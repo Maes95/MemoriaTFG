@@ -1,168 +1,105 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Plantilla de memoria en LaTeX para la ETSIT - Universidad Rey Juan Carlos
-%%
-%% Por Gregorio Robles <grex arroba gsyc.urjc.es>
-%%     Grupo de Sistemas y Comunicaciones
-%%     Escuela Técnica Superior de Ingenieros de Telecomunicación
-%%     Universidad Rey Juan Carlos
-%% (muchas ideas tomadas de Internet, colegas del GSyC, antiguos alumnos...
-%%  etc. Muchas gracias a todos)
-%%
-%% La última versión de esta plantilla está siempre disponible en:
-%%     https://github.com/gregoriorobles/plantilla-memoria
-%%
-%% Para obtener PDF, ejecuta en la shell:
-%%   make
-%% (las imágenes deben ir en PNG o JPG)
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\documentclass[a4paper, 12pt]{book}
-%\usepackage[T1]{fontenc}
+\documentclass[a4paper, 12pt, oneside]{book}
 
 \usepackage[a4paper, left=2.5cm, right=2.5cm, top=3cm, bottom=3cm]{geometry}
 \usepackage{times}
 \usepackage[latin1]{inputenc}
-\usepackage[spanish]{babel} % Comenta esta línea si tu memoria es en inglés
+\usepackage[spanish]{babel} 
 \usepackage{url}
-%\usepackage[dvipdfm]{graphicx}
 \usepackage{graphicx}
-\usepackage{float}  %% H para posicionar figuras
-\usepackage[nottoc, notlot, notlof, notindex]{tocbibind} %% Opciones de índice
-\usepackage{latexsym}  %% Logo LaTeX
+\usepackage{float} 
+\usepackage[nottoc, notlot, notlof, notindex]{tocbibind}
+\usepackage{latexsym}
 
-\title{Memoria del Proyecto}
-\author{Nombre del autor}
+\usepackage{listings}
+\usepackage{color}
 
-\renewcommand{\baselinestretch}{1.5}  %% Interlineado
+\definecolor{blue-violet}{rgb}{0.54, 0.17, 0.89}
+\definecolor{lightgray}{rgb}{.6,.6,.6}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+\lstdefinelanguage{JavaScript}{
+	keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+	keywordstyle=\color{blue-violet}\bfseries,
+	ndkeywords={class, export, boolean, throw, implements, import, this},
+	ndkeywordstyle=\color{darkgray}\bfseries,
+	identifierstyle=\color{black},
+	sensitive=false,
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{lightgray}\ttfamily,
+	stringstyle=\color{red}\ttfamily,
+	morestring=[b]',
+	morestring=[b]"
+}
+
+\lstset{
+	language=JavaScript,
+	backgroundcolor=\color{white},
+	extendedchars=true,
+	basicstyle=\footnotesize\ttfamily,
+	showstringspaces=false,
+	showspaces=false,
+	tabsize=4,
+	breaklines=true,
+	showtabs=false,
+	captionpos=b
+}
+
+\title{Comparativa de tecnologías de servidor para servicios basados en websocket}
+\author{Michel Maes Bermejo}
+
+\renewcommand{\baselinestretch}{1.5}
 
 \begin{document}
 
-\renewcommand{\refname}{Bibliografía}  %% Renombrando
+\renewcommand{\refname}{Bibliografía} 
 \renewcommand{\appendixname}{Apéndice}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PORTADA
-
+\cleardoublepage
 \begin{titlepage}
 \begin{center}
 \begin{tabular}[c]{c c}
-%\includegraphics[bb=0 0 194 352, scale=0.25]{logo} &
-\includegraphics[scale=0.25]{img/logo_vect.png} &
-\begin{tabular}[b]{l}
-\Huge
-\textsf{UNIVERSIDAD} \\
-\Huge
-\textsf{REY JUAN CARLOS} \\
-\end{tabular}
-\\
+\includegraphics[scale=0.6]{img/logos/urjc-logo.jpg} &
 \end{tabular}
 
-\vspace{3cm}
+\vspace{1cm}
 
 \Large
-TITULACIÓN EN MAYÚSCULAS
+TITULACIÓN EN INGENIERÍA DEL SOFTWARE
 
 \vspace{0.4cm}
 
 \large
-Curso Académico 20XX/20XX
+Curso Académico 2017/2018
 
 \vspace{0.8cm}
 
-Trabajo Fin de Grado/Máster
+Trabajo Fin de Grado
 
 \vspace{2.5cm}
 
 \LARGE
-TÍTULO DEL TRABAJO EN MAYÚSCULAS
+Comparativa de tecnologías de servidor para servicios basados en websocket
 
 \vspace{4cm}
 
 \large
-Autor : Nombre del Alumno/a \\
-Tutor : Dr. Gregorio Robles
+Autor : Michel Maes Bermejo \\
+Tutor : Micael Gallego Carrillo
+
 \end{center}
 \end{titlepage}
 
-\newpage
-\mbox{}
-\thispagestyle{empty} % para que no se numere esta pagina
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Para firmar
-\clearpage
-\pagenumbering{gobble}
-\chapter*{}
-
-\vspace{-4cm}
-\begin{center}
-\LARGE
-\textbf{Trabajo Fin de Grado/Máster}
-
-\vspace{1cm}
-\large
-Título del Trabajo con Letras Capitales para Sustantivos y Adjetivos
-
-\vspace{1cm}
-\large
-\textbf{Autor :} Nombre del Alumno/a \\
-\textbf{Tutor :} Dr. Gregorio Robles Martínez
-
-\end{center}
-
-\vspace{1cm}
-La defensa del presente Proyecto Fin de Carrera se realizó el día \qquad$\;\,$ de \qquad\qquad\qquad\qquad \newline de 20XX, siendo calificada por el siguiente tribunal:
-
-
-\vspace{0.5cm}
-\textbf{Presidente:}
-
-\vspace{1.2cm}
-\textbf{Secretario:}
-
-\vspace{1.2cm}
-\textbf{Vocal:}
-
-
-\vspace{1.2cm}
-y habiendo obtenido la siguiente calificación:
-
-\vspace{1cm}
-\textbf{Calificación:}
-
-
-\vspace{1cm}
-\begin{flushright}
-Fuenlabrada, a \qquad$\;\,$ de \qquad\qquad\qquad\qquad de 20XX
-\end{flushright}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Dedicatoria
-
-\chapter*{}
-\pagenumbering{Roman} % para comenzar la numeracion de paginas en numeros romanos
-\begin{flushright}
-\textit{Dedicado a \\
-mi familia / mi abuelo / mi abuela}
-\end{flushright}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Agradecimientos
-
-\chapter*{Agradecimientos}
-%\addcontentsline{toc}{chapter}{Agradecimientos} % si queremos que aparezca en el índice
-\markboth{AGRADECIMIENTOS}{AGRADECIMIENTOS} % encabezado 
-
-Aquí vienen los agradecimientos\ldots Aunque está bien acordarse de la pareja, no hay que olvidarse de dar las gracias a tu madre, que aunque a veces no lo parezca disfrutará tanto de tus logros como tú\ldots 
-Además, la pareja quizás no sea para siempre, pero tu madre sí.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
 %%%% Resumen
+%%%%%%%%%%%%%%%%%%%%
 
 \chapter*{Resumen}
-%\addcontentsline{toc}{chapter}{Resumen} % si queremos que aparezca en el índice
+\pagenumbering{gobble}
+
 \markboth{RESUMEN}{RESUMEN} % encabezado
 
 Aquí viene un resumen del proyecto. Ha de constar de tres o cuatro párrafos, donde se presente de manera clara y concisa de qué va el proyecto. 
@@ -177,327 +114,173 @@ dentro de un marco general?
 
 Lo mejor es escribir el resumen al final.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Resumen en inglés
-
-\chapter*{Summary}
-%\addcontentsline{toc}{chapter}{Summary} % si queremos que aparezca en el índice
-\markboth{SUMMARY}{SUMMARY} % encabezado
-
-Here comes a translation of the ``Resumen'' into English. Please, double check it for correct grammar and spelling.
-As it is the translation of the ``Resumen'', which is supposed to be written at the end, this as well should be filled out
-just before submitting.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
 % ÍNDICES %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% Las buenas noticias es que los índices se generan automáticamente.
-% Lo único que tienes que hacer es elegir cuáles quieren que se generen,
-% y comentar/descomentar esa instrucción de LaTeX.
+%%%%%%%%%%%%%%%%%%%%
 
 %%%% Índice de contenidos
 \tableofcontents 
 %%%% Índice de figuras
 \cleardoublepage
-%\addcontentsline{toc}{chapter}{Lista de figuras} % para que aparezca en el indice de contenidos
-\listoffigures % indice de figuras
-%%%% Índice de tablas
-%\cleardoublepage
-%\addcontentsline{toc}{chapter}{Lista de tablas} % para que aparezca en el indice de contenidos
-%\listoftables % indice de tablas
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% INTRODUCCIÓN %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%       1.INTRODUCCIÓN Y MOTIVACIÓN           %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage
-\chapter{Introducción}
-\label{sec:intro} % etiqueta para poder referenciar luego en el texto con ~\ref{sec:intro}
-\pagenumbering{arabic} % para empezar la numeración de página con números
+\chapter{Introducción y motivación}
+\label{sec:intro} 
+\pagenumbering{arabic} 
 
-En este capítulo se introduce el proyeto. Debería tener información general sobre el mismo, dando la información sobre el contexto en el que se ha desarrollado.
+Hoy en día, un desarrollador de software tiene múltiples herramientas (entre lenguajes y librerías) para abordar cualquier proyecto que tenga entre manos.
 
-No te olvides de echarle un ojo a la página con los cinco errores de escritura más frecuentes\footnote{\url{http://www.tallerdeescritores.com/errores-de-escritura-frecuentes}}.
+Es una práctica común usar una tecnología concreta sobre la que sentimos predilección o las que creemos que pueden resolver mejor nuestro problema. En ocasiones, nos equivocamos en nuestra elección y descartamos opciones mucho más efectivas.
 
-Aconsejo a todo el mundo que mire y se inspire en memorias pasadas. Las mías están todas almacenadas en mi web del GSyC\footnote{\url{https://gsyc.urjc.es/~grex/pfcs/}}.
+Este problema de desinformación puede abordarse mediante el estudio de las distintas tecnologías que proponen una solución al mismo, pero dado que el ámbito del desarrollo software es muy amplio, vamos a centrarnos en las tecnologías de servidor para servicios basados en WebSockets.
 
-\section{Sección}
-\label{sec:seccion}
+Estas tecnologías proporcionan una comunicación en tiempo real con clientes muy diversos (aplicaciones móviles, navegadores, otro servidores). Un ejemplo actual son los servicios de mensajería instantánea cómo WhatsApp o Telegram, cuyo crecimiento de usuarios se ha disparado en los últimos años. Hoy en día este tipo de aplicaciones tienen un impacto drástico en la vida diaria, siendo casi una herramienta imprescindible, por lo que prevenir una caída de servicio ante un alto número de clientes es fundamental.
 
-Esto es una sección, que es una estructura menor que un capítulo. 
+La motivación de este proyecto surge de la necesidad de comprender mejor estas tecnologías y proporcionar argumentos sólidos que justifiquen el uso de una u otra, dependiendo de las necesidades de nuestro proyecto y de los recursos de los que dispongamos.
 
-Por cierto, a veces me comentáis que no os compila por las tildes.
-Eso es un problema de codificación.
-Cambiad de ``UTF-8'' a ``ISO-Latin-1'' (o vicecersa) y funcionará.
+\clearpage
 
-\subsection{Estilo}
-\label{subsec:estilo}
+Para ello, tomaremos como punto de partida las tecnologías reactivas, que siguiendo el Manifiesto Reactivo\footnote{\url{http://www.reactivemanifesto.org/}} cuentan entre sus características:
 
-Recomiendo leer los consejos prácticos sobre LaTeX de Diomidos 
-Spinellis\footnote{\url{https://github.com/dspinellis/latex-advice}}.
 
-Sobre el uso de las comas\footnote{\url{http://narrativabreve.com/2015/02/opiniones-de-un-corrector-de-estilo-11-recetas-para-escribir-correctamente-la-coma.html}}
-
-A continuación, viene una figura, la Figura~\ref{figura:foro_hilos}. 
-Observarás que el texto dentro del a referencia es el identificador de la figura (que se corresponden con el ``label'' dentro de la misma). 
-También habrás tomado nota de cómo se ponen las ``comillas dobles'' para que se muestren correctamente. 
-Volviendo a las referencias, nota que al compilar, la primera vez se crea un diccionario con las referencias, y en la segunda compilación se ``rellenan'' estas referencias. 
-Por eso hay que compilar dos veces.
-
- \begin{figure}
-    \centering
-    \includegraphics[bb=0 0 800 600, width=12cm, keepaspectratio]{img/foro1}
-    \caption{Página con enlaces a hilos}
-    \label{figura:foro_hilos}
- \end{figure}
-
-{\footnotesize
-\begin{verbatim}
-    From gaurav at gold-solutions.co.uk  Fri Jan 14 14:51:11 2005
-    From: gaurav at gold-solutions.co.uk (gaurav_gold)
-    Date: Fri Jan 14 19:25:51 2005
-    Subject: [Mailman-Users] mailman issues
-    Message-ID: <003c01c4fa40$1d99b4c0$94592252@gaurav7klgnyif>
-
-    Dear Sir/Madam,
-    How can people reply to the mailing list?  How do i turn off
-    this feature? How can i also enable a feature where if someone
-    replies the newsletter the email gets deleted?
-    Thanks
-
-    From msapiro at value.net  Fri Jan 14 19:48:51 2005
-    From: msapiro at value.net (Mark Sapiro)
-    Date: Fri Jan 14 19:49:04 2005
-    Subject: [Mailman-Users] mailman issues
-    In-Reply-To: <003c01c4fa40$1d99b4c0$94592252@gaurav7klgnyif>
-    Message-ID: <PC173020050114104851057801b04d55@msapiro>
-
-    gaurav_gold wrote:
-    >How can people reply to the mailing list?  How do i turn off
-    this feature? How can i also enable a feature where if someone
-    replies the newsletter the email gets deleted?
-
-    See the FAQ
-    >Mailman FAQ: http://www.python.org/cgi-bin/faqw-mm.py
-    article 3.11
-\end{verbatim}
-}
-
-\section{Estructura de la memoria}
-\label{sec:estructura}
-
-En esta sección se debería introducir la esctura de la memoria. Así:
-
-\begin{itemize}
-  \item En el primer capítulo se hace una intro al proyecto.
-  
-  \item En el capítulo~\ref{chap:objetivos} (ojo, otra referencia automática) se muestran los objetivos del proyecto.
-  
-  \item A continuación se presenta el estado del arte.
-  
-  \item \ldots
+\begin{itemize}  
+	\item Tiempos de respuestas rápidos
+	\item Tolerantes a fallos
+	\item Adaptación a variaciones en la carga de trabajo
+	\item Uso de mensajes asíncronos para la comunicación (no bloqueantes)
 \end{itemize}
 
+Para este proyecto, nos centraremos en Java, un lenguaje consolidado que cuenta con librerias y frameworks que nos ayudarán a abordar esta comparativa.
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% OBJETIVOS %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\cleardoublepage % empezamos en página impar
-\chapter{Objetivos} % título del capítulo (se muestra)
-\label{chap:objetivos} % identificador del capítulo (no se muestra, es para poder referenciarlo)
-
-\section{Objetivo general} % título de sección (se muestra)
-\label{sec:objetivo-general} % identificador de sección (no se muestra, es para poder referenciarla)
-
-Aquí vendría el objetivo general en una frase:
-Mi trabajo fin de grado consiste en crear de una herramienta de análisis de los comentarios jocosos en repositorios de software libre alojados en la plataforma GitHub.
-
-Recuerda que los objetivos siempre vienen en infinitivo.
-
-
-\section{Objetivos específicos}
-\label{sec:objetivos-especificos}
-
-Los objetivos específicos se pueden entender como las tareas en las que se ha desglosado el objetivo general.
-Y, sí, también vienen en infinitivo.
-
-
-\section{Planificación temporal}
-\label{sec:planificacion-temporal}
-
-A mí me gusta que aquí pongáis una descripción de lo que os ha llevado realizar el trabajo.
-Hay gente que añade un diagrama de GANTT.
-Lo importante es que quede claro cuánto tiempo llevas (tiempo natural, p.ej., 6 meses) y a qué nivel de esfuerzo (p.ej., principalmente los fines de semana).
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% ESTADO DEL ARTE %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%             2. Objetivos                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage
-\chapter{Estado del arte}
+\chapter{Objetivos}
+\label{sec:objetivos} 
 
-Descripción de las tecnologías que utilizas en tu trabajo. 
-Con dos o tres párrafos por cada tecnología, vale. 
-Se supone que aquí viene todo lo que no has hecho tú.
+El objetivo principal de este proyecto será realizar una comparativa entre distintas tecnologías que den solución a la comunicación en tiempo real mediante el uso de WebSockets. Dicha comparativa se realizará en base al rendimiento y el consumo de recursos de cada una de las tecnologías comparadas, ante diferentes niveles de carga y haciendo uso de un número variado de servidores.
 
-Puedes citar libros, como el de Bonabeau et al. sobre procesos estigmérgicos~\cite{bonabeau:_swarm}. % Nota que el ~ añade un espacio en blanco, pero no deja que exista un salto de línea. Imprescindible ponerlo para las citas.
+Con este fin, se implementará un servidor de mensajería instantánea (que a partir de ahora denominaremos simplemente Chat) para cada tecnología y un cliente que se conectará a ese servidor simulando varios usuarios enviando mensajes que podrá medir el tiempo que tarda un mensaje desde que se envía hasta que se recibe.
 
-También existe la posibilidad de poner notas al pie de página, por ejemplo, una para indicarte que visite la página de LibreSoft\footnote{\url{http://www.libresoft.es}}.
+Otro objetivo relevante del proyecto será su extensibilidad, de forma que cualquier desarrollador pueda implementar su aplicación de chat, sumarla a la comparativa y así contribuir al proyecto.
 
-\section{Sección 1} 
-\label{sec:seccion1}
+El proyecto base corresponde al realizado por el mismo autor de el proyecto que nos ocupa, en el que se realizó una comparativa entre las aplicaciones de Akka, Vert.x, SpringBoot y NodeJS, las cuales se compararón haciendo uso de una sola máquina. Este proyecto pretende ser una continuación y expansión del anterior, concretamente:
 
-Hemos hablado de cómo incluir figuras.
-Pero no hemos dicho nada de tablas.
-A mí me gustan las tablas.
-Mucho.
-Aquí un ejemplo de tabla, la Tabla~\ref{tabla:ejemplo}.
+\begin{itemize}  
+	\item Distribuir cada aplicación para que pueda ser lanzada en varias máquinas que formen un clúster.
+	\item Actualizar las librerias a su última versión a fin de contar con las herramientas más recientes.
+	\item Mejorar el cliente existente para que sea capaz de recoger métricas de una aplicación distribuida.
+\end{itemize}
 
-\begin{table}
- \begin{center}
-  \begin{tabular}{ | l | c | r |} % tenemos tres colummnas, la primera alineada a la izquierda (l), la segunda al centro (c) y la tercera a la derecha (r). El | indica que entre las columnas habrá una línea separadora.
-    \hline
-    1 & 2 & 3 \\ \hline % el hline nos da una línea vertical
-    4 & 5 & 6 \\ \hline
-    7 & 8 & 9 \\
-    \hline
-  \end{tabular}
-  \label{tabla:ejemplo}
-  \caption{Ejemplo de tabla}
- \end{center}
-\end{table}
+Las tecnologías que compararemos en este proyecto serán:
 
+\begin{itemize}  
+	\item Akka
+	\item Vert.x
+	\item SpringBoot + RabbitMQ
+\end{itemize}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% DISEÑO E IMPLEMENTACIÓN %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 3. Tecnologías, Herramientas y Metodologías %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage
-\chapter{Diseño e implementación}
+\chapter{Tecnologías, Herramientas y Metodologías}
+\label{sec:tecnologias} 
 
-Aquí viene todo lo que has hecho tú (tecnológicamente). 
-Puedes entrar hasta el detalle. 
-Es la parte más importante de la memoria, porque describe lo que has hecho tú.
-Eso sí, normalmente aconsejo no poner código, sino diagramas.
+\section{Tecnologías}
 
-\section{Arquitectura general} 
-\label{sec:arquitectura}
+\subsection{Websockets}
+\label{subsec:websockets}
 
-Si tu proyecto es un software, siempre es bueno poner la arquitectura (que es cómo se estructura tu programa a ``vista de pájaro'').
+\begin{tabular}[c]{c c}
+	\includegraphics[scale=0.6]{img/logos/ws-logo.png} &
+\end{tabular}
 
-Por ejemplo, puedes verlo en la figura~\ref{fig:arquitectura}.
+RFC 6455\footnote{\url{https://tools.ietf.org/html/rfc6455}} define WebSocket como un protocolo que proporciona un canal de comunicación bidireccional y full-dúplex sobre un único socket TCP. Aunque inicialmente estaba pensado para cualquier tipo de comunicaciones entre el navegador y el servidor web, puede usarse también para aplicaciones cliente/servidor.
 
-\begin{figure}
-  \centering
-  \includegraphics[width=9cm, keepaspectratio]{img/arquitectura}
-  \caption{Estructura del parser básico}
-  \label{fig:arquitectura}
-\end{figure}
+Por otro lado, W3C se encarga de normalizar la API\footnote{\url{https://www.w3.org/TR/2011/WD-websockets-20110929}} de WebSocket. Define una interfaz para el navegador compuesta por 4 métodos que corresponden a manejadores o gestores (\textsl{handlers}) para cada evento. 
 
-Si utilizas una base de datos, no te olvides de incluir también un diagrama de entidad-relación.
+\clearpage
 
+Podemos ver un ejemplo de estos manejadores en el código mostrado a continuación (Javascript en el navegador).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% RESULTADOS %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{lstlisting}[language=JavaScript]
+var socket = new WebSocket("ws://example.com:9000/chat");
+// Send new text
+socket.send("Some text");
+socket.onmessage = function(event) {
+	var data = JSON.parse(event.data);
+	// Use data
+});
+socket.onopen  = function(e){ console.log("WS Opened")};
+socket.onclose = function(e){ console.log("WS Closed")};
+socket.onerror = function(e){ console.log(e)};
+\end{lstlisting}
+
+\section{Herramientas}
+
+\section{Metodologías}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 		 4. Descripción informática           %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage
-\chapter{Resultados}
+\chapter{Descripción informática}
+\label{sec:descripcion} 
 
-En este capítulo se incluyen los resultados de tu trabajo fin de grado.
+\section{Requisitos}
 
-Si es una herramienta de análisis lo que has realizado, aquí puedes poner ejemplos de haberla utilizado para que se vea su utilidad.
+\section{Diseño e Implementación}
 
+\section{Pruebas}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% CONCLUSIONES %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 		   5. Estudio comparativo             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage
-\chapter{Conclusiones}
-\label{chap:conclusiones}
+\chapter{Estudio comparativo}
+\label{sec:comparativa} 
+
+\section{Latencia}
+
+\section{Uso de CPU}
+
+\section{Uso de memoria}
+
+\section{Desarrollo}
+
+\section{Conclusiones generales de la comparativa}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 6. Conclusiones del proyecto y trabajos futuros %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter{Conclusiones del proyecto y trabajos futuros}
+\label{sec:conclusiones} 
+
+Mis conclusiones
 
 
-\section{Consecución de objetivos}
-\label{sec:consecucion-objetivos}
 
-Esta sección es la sección espejo de las dos primeras del capítulo de objetivos, donde se planteaba el objetivo general y se elaboraban los específicos.
-
-Es aquí donde hay que debatir qué se ha conseguido y qué no. 
-Cuando algo no se ha conseguido, se ha de justificar, en términos de qué problemas se han encontrado y qué medidas se han tomado para mitigar esos problemas.
-
-
-\section{Aplicación de lo aprendido}
-\label{sec:aplicacion}
-
-Aquí viene lo que has aprendido durante el Grado/Máster y que has aplicado en el TFG/TFM. Una buena idea es poner las asignaturas más relacionadas y comentar en un párrafo los conocimientos y habilidades puestos en práctica.
-
-\begin{enumerate}
-  \item a
-  \item b
-\end{enumerate}
-
-
-\section{Lecciones aprendidas}
-\label{sec:lecciones_aprendidas}
-
-Aquí viene lo que has aprendido en el Trabajo Fin de Grado/Máster.
-
-\begin{enumerate}
-  \item a
-  \item b
-\end{enumerate}
-
-
-\section{Trabajos futuros}
-\label{sec:trabajos_futuros}
-
-Ningún software se termina, así que aquí vienen ideas y funcionalidades que estaría bien tener implementadas en el futuro.
-
-Es un apartado que sirve para dar ideas de cara a futuros TFGs/TFMs.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
 % APÉNDICE(S) %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage
 \appendix
 \chapter{Manual de usuario}
 \label{app:manual}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% BIBLIOGRAFIA %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\cleardoublepage
-
-% Las siguientes dos instrucciones es todo lo que necesitas
-% para incluir las citas en la memoria
-\bibliographystyle{abbrv}
-\bibliography{memoria}  % memoria.bib es el nombre del fichero que contiene
-% las referencias bibliográficas. Abre ese fichero y mira el formato que tiene,
-% que se conoce como BibTeX. Hay muchos sitios que exportan referencias en
-% formato BibTeX. Prueba a buscar en http://scholar.google.com por referencias
-% y verás que lo puedes hacer de manera sencilla.
-% Más información: 
-% http://texblog.org/2014/04/22/using-google-scholar-to-download-bibtex-citations/
 
 \end{document}
