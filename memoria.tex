@@ -18,6 +18,7 @@
 \usepackage{color}
 
 \definecolor{blue-violet}{rgb}{0.54, 0.17, 0.89}
+\definecolor{midnight}{RGB}{0, 103, 149}
 \definecolor{lightgray}{rgb}{.6,.6,.6}
 \definecolor{darkgray}{rgb}{.4,.4,.4}
 \definecolor{purple}{rgb}{0.65, 0.12, 0.82}
@@ -32,7 +33,7 @@
 	comment=[l]{//},
 	morecomment=[s]{/*}{*/},
 	commentstyle=\color{lightgray}\ttfamily,
-	stringstyle=\color{red}\ttfamily,
+	stringstyle=\color{midnight}\ttfamily,
 	morestring=[b]',
 	morestring=[b]"
 }
@@ -217,16 +218,16 @@ Por otro lado, W3C se encarga de normalizar la API\footnote{\url{https://www.w3.
 Podemos ver un ejemplo de estos manejadores en el código mostrado a continuación (Javascript en el navegador).
 
 \begin{lstlisting}[language=JavaScript]
-var socket = new WebSocket("ws://example.com:9000/chat");
-// Send new text
-socket.send("Some text");
-socket.onmessage = function(event) {
-	var data = JSON.parse(event.data);
-	// Use data
-});
-socket.onopen  = function(e){ console.log("WS Opened")};
-socket.onclose = function(e){ console.log("WS Closed")};
-socket.onerror = function(e){ console.log(e)};
+	var socket = new WebSocket("ws://example.com:9000/chat");
+	// Send new text
+	socket.send("Some text");
+	socket.onmessage = function(event) {
+		var data = JSON.parse(event.data);
+		// Use data
+	});
+	socket.onopen  = function(e){ console.log("WS Opened")};
+	socket.onclose = function(e){ console.log("WS Closed")};
+	socket.onerror = function(e){ console.log(e)};
 \end{lstlisting}
 
 
@@ -482,9 +483,96 @@ Por lo tanto, para cada aplicación que implementásemos, debíamos desarrollarla d
 
 \cleardoublepage
 \chapter{Descripción informática}
-\label{sec:descripcion} 
+\label{sec:descripcion}
+
+En este apartado se abordará la construcción del proyecto. Todo el proyecto (que incluye tanto las aplicaciones de chat como el cliente de pruebas, pueden encontrarse como repositorios en la siguiente organización de GitHub:
+
+\url{https://github.com/TFG-DistributedWebChat}
+
+El proyecto realizado consta de 3 aplicaciones de chat y un cliente de pruebas. Las aplicaciones construidas y que entran a formar parte de la comparativa son:
+
+\begin{itemize}  
+	\item Akka
+	\item Vert.x
+	\item SpringBoot + RabbitMQ
+\end{itemize}
+
+
+La comparativa tomará en cuenta la escalabilidad horizontal, por lo que todas las aplicaciones se desarrollaran para funcionar en 2 o más máquinas
 
 \section{Requisitos}
+
+Como se ha mencionado anteriormente, este proyecto es la continuación de uno anterior, del que se ha heredado un cliente de chat que funciona como prueba de integración. Los requisitos, por lo tanto, quedan condicionados al funcionamiento de dicho cliente. Cada aplicación se construirá siguiendo los mismos requisitos.
+
+Distinguiremos entre requisitos funcionales y no funcionales:
+
+\subsection{Requisitos funcionales}
+
+Los requisitos funcionales fueron detallados como documentación y publicados como una página en una wiki de GitHub para que cualquier desarrollador pudiera incluir su propia aplicación. Su versión en inglés puede encontrarse en la documentación del proyecto en GitHub \footnote{\url{https://github.com/TFG-DistributedWebChat/DistributedWebChatClient/wiki/Requeriments}}, mientras que su versión en español se detalla a continuación.
+
+\textbf{Requisitos básicos}
+
+La aplicación en cuestión debe poder soportar un chat en el que varios usuarios puedan comunicarse entre si.
+
+Requiere lanzar la aplicación como un servidor que escuche de un puerto concreto y ofrecer una conexión WebSocket sobre la dirección \textit{/chat}.
+
+\textbf{Primera conexión}
+
+El cliente, al establecer la conexión enviará sus datos en un string, que podrá formatearse a JSON y tiene la siguiente estructura:
+
+\begin{lstlisting}[language=JavaScript]
+	{
+		"name": "MyName",
+		"chat": "MyRoom"
+	}
+\end{lstlisting}
+
+La aplicación debe almacenar estos datos junto a la conexión WebSocket, de forma que queden registrados.
+
+
+\textbf{Recepción y reenvío de mensajes} 
+
+Una vez se ha establecido la conexión y se ha mandado el mensaje de inicialización, el cliente enviará mensajes a la aplicación, de nuevo como un String, que se podrá formatear a un JSON con la siguiente estructura:
+
+\begin{lstlisting}[language=JavaScript]
+	{
+		"name": "MyName",
+		"chat": "MyRoom",
+		"message":"MyMessage"
+	}
+\end{lstlisting}
+
+Este mensaje debe ser reenviado por la aplicación a todos los usuarios cuya sala de chat sea la misma que la del mensaje.
+
+No debe confundirse un mensaje de chat con un mensaje de conexión, la forma de diferenciarlos es por la existencia o no de la clave \textit{message} en el JSON.
+
+\textbf{Desconexión}
+
+La aplicación debe gestionar la desconexión de usuarios, de forma que cuando un usuario se desconecta, este debe eliminarse de la aplicación para que no se le reenvíen mensajes.
+
+\textbf{Opcionales}
+
+Aunque las pruebas que se realizan no lo requieren, para añadirle dificultad, la aplicación puede impedir que dos usuarios con el mismo nombre puedan conectarse (independientemente del chat al que pertenezcan). En caso de que ya exista el usuario debería enviar un mensaje de vuelta al cliente tal y cómo se muestra a continuación:
+
+\begin{lstlisting}[language=JavaScript]
+	{
+		"type": "system",
+		"message": "A user with that name already exists"
+	}
+\end{lstlisting}
+
+Además, y de cara a probar rápidamente el correcto funcionamiento más básico de la aplicación, puede ofrecerse un cliente http que permita realizar la conexión desde el navegador.
+
+\subsection{Requisitos no funcionales}
+
+Dado el carácter comparativo que posee el proyecto, nos centraremos en los requisitos de calidad de ejecución, a fin de optimizar lo máximo posible cada aplicación. Los requisitos no funcionales más relevantes en el proyecto serán:
+
+\begin{itemize}  
+	\item \textbf{Latencia}: Las aplicaciones deben ofrecer un tiempo de respuesta lo más bajo posible dentro de las características de la tecnología en la que se base.
+	\item \textbf{Consumo de recursos}: Las aplicaciones deben hacer un uso responsable de los recursos del sistema (como son la memoria o el uso del procesador).
+	\item \textbf{Escalabilidad}: en nuestro caso, será escalabilidad vertical, que buscará que nuestras aplicaciones no vean degradada su calidad (en este caso una baja latencia y consumo de recursos) ante grandes cargas de trabajo.
+	\item \textbf{Concurrencia}: Las aplicaciones tienen que estar libres de interbloqueos y esperas innecesarias. Dada la naturaleza de la mayoría de tecnologías (reactivas y no bloqueantes), este requisito es fácilmente satisfacible.
+\end{itemize}
 
 \section{Diseño e Implementación}
 
