@@ -10,6 +10,10 @@
 \usepackage[nottoc, notlot, notlof, notindex]{tocbibind}
 \usepackage{latexsym}
 
+\newcommand{\subsubsubsection}[1]{\paragraph{#1}\mbox{}\\}
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+
 \usepackage{listings}
 \usepackage{color}
 
@@ -200,9 +204,9 @@ Las tecnologías que compararemos en este proyecto serán:
 \subsection{Websockets}
 \label{subsec:websockets}
 
-\begin{tabular}[c]{c c}
-	\includegraphics[scale=0.6]{img/logos/ws-logo.png} &
-\end{tabular}
+\begin{center}
+	\includegraphics[scale=0.5]{img/logos/ws-logo.png}
+\end{center}
 
 RFC 6455\footnote{\url{https://tools.ietf.org/html/rfc6455}} define WebSocket como un protocolo que proporciona un canal de comunicación bidireccional y full-dúplex sobre un único socket TCP. Aunque inicialmente estaba pensado para cualquier tipo de comunicaciones entre el navegador y el servidor web, puede usarse también para aplicaciones cliente/servidor.
 
@@ -225,9 +229,252 @@ socket.onclose = function(e){ console.log("WS Closed")};
 socket.onerror = function(e){ console.log(e)};
 \end{lstlisting}
 
+
+\subsection{Java}
+\label{subsec:java}
+
+\begin{center}
+	\includegraphics[scale=0.06]{img/logos/java-logo.png}
+\end{center}
+
+Java es un lenguaje de programación de propósito general, concurrente y orientado a objetos. Su sintaxis deriva en gran medida de C y C++. Uno de los principales atractivos de Java es su máquina virtual (JVM) que nos permite ejecutar nuestro código Java en cualquier dispositivo, independientemente de la arquitectura. Las tecnologías basadas en Java seleccionadas para la comparativa son explicadas a continuación.
+
+\subsection{Akka}
+\label{subsec:akka}
+
+\begin{center}
+	\includegraphics[scale=0.2]{img/logos/akka-logo.png}
+\end{center}
+
+Akka\footnote{\url{http://akka.io/}} es un toolkit para crear aplicaciones concurrentes y distribuidas. También se ejecuta sobre la JVM. Se puede utilizar con Java y Scala, lenguaje con el que está escrito y del que su implementación de los actores forma parte de la librería estándar desde la versión 2,10. Otras de sus características son:
+
+
+\begin{itemize}  
+	\item \textbf{Tolerancia a fallos}: Akka adopta el modelo de ?let it crash? que ha resultado un gran éxito en la industria de la telecomunicación.
+	\item \textbf{Transparencia de localización}: todo en Akka está diseñado para trabajar en un entorno distribuido: todas las comunicaciones son mediante paso de mensajes y todo es asíncrono
+	\item \textbf{Persistencia}: Los mensajes recibidos por el actor pueden conservarse y ser reproducidos al iniciar o reiniciar el actor, por lo que se puede conservar el estado de los actores después de un fallo o al migrarlos a otro nodo.
+\end{itemize}
+
+La versión utilizada de Akka durante este proyecto es la 2.5.
+
+La aplicación de Akka hace uso de Play Framework\footnote{\url{https://www.playframework.com/}} un framework web open source, que da soporte web a la aplicación y proporciona la comunicación mediante WebSockets.
+
+Los conceptos básicos que debemos comprender de Akka son:
+
+\begin{itemize}  
+	\item \textbf{Actores}: Los actores son objetos que poseen un estado y un comportamiento. Se comunican entre ellos exclusivamente enviando mensajes que se encolan en el mailbox del actor de destino. Los actores se organizan jerárquicamente. Un actor encargado de realizar una tarea, puede dividir esa tarea en otras sub-tareas y enviárselas a unos actores hijos a los que supervisará.
+	\item \textbf{Actor System}: Es el encargado de ejecutar, crear y borrar actores además de otros fines como la configuración o el logging. Varios actor systems con diferentes configuraciones puede coexistir en la misma JVM sin problemas, aunque al ser una estructura pesada que puede manejar de 1..N threads, se recomienda crear una por aplicación.
+	\item \textbf{Actor Reference}: Es un objeto que representa al actor en el exterior. Estos objetos pueden enviarse sin ninguna restricción y permiten enviar mensajes al actor con total transparencia, sin necesidad de actualizar las referencias a pesar de enviarse a otros hosts. Además evitan que desde el exterior pueda conocerse el estado del actor a no ser que este lo publique.
+	\item \textbf{Actor Path}: Como los actores son creados en una estricta estructura jerárquica, existe una única secuencia de nombres de actores dados siguiendo recursivamente los links entre actores padres e hijos hasta el actorSystem. Esta secuencia similar a las rutas de un sistema de ficheros, por ello es conocida como actor Path.
+\end{itemize}
+
+La diferencia entre un ActorPath y una ActorReference es que el segundo tiene el mismo ciclo de vida que el actor. Si el actor se destruye su ActorReference también, sin embargo un ActorPath puede existir perfectamente a pesar de que no exista el actor.
+
+\subsection{Vert.x}
+\label{subsec:vertx}
+
+\begin{center}
+	\includegraphics[scale=0.1]{img/logos/vertx-logo.png}
+\end{center}
+
+Vert.x\footnote{\url{http://vertx.io/}} es otro toolkit de Java que permite construir aplicaciones reactivas. Se autodenomina dirigido por eventos y no bloqueante, está inspirado en Node.js. La versión utilizada en el proyecto es la 3.5.
+
+Los conceptos básicos que debemos comprender de Vert.x son:
+
+\begin{itemize}  
+	\item \textbf{Verticle}\footnote{\url{http://vertx.io/docs/vertx-core/java/#verticles}}: modelo de concurrencia que propone Vertx. Un Verticle es una clase que se comporta como un actor\footnote{\url{https://en.wikipedia.org/wiki/Actor_model}}, cuyo comportamiento está orientado a enviar/recibir mensajes. Para facilitar el desarrollo, Vertx asegura que el código de un verticle nunca va a ser ejecutado por más de un thread a la vez.\\
+	\item \textbf{EventBus}: es uno de sus principales recursos que le da su carácter reactivo. Consiste en un bus transversal a la aplicación que permite la comunicación entre los verticles de distintas formas\footnote{\url{http://vertx.io/docs/apidocs/io/vertx/core/eventbus/EventBus.html}}:
+	\item \textbf{Publicar-Subscribir}: Diversos verticles se subscriben a un determinado topic proporcionando un handler que opere con la respuesta. Tras esto, basta con publicar un mensaje bajo ese topic para que todos los componentes subscritos lo reciban.
+	\item \textbf{Punto a punto}: Al igual que el anterior, envía un mensaje bajo un topic, pero en este caso, solo a uno de los subscriptores, elegido mediante un algoritmo de round-robin no estricto.
+	\item \textbf{Petición-Respuesta}: Similar al anterior, con la única diferencia que se proporciona un handler para una posible respuesta.
+	\item \textbf{Context}\footnote{\url{https://github.com/vietj/vertx-materials/blob/master/src/main/asciidoc/Demystifying_the_event_loop.adoc}}: se encarga de controlar un ámbito concreto de la aplicación, además del orden en el que los callbacks/handlers son ejecutados. Vertx dispone de 3 tipos diferentes de contexts:
+	\begin{itemize}
+		\item Event-loop: ejecuta los handlers de forma que un mismo handler es ejecutado únicamente en un Thread y este no debe ser bloqueante de ninguna manera (uso de herramientas de bloqueo condicional, llamadas a bases de datos, ejecuciones del sistema largas, etc?). Este modelo no es dependiente la sincronización y dota a Vertx, junto al EventBus de su reactividad, además de su carácter no bloqueante. Es el context usado por defecto.
+		\item Worker: contexto ligado a los verticles, que siguen asegurando que se ejecutan en un solo Thread, pero permiten su bloqueo.
+		\item Multi-Thread Worker: Permite la ejecución de un verticle en diferentes threads, de forma que pueda realizar las tareas de forma concurrente, delegando en el desarrollador la responsabilidad de asegurar la concurrencia y sincronización.
+		\item Además de los recursos mencionados, cuenta con una extensa API que abarca desde múltiples herramientas de testing hasta servidores y clientes de TCP/SSL, HTTP/HTTPS y WebSockets, cobrando estos últimos especial importancia de cara al desarrollo de la aplicación.
+	\end{itemize}
+\end{itemize}
+
+\subsection{SpringBoot}
+\label{subsec:springboot}
+
+\begin{center}
+	\includegraphics[scale=0.7]{img/logos/springboot-logo.png}
+\end{center}
+
+Spring Boot\footnote{\url{http://projects.spring.io/spring-boot/}} comprende un módulo de Spring\footnote{\url{https://spring.io/}} (un framework para el desarrollo de aplicaciones web) que provee de todo lo necesario para crear una aplicación con un mínimo de configuración lista para lanzar. Spring Boot proporciona:
+
+\begin{itemize}  
+	\item Una experiencia de iniciación muy rápida
+
+	\item Prototipos extensibles para la mayoría de problemas que podamos tener
+
+	\item Características no funcionales comunes a la mayoría de proyectos (servidores integrados, seguridad, métricas, comprobaciones de estado, configuración externalizada).
+\end{itemize}
+
+Además, cuenta con el Sistema de Inversión de Control de Spring\footnote{\url{https://en.wikipedia.org/wiki/Inversion_of_control}}\footnote{\url{https://docs.spring.io/spring/docs/current/spring-framework-reference/html/beans.html}}, que permite la configuración de los componentes de la aplicación, mientras que la administración del ciclo de vida de los objetos se lleva a cabo a través de la inyección de dependencias\footnote{\url{https://en.wikipedia.org/wiki/Dependency_injection}} (que a su vez es una forma de inversión de control).
+
+La versión utilizada de Spring para este proyecto es la 1.4.3
+
+\clearpage
+
+\subsection{RabbitMQ}
+\label{subsec:rabbitmq}
+
+\begin{center}
+	\includegraphics[scale=0.3]{img/logos/rabbitmq-logo.png}
+\end{center}
+
+RabbitMQ\footnote{\url{https://www.rabbitmq.com/}} es un software de mensajería de código abierto escrito en Erlang\footnote{\url{https://www.erlang.org/}} que implementa el protocolo de cola de mensajes avanzados (AMQP\footnote{\url{https://es.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol}}), además de otros protocolos que ha ido añadiendo  cómo STOMP\footnote{\url{https://en.wikipedia.org/wiki/Streaming_Text_Oriented_Messaging_Protocol}} y MQTT\footnote{\url{https://en.wikipedia.org/wiki/MQTT}}. Para este proyecto usaremos la versión 3.5.7.
+
+Entre las caracteristicas mas relevantes que encontramos en esta tecnología, que comparte con otras tecnologías de colas de mensajes, encontramos:
+
+\begin{itemize}  
+	\item \textbf{Garantía de entrega y orden}: los mensajes se consumen en el mismo orden que se llegaron a la cola y son consumidos una única vez.
+	\item \textbf{Redundancia}: Las colas mantienen los mensajes hasta que son procesados por completo.
+	\item \textbf{Desacoplamiento}: al actuar cómo un middleware, siendo una capa intermedia de comunicación entre procesos, aportan la flexibilidad en la definición de arquitectura de cada uno de ellos de manera separada, siempre que se mantenga una interfaz común.
+	\item \textbf{Escalabilidad}: con más unidades de procesamiento, las colas balancean su respectiva carga.
+\end{itemize}
+
+Al contrario que Vert.x o Akka, RabbitMQ es un servicio externo (pudiendo estar o no en la misma máquina dónde se ejecute nuestra aplicación). Para hacer uso de este middleware será necesario un cliente que interactúe con él.
+
+\subsection{HA PROXY}
+\label{subsec:haproxy}
+
+\begin{center}
+	\includegraphics[scale=0.5]{img/logos/haproxy-logo.png}
+\end{center}
+
+HAProxy es una solución gratuita, muy rápida y confiable que ofrece alta disponibilidad, balanceo de carga y proxying para aplicaciones TCP y HTTP. Es especialmente adecuado para sitios web de mucho tráfico. Está escrito en C y tiene la reputación de ser rápido y eficiente en términos de uso del procesador y consumo de memoria. Con el paso de los años, se ha convertido en el estándar de facto del balanceador de carga opensource, ahora se incluye con la mayoría de las distribuciones de Linux, y a menudo se implementa de manera predeterminada en las plataformas en la nube.
+
+\subsection{Angular}
+\label{subsec:angular}
+
+\begin{center}
+	\includegraphics[scale=0.1]{img/logos/angular-logo.png}
+\end{center}
+
+Angular\footnote{\url{https://angular.io/}} es un framework de JavaScript (aunque comúnmente se utiliza con Typescript\footnote{\url{https://www.typescriptlang.org/}}, un superconjunto de Javascript) de código abierto desarrollado por Google. Nos permite desarrollar SPAs (Single Page Applications), que siguiendo el MVC (modelo-vista-controlador), facilitan la presentación y manipulación de los datos en el lado cliente (frontend), reduciendo la carga lógica del lado servidor (backend). La versión utilizada para este proyecto es la 5.2.
+
+Entre sus características, destacamos:
+
+\begin{itemize}  
+	\item La extensión del html mediante etiquetas y sintaxis propia.
+	\item Inyección de dependencias
+	\item Una numerosa comunidad y una extensa documentación
+\end{itemize}
+
+
+
+Utilizaremos Angular para ofrecer un cliente web en el que mostrar los resultados del experimento.
+
+
 \section{Herramientas}
 
+\subsection{Control de versiones: Git}
+\label{subsec:git}
+
+\begin{center}
+	\includegraphics[scale=0.15]{img/logos/git-logo.png}
+\end{center}
+
+Git\footnote{\url{https://git-scm.com/}} es un software de control de versiones diseñado por Linus Torvalds, pensando en la eficiencia y la confiabilidad del mantenimiento de versiones de aplicaciones cuando éstas tienen un gran número de archivos de código fuente.
+
+Para el desarrollo de este proyecto hemos usado GitHub\footnote{\url{https://github.com}}, una plataforma de desarrollo colaborativa para alojar proyectos Git.
+
+A pesar de su integración con diversos entornos de desarrollo, se ha optado por su versión de línea de comandos.
+
+\subsection{Gestores de dependencias}
+\label{subsec:getsores_dependencias}
+
+Debido a la pluralidad de tecnologías, hemos utilizado distintos gestores de dependencias:
+
+
+\subsubsection{Maven}
+
+\begin{center}
+	\includegraphics[scale=0.5]{img/logos/maven-logo.png}
+\end{center}
+
+
+Maven\footnote{\url{https://maven.apache.org/}} es una herramienta de software para la gestión y construcción de proyectos Java creada por Jason van Zyl. Hace uso de un POM (Project Object Model), un archivo XML que describe las dependencias y permite añadir opciones de ejecución, test y desplegamiento de la aplicación.
+
+Se ha utilizado para configurar los proyectos en Vert.x y Spring Boot.
+
+\subsubsection{SBT}
+
+\begin{center}
+	\includegraphics[scale=0.4]{img/logos/sbt-logo.png}
+\end{center}
+
+
+SBT\footnote{\url{http://www.scala-sbt.org/}} es una herramienta de software para construcción de proyectos en Scala y estándar para contruir aplicaciones en Play Framework, similar a Maven o Ant (propios de Java). Entre sus características, permite el uso conjunto de Java y Scala en el mismo proyecto. Su archivo de configuración es un.stb, que dispone dispone de sintaxis propia.
+
+Se ha utilizado para configurar el proyecto de Akka.
+
+\subsection{AWS}
+\label{subsec:aws}
+
+\begin{center}
+	\includegraphics[scale=0.05]{img/logos/aws-logo.png}
+\end{center}
+
+Amazon Web Services\footnote{\url{https://aws.amazon.com}} (AWS) es una plataforma de servicios de nube que ofrece potencia de cómputo, almacenamiento de bases de datos, entrega de contenido y otras funcionalidades.
+
+Concretamente se ha utilizado su servicio EC2\footnote{\url{https://aws.amazon.com/es/ec2}}, que nos permite lanzar instancias que contengan nuetras aplicaciones en la nube. Para este proyecto se ha hecho uso de la capa gratuita.
+
+Para hacer uso de esta plataforma, se ha utilizado su interfaz mediante línea de comandos\footnote{\url{https://aws.amazon.com/es/cli}}.
+
+
+\subsection{Entornos de desarrollo}
+\label{subsec:entornos}
+
+\subsubsection{IntelliJ}
+
+\begin{center}
+	\includegraphics[scale=0.6]{img/logos/intellij-logo.png}
+\end{center}
+
+IntelliJ\footnote{\url{https://www.jetbrains.com/idea/} }es un IDE para Java desarollado por JetBrains ideado para mejorar la productividad del programador. Entre sus características incluye:
+
+\begin{itemize}  
+	\item Soporte para los lenguajes basados en la JVM (Java, Scala, Groovy y Kotlin)
+	\item Soporte para diferentes frameworks basados en estos lenguajes (Spring, Play, JavaEE\dots)
+	\item Control de versiones
+	\item Asistencia al escribir código y autocompletar
+	\item Soporte para programar en web (HTML, CSS y Javascript)
+\end{itemize}
+
+Se ha utilizado este IDE para desarrollar los distintos servidores de chat, ya que todos ellos están basados en Java.
+
+\subsubsection{Atom}
+
+\begin{center}
+	\includegraphics[scale=0.4]{img/logos/atom-logo.jpg}
+\end{center}
+
+Atom\footnote{\url{https://atom.io/}} es un editor de texto sencillo, ligero y extensible creado por Github. Cuenta con una gran librería de paquetes aportados por la comunidad para facilitar el desarrollo software. Por defecto, no cuenta con ningún tipo de compilador o intérprete.
+
+Se ha utilizado de forma conjunta con IntelliJ para desarrollar la aplicación de pruebas, ya que cuenta con paquetes que nos ayudan a desarrollar aplicaciones en Angular y soporte para Typescript.
+
+
 \section{Metodologías}
+
+El modelo de desarrollo de este proyecto se ha llevado a cabo a través de TDD\footnote{\url{https://es.wikipedia.org/wiki/Desarrollo_guiado_por_pruebas}}(Test-driven Development, o en español, desarrollo guiado por pruebas), una práctica de Ingeniería del Software cuya principal idea es hacer que los requistos sean traducidos a pruebas.
+
+Las razones que han llevado a utilizar un ciclo de desarrollo conducido por pruebas son:
+
+\begin{itemize}  
+	\item La naturaleza intrínseca del proyecto, distintas aplicaciones cuyo funcionamiento debe ser el mismo y por tanto comparten requisitos.
+	\item La herencia de un proyecto, que proporcionaba dichas pruebas de integración necesarias para validar cualquier aplicación.
+\end{itemize}
+
+\begin{center}
+	\includegraphics[scale=1.2]{img/tdd.png}
+\end{center}
+
+Por lo tanto, para cada aplicación que implementásemos, debíamos desarrollarla de acuerdo a las pruebas, de forma que una vez las pasasen, solo debíamos refactorizar la aplicación para mejorar su rendimiento y mantenibilidad.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 		 4. Descripción informática           %
