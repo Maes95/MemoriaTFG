@@ -23,6 +23,17 @@
 \definecolor{darkgray}{rgb}{.4,.4,.4}
 \definecolor{purple}{rgb}{0.65, 0.12, 0.82}
 
+\lstdefinelanguage{Bash}{
+	sensitive=false
+}
+
+\lstset
+{
+	language = Bash,
+	literate = {\$\#}{{{\$\#}}}2 {\$\# }{{{\$\# }}}2,
+	columns  = fullflexible
+}
+
 \lstdefinelanguage{JavaScript}{
 	keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
 	keywordstyle=\color{blue-violet}\bfseries,
@@ -200,6 +211,12 @@ Las tecnologías que compararemos en este proyecto serán:
 \chapter{Tecnologías, Herramientas y Metodologías}
 \label{sec:tecnologias} 
 
+De la multitud de lenguajes de programación que existen válidos para afrontar el desarrollo de un servidor basado en WebSocket nuestra primera opción ha sido seleccionar Java, que dispone de múltiples librerías interesantes para abordar el problema además de ser uno de los lenguajes de programación más extendidos, populares y con una amplia comunidad, como demuestra el informe TIOBE.
+
+\begin{center}
+	\includegraphics[scale=0.5]{img/tiobe.png}
+\end{center}
+
 \section{Tecnologías}
 
 \subsection{Websockets}
@@ -212,8 +229,6 @@ Las tecnologías que compararemos en este proyecto serán:
 RFC 6455\footnote{\url{https://tools.ietf.org/html/rfc6455}} define WebSocket como un protocolo que proporciona un canal de comunicación bidireccional y full-dúplex sobre un único socket TCP. Aunque inicialmente estaba pensado para cualquier tipo de comunicaciones entre el navegador y el servidor web, puede usarse también para aplicaciones cliente/servidor.
 
 Por otro lado, W3C se encarga de normalizar la API\footnote{\url{https://www.w3.org/TR/2011/WD-websockets-20110929}} de WebSocket. Define una interfaz para el navegador compuesta por 4 métodos que corresponden a manejadores o gestores (\textsl{handlers}) para cada evento. 
-
-\clearpage
 
 Podemos ver un ejemplo de estos manejadores en el código mostrado a continuación (Javascript en el navegador).
 
@@ -251,7 +266,7 @@ Akka\footnote{\url{http://akka.io/}} es un toolkit para crear aplicaciones concu
 
 
 \begin{itemize}  
-	\item \textbf{Tolerancia a fallos}: Akka adopta el modelo de ?let it crash? que ha resultado un gran éxito en la industria de la telecomunicación.
+	\item \textbf{Tolerancia a fallos}: Akka adopta el modelo de \textit{let it crash} que ha resultado un gran éxito en la industria de la telecomunicación.
 	\item \textbf{Transparencia de localización}: todo en Akka está diseñado para trabajar en un entorno distribuido: todas las comunicaciones son mediante paso de mensajes y todo es asíncrono
 	\item \textbf{Persistencia}: Los mensajes recibidos por el actor pueden conservarse y ser reproducidos al iniciar o reiniciar el actor, por lo que se puede conservar el estado de los actores después de un fallo o al migrarlos a otro nodo.
 \end{itemize}
@@ -339,6 +354,23 @@ Entre las caracteristicas mas relevantes que encontramos en esta tecnología, que
 \end{itemize}
 
 Al contrario que Vert.x o Akka, RabbitMQ es un servicio externo (pudiendo estar o no en la misma máquina dónde se ejecute nuestra aplicación). Para hacer uso de este middleware será necesario un cliente que interactúe con él.
+
+Los conceptos principales para entender RabbitMQ son:
+
+\begin{itemize}  
+	\item \textbf{Exchange}: punto de entrada de los mensajes. Pueden ser:
+	\begin{itemize}
+	 \item \textit{Direct} entrega un mensaje a una sola cola, \item \textit{Fanout} entrega copias del mensaje a todas las colas
+	 \item \textit{Topic}: entrega copias del mensaje sólo a algunas colas.
+	\end{itemize}
+	\item \textbf{Queue}: punto de lectura de los mensajes. Pueden ser durable o persistentes (si almacenan los mensajes para sobrevivir a un reinicio de RabbitMQ). También pueden ser exclusivas, si sólo un consumidor puede estar conectado a la vez.
+	\item \textbf{Bindings}: definen cómo llegar de un \textit{Exchange} a las \textit{Queue} asociadas.
+	
+	\item \textbf{Routing key o topic}: filtro asociado a un Binging que permite seleccionar sólo algunos mensajes para dicho binding.
+	
+	\item \textbf{Productor}: programa que escribe en un Exchange
+	\item \textbf{Consumidor}: programa que escucha en una Queue
+\end{itemize}
 
 \subsection{HA PROXY}
 \label{subsec:haproxy}
@@ -485,9 +517,9 @@ Por lo tanto, para cada aplicación que implementásemos, debíamos desarrollarla d
 \chapter{Descripción informática}
 \label{sec:descripcion}
 
-En este apartado se abordará la construcción del proyecto. Todo el proyecto (que incluye tanto las aplicaciones de chat como el cliente de pruebas, pueden encontrarse como repositorios en la siguiente organización de GitHub:
+En este apartado se abordará la construcción del proyecto. Todo el proyecto (que incluye tanto las aplicaciones de chat como el cliente de pruebas, pueden encontrarse como repositorios en la organización de GitHub: \textit{TFG-DistributedWebChat}\footnote{\url{https://github.com/TFG-DistributedWebChat}}.
 
-\url{https://github.com/TFG-DistributedWebChat}
+
 
 El proyecto realizado consta de 3 aplicaciones de chat y un cliente de pruebas. Las aplicaciones construidas y que entran a formar parte de la comparativa son:
 
@@ -542,9 +574,7 @@ Una vez se ha establecido la conexión y se ha mandado el mensaje de inicializaci
 	}
 \end{lstlisting}
 
-Este mensaje debe ser reenviado por la aplicación a todos los usuarios cuya sala de chat sea la misma que la del mensaje.
-
-No debe confundirse un mensaje de chat con un mensaje de conexión, la forma de diferenciarlos es por la existencia o no de la clave \textit{message} en el JSON.
+Este mensaje debe ser reenviado por la aplicación a todos los usuarios cuya sala de chat sea la misma que la del mensaje\footnote{No debe confundirse un mensaje de chat con un mensaje de conexión, la forma de diferenciarlos es por la existencia o no de la clave \textit{message} en el JSON.}.
 
 \textbf{Desconexión}
 
@@ -576,7 +606,364 @@ Dado el carácter comparativo que posee el proyecto, nos centraremos en los requi
 
 \section{Diseño e Implementación}
 
+El proyecto seguirá la arquitectura planteada en la siguiente figura:
+
+\begin{center}
+	\includegraphics[scale=0.7]{img/diagrams/design.png}
+\end{center}
+
+Al iniciar el experimento (una vez desplegados los nodos de la aplicación en clúster), el cliente abrirá varias conexiones WebSocket con el servidor, simulando varios usuarios, enviando mensajes a través de ellas y recogiendo diversas métricas. Estas métricas serán enviadas a través de WebSocket a una aplicación web en el navegador, que mostrará dichas métricas mediante el uso de gráficas en tiempo real. Las métricas podrán ser descargadas desde el navegador en formato JSON.
+
+Los nodos del diagrama deberá poder ser cualquiera de las aplicaciones participantes en la comparativa (cuentan con los mismos requisitos), de forma que el cliente pueda interactuar con ellos independientemente de la implementación que posean.
+
+A continuación, se expondrá el diseño e implementación de cada aplicación construida, así como un acceso a su código fuente. La infraestructura necesaria para desplegar cualquier aplicación esta definida en el apéndice A de este documento.
+
+\subsection{Akka}
+
+El código de esta aplicación se puede encontrar en un repositorio en GitHub de la organización antes mencionada bajo en nombre de \textit{Akka-DistributedWebChat}\footnote{\url{https://github.com/TFG-DistributedWebChat/Akka-DistributedWebChat}}
+
+\textbf{Diseño y arquitectura}
+
+\begin{center}
+	\includegraphics[scale=0.5]{img/diagrams/Akka-Diagram.png}
+\end{center}
+
+La aplicación de Akka, tal y cómo vemos en la figura hace uso del patron Publicar-Subscribir\footnote{\url{https://en.wikipedia.org/wiki/Publish-subscribe_pattern}}, permitiendo que el actor \textit{User} sea capaz de interactura con otros de su mismo tipo incluso aunque se encuentren en otra máquina distinta bajo un topic que será en nombre de su sala de chat. Este actor es capaz de:
+\begin{itemize}  
+	\item Publicar nuevos mensajes que lleguen del cliente bajo un topic al resto de usuarios de la sala.
+	\item Recibir (mediante subscripción) mensajes de un topic y enviarselos al cliente.
+\end{itemize}
+
+
+\textbf{Funcionamiento}
+
+\begin{itemize}  
+	\item \textbf{Conexión}: Cuando un cliente abre la conexión, Play ejecuta el siguiente método:
+	
+	\begin{lstlisting}[language=Java]
+	// /app/controllers/Application.java
+	public WebSocket<String> socket() {
+		return WebSocket.withActor(User::props);
+	}
+	\end{lstlisting}
+	
+	La llamada al método estático props devuelve un nuevo actor User al que asigna la conexión WebSocket establecida que representa al cliente, tal y como se muestra en el código a continuación:
+	
+	\begin{lstlisting}[language=Java]
+	// /app/actors/User.java
+	public static Props props(ActorRef out) {
+		return Props.create(User.class, out);
+	}
+	\end{lstlisting}
+	
+	Al crearse el actor, también se le asigna una referencia a un mediador, que gestionará nuestras peticiones de publicar y subscribirnos a mensajes.
+	
+	\begin{lstlisting}[language=Java]
+	// /app/actors/User.java
+	this.mediator = DistributedPubSub
+		.get(getContext().system())
+		.mediator();
+	\end{lstlisting}
+	
+	Una vez creado el actor, es capaz de recibir mensajes y estos serán tratados mediante las reglas que hayamos definido en su método \textit{createReceive()}. Este método diferenciará entre mensajes que lleguen de la clase \textit{String} (llegan del cliente) o de la clase \textit{Message} (llegan del mediador.)
+	
+	\begin{lstlisting}[language=Java]
+	// /app/actors/User.java
+	@Override
+	public Receive createReceive() {
+		return receiveBuilder()
+		.match(String.class, message -> { /* FROM CLIENT */ })
+		.match(Message.class, message -> { /* FROM OTHER USERS */ })
+	}
+	\end{lstlisting}
+	
+	El primer mensaje del cliente (el de conexión) provoca la subscripción de dicho usuario a la sala de chat que ha definido:
+	
+	\begin{lstlisting}[language=Java]
+	// /app/actors/User.java
+	this.mediator.tell(
+		new DistributedPubSubMediator
+			.Subscribe(this.chatName, getSelf()),
+		getSelf()
+	);
+	\end{lstlisting}
+	
+	De forma previa a esta subscripción, se válida que el nombre del usuario no está repetido. De ser así, el actor se \textit{suicida} (mandandose una \textit{PoisonPill} a sí mismo) y cierra la conexión con el cliente:
+	
+	\begin{lstlisting}[language=Java]
+	// /app/actors/User.java
+	self().tell(PoisonPill.getInstance(), self());
+	\end{lstlisting}
+	
+	\item \textbf{Re-envío de mensajes}: Cómo hemos definido antes, la entidad \textit{User} recibe dos tipos de mensajes:
+	
+	\begin{itemize}  
+		\item Los mensajes del cliente (\textit{String}) el cual llega através del Websocket. Este se publica haciendo uso del mediador para distribuirlo al resto de usuarios en la sala de chat:
+		
+		\begin{lstlisting}[language=Java]
+		// /app/actors/User.java
+		mediator.tell(
+			new DistributedPubSubMediator
+				.Publish(this.chatName, message),
+			getSelf()
+		);
+		\end{lstlisting}
+		
+		
+		\item Los mensajes de otros usuarios (\textit{Message)}  son directamente re-enviados al cliente por Websocket (usando el actor que representa esta conexión):
+
+		\begin{lstlisting}[language=Java]
+		// /app/actors/User.java
+		out.tell(message.getJson().toString(), self());
+		\end{lstlisting}
+		
+	\end{itemize}
+	
+	\item \textbf{Desconexión}: Cuando el usuario cierra la conexión WebSocket, se ejecuta el método postStop() del User correspondiente, que se encarga de dar de baja al usuario de su sala de chat.
+	
+	\begin{lstlisting}[language=Java]
+	// /app/actors/User.java
+	mediator.tell(
+		new DistributedPubSubMediator
+			.Unsubscribe(this.chatName, getSelf()),
+		getSelf()
+	);
+	\end{lstlisting}
+	
+	
+	
+\end{itemize}
+
+\pagebreak
+
+\textbf{Despliegue en clúster}
+
+La entidad mediadora (\textit{mediator}) es la que nos proporciona la capacidad de comunicarnos con usuarios de otros nodos situados en otras máquinas. Akka junto al framework Play nos abstrae  de la lógica necesaria para esta comunicación, pero debemos declarar uno o varios \textit{seed-nodes} en el archivo \textit{/conf/application.conf} para crear nuestro clúster. Estos \textit{seed-nodes} ó nodos semilla en español identifican a una aplicación ya lanzada a la que una nueva aplicación puede unirse para formar un clúster.
+
+\begin{lstlisting}
+// /conf/application.conf
+cluster {
+	seed-nodes = [
+		"akka.tcp://application@127.0.0.1:8000"
+	]
+}
+\end{lstlisting}
+
+El uso de \textit{seed-nodes} nos garantiza que al arrancar una nueva máquina con un nuevo nodo no se formarán islas en el clúster (nodos sin ninguna conexión con el resto).
+
+Para desplegar 2 ó más nodos en AWS basta con lanzar una máquina (sin necesidad de declarar \textit{seed-nodes}) y obtener su dirección IP (privada). Los siguientes nodos deberán contener esta dirección entre sus \textit{seed-nodes} o declararlo como semilla al lanzarlo.
+
+\begin{lstlisting}[language=bash]
+	./webchat-1.0/bin/webchat \
+	 	-Dakka.cluster.seed-nodes.0=akka.tcp://application@${SEED}:8000
+\end{lstlisting}
+
+Para facilitar el desplegado del clúster se facilita un script en python que automatiza todos los pasos necesarios. Para más detalles, consultar el fichero README.md\footnote{\url{https://github.com/TFG-DistributedWebChat/Akka-DistributedWebChat/blob/master/README.md}} del repositorio de Akka.
+
+\textbf{Problemas en el desarrollo}
+
+El mayor desafío era comprender cómo hacer evolucionar una aplicación monolítica a una distribuida. A partir de la documentación fué sencillo probar la aplicación haciendo uso de dos nodos en local, pero para desplegar estos nodos en AWS era necesario definir y abrir los puertos necesarios para que las máquinas pudieran comunicarse. Este despliegue require un gran número de pasos que dan lugar fácilmente a errores. La solución, tanto para Akka cómo para el resto de aplicaciones a este problema ser resolvió automatizando este despliegue, tal y cómo se ha comentado anteriormente.
+
+\subsection{Vertx}
+
+El código de esta aplicación se puede encontrar en un repositorio en GitHub de la organización antes mencionada bajo en nombre de \textit{Vertx-DistributedWebChat}\footnote{\url{https://github.com/TFG-DistributedWebChat/Vertx-DistributedWebChat}}
+
+\textbf{Diseño y arquitectura}
+
+\begin{center}
+	\includegraphics[scale=0.5]{img/diagrams/Vertx-Diagram.png}
+\end{center}
+
+En el caso de esta aplicación, el funcionamiento y la arquitectura de la aplicación es muy similar a la versión monolítica ya que lo único que se distribuye es el bus de eventos.
+
+La aplicación se compone de:
+\begin{itemize} 
+	\item Un \textit{ChatManager}, un Verticle que se ocupa de la recepción de mensajes por parte de los clientes, su posterior distribución y la gestión de los usuarios (creación y eliminación).
+
+	\item Varios \textit{User}, Verticles que representan a cada usuario de la aplicación, que se encargan de almacenar la conexión WebSocket con su cliente para enviarle mensajes.
+\end{itemize} 
+
+
+\textbf{Funcionamiento}
+
+\begin{itemize}  
+	\item \textbf{Conexión}: Cuando un usuario inicia la conexión WebSocket, al contrario de otras aplicaciones, no se realiza ninguna acción más que proporcionar un handler para los mensajes. Cuando el cliente manda el mensaje de conexión, si el nombre no existe, se crear un nuevo User y se incluye en el contexto de la aplicación, guardando su id de Verticle en un mapa cuya clave es el nombre, tal y cómo podemos apreciar en el código a continuación:
+	
+	\begin{lstlisting}[language=Java]
+	// /src/main/java/com/globex/app/ChatManager.java
+	vertx.deployVerticle(user, res -> {
+		if (res.succeeded()) {
+			//Save the deploymentID to later remove the verticle
+			users.put(name, res.result());
+		} else {
+			System.err.println("Error at deploy User");
+		}
+	});
+	\end{lstlisting}
+	
+	\item \textbf{Re-envío de mensajes}: El chat manager es el encargado de recibir los mensajes de los clientes, publicándolos en el EventBus con la dirección igual a la sala de chat.
+	
+	\begin{lstlisting}[language=Java]
+	// /src/main/java/com/globex/app/ChatManager.java
+	vertx.eventBus().publish(message.getString("chat"), message);
+	\end{lstlisting}
+	
+	Por otro lado, cuando un User es incluido en el contexto de la aplicación, se suscribe a su chat para recibir los mensajes dirigidos a esa sala y re-enviar a su cliente dichos mensajes. En el fragmento de código a continuación podemos apreciar esta subscripción y el callback que se ejecuta al recibir un mensaje:
+	
+	\begin{lstlisting}[language=Java]
+	// /src/main/java/com/globex/app/User.java
+	// Listen for messages from his chat
+	this.handler = vertx.eventBus().consumer(chat).handler(data -> {
+		try{
+			// Try to send the message
+			this.wss.writeFinalTextFrame(data.body().toString());
+		}catch(IllegalStateException e){
+			// The user is offline, so I delete it.
+			this.handler.unregister();
+			vertx.eventBus().publish("delete.user", name);
+			wss.close();
+		} 
+	});
+	\end{lstlisting}
+
+	\item \textbf{Desconexión}: Se produce cuando User no es capaz de enviar un mensaje a su cliente. Publica su borrado en el EventBus y cierra la conexión. El evento de borrado es capturado por el ChatManager, que da de baja al User.
+
+	\begin{lstlisting}[language=Java]
+		// /src/main/java/com/globex/app/ChatManager.java
+		vertx.undeploy(users.get(user_name));
+		users.remove(user_name);
+	\end{lstlisting}
+	
+	
+\end{itemize}
+
+\textbf{Despliegue en clúster}
+
+La entidad de esta tecnología que nos permite distribuir el envío de mensajes es el \textit{Event Bus} o bus de eventos. Este recurso puede utilizarse tanto en local cómo en distribuido de forma análoga. Para distribuirse, hace uso de Hazelcast\footnote{\url{https://hazelcast.com/}} y es necesario declarar almenos un nodo semilla (al igual que Akka) aunque también permite definir una interfaz de red bajo la que descubrir los nodos. Para este proyecto hemos usado la primera opción para descubrir el nodo semilla mediante TCP simplemente añadiendo la dirección de un nodo (previamente lanzado en otra máquina) en el archivo de configuración \textit{cluster.xml}:
+
+\begin{lstlisting}[language=XML]
+<tcp-ip enabled="true">
+	<interface>172.31.34.96</interface>
+</tcp-ip>
+\end{lstlisting}
+
+Es posible configurar Hazelcast para que trabaje junto a un security group de AWS, pero resulta bastante más compleja.
+
+Para desplegar el clúster se ha hecho uso de nuevo de un script en python que automatiza todos los pasos necesarios. Para más detalles, consultar el fichero README.md\footnote{\url{https://github.com/TFG-DistributedWebChat/Vertx-DistributedWebChat/blob/master/README.md}} del repositorio de Vertx.
+
+\textbf{Problemas en el desarrollo}
+
+Sin duda el mayor reto fué comprender cómo funciona Hazelcast a nivel de TCP-IP y que requiere de la IP privada y no la pública (otra tecnología que veremos más adelante, RabbitMQ, es capaz de resolver incluso a partir de DNS) lo que dió lugar a bastantes problemas ya que la documentación para clúster era bastante pobre y los ejemplos no proporcionaban la guía necesaria para hacer un uso correcto de esta funcionalidad.
+
+De forma adicional, Vert.x arrastraba del proyecto anterior un grave problema de memoria, siendo la tecnología que más uso hacia de este recurso. Tras trabajar con RabbitMQ (que también sufria de problemas similares y se hayó el problema) se llegó a la conclusión de que probablemente algun recurso registrado en el EventBus no estaba siendo liberado (pensando que simplemente con expulsar al actor del sistema, se borraba cualquier referencia). Finalmente se detecto que recurso era: un manejador (\textit{handler}) que el usuario registraba para poder subscribirse a los mensajes de un chat. Para darle de baja solo era necesario guardar una referencia a este manejador y liberarlo cuando se cerrase la conexión Websocket:
+
+\begin{lstlisting}[language=Java]
+	this.handler.unregister();
+\end{lstlisting}
+
+
+\subsection{Spring + RabbitMQ}
+
+El código de esta aplicación se puede encontrar en un repositorio en GitHub de la organización antes mencionada bajo en nombre de \textit{SpringBoot-RabbitMQ-DistributedWebChat}\footnote{\url{https://github.com/TFG-DistributedWebChat/SpringBoot-RabbitMQ-DistributedWebChat}}
+
+\textbf{Diseño y arquitectura}
+
+\begin{center}
+	\includegraphics[scale=0.6]{img/diagrams/Spring-Diagram.png}
+\end{center}
+
+Cómo podemos apreciar, parte de la lógica del sistema se encuentra fuera de la aplicación de Java, en el servidor de RabbitMQ, será necesario por tanto una libreria/cliente AMQP para poder conectarnos a dicho servidor.
+
+Utilizaremos una cola para cada usuario y un único \textit{Exchange} para todo el sistema. De esta forma, los usuarios comunicarán al \textit{Exchange} sus mensajes y este se encargará de hacerlos llegar a las colas de los usuarios en su misma sala.
+
+La aplicación de Spring hace uso de la anotación @ServerEndpoint sobre la clase User, que convierte a dicha clase en un punto de entrada para la conexión WebSocket. Permite a la clase implementar métodos bajo las anotaciones:
+
+\begin{itemize}
+
+\item \textbf{@OnOpen}: Se ejecuta cuando el usuario establece la conexión
+
+\item \textbf{@OnMessage}: Se ejecuta cada vez que el usuario manda un mensaje
+
+\item \textbf{@OnClose}: Se ejecuta cuando la conexión WebSocket se cierra
+
+\item \textbf{@OnError}: Se ejecuta cada vez que sucede un error en la conexión, capturándolo
+
+\end{itemize}
+
+Estas anotaciones permiten tener un control sencillo del flujo de la aplicación y de los eventos que requiere.
+
+Cada vez que un cliente se conecta, se crea una instancia de User que se encargará de recoger los eventos de ese usuario en concreto. Esto es posible gracias a SpringBoot, que se encarga de servir esta clase como un componente reutilizable bajo la anotación \textit{@Bean} en WebChatSpringBootApplication (que actúa como archivo de configuración):
+
+\begin{lstlisting}[language=Java]
+	// /src/main/java/com/chat/WebChatSpringBootApplication.java
+	@Bean
+	public ChatManager reverseWebSocketEndpoint() {
+		return new User();
+	}
+\end{lstlisting} 
+
+Todas las anotaciones utilizadas pertenecen a la librería WebSocket de Java\footnote{\url{https://mvnrepository.com/artifact/javax.websocket/javax.websocket-ap}}.
+
+La clase \textit{User} implementa tambien la interfaz (a partir de una clase intermedia, \textit{UserConsumer}) \textit{Consumer}, que le permite ser subscriptor a una cola de RabbitMQ.
+
+Por otro lado, cada aplicación/nodo cuenta con un ChatManager, una clase que implementa el patron \textit{Singleton}\footnote{\url{https://es.wikipedia.org/wiki/Singleton}} y a la que los User tienen acceso. Esta clase permite a un User:
+
+\begin{itemize}
+	\item Darse de alta en el registro de usuarios (comprobando previamente si existe el nombre).
+	\item Subscribirse a un topic (nombre de la sala de chat). El Chat Manager se encarga de crear la conexión.
+\end{itemize}
+
+\textbf{Funcionamiento}
+
+\begin{itemize}
+	\item \textbf{Conexión}: Al iniciarse la conexión, se crea un objeto de la clase \textit{User} que manejara dicha conexión. Se ejecutará el método \textit{@OnOpen}, que obtiene una referencia al \textit{ChatManager}. El mensaje de conexión, en cambio, es capturado por el método bajo la anotación \textit{@OnMessage}, que tras validar que el usuario asociado a esa sesión no tiene aún atributos como ?name? o ?chat?, comprueba que el nombre sea único y se los asigna. Se informa al \textit{ChatManager} para que se le incluya y le subscriba a su sala de chat, asignandole al \textit{User} su conexión con el \textit{Exchange}.
+	
+	\item \textbf{Re-envío de mensajes}: Un \textit{User} recibirá mensajes de dos formas:
+	\begin{itemize}
+		\item Un nuevo mensaje del cliente llega desde el WebSocket y ejecuta el método bajo la anotación \textit{@OnMessage}. Este mensaje será enviado al \textit{Exchange}, que se ocupará de distribuir dicho mensaje a todas las colas de otros usuarios, siendo el topic de este envío su sala de chat.
+\begin{lstlisting}[language=Java]
+this.channel.basicPublish(EXCHANGE_NAME, chat, null, message.getBytes());
+\end{lstlisting} 
+		\item Un nuevo mensaje procedente de su cola y que recoge en el metodo \textit{sent()} que lo envía directamente por WebSocket al cliente.
+\begin{lstlisting}[language=Java]
+session.getBasicRemote().sendText(message);
+\end{lstlisting} 
+	\end{itemize}
+	\item \textbf{Desconexión}: Cúando un cliente se desconecta (se cierra su conexión Websocket), se ejecuta el método bajo la anotación \textit{@OnClose}, que cierra la conexión con RabbitMQ de ese usuario e informa al \textit{ChatManager} para que le elimine del registro.
+\end{itemize}
+
+\textbf{Despliegue en clúster}
+
+En este caso, la aplicación de Spring no se distribuye, si no que es el servicio externo, RabbitMQ, el que lo hará. Los pasos para formar un clúster RabbitMQ son algo más complejos que en el resto de aplicaciones:
+
+\begin{itemize}
+	\item Arrancar el servicio RabbitMQ en ambas máquinas, deben estar en la misma versión y compartir una clave denominada \textit{erlang-cookie} (un archivo de configuración).
+	\item Detener RabbitMQ en una de las máquinas, ejecutar:
+	\begin{lstlisting}[language=Bash]
+	rabbitmqctl join_cluster rabbit@ip-${MASTER-IP}
+	\end{lstlisting} 
+	siendo MASTER-IP la IP de la máquina que no hemos detenido. Arrancamos de nuevo RabbitMQ y ya se habrá formado el clúster
+\end{itemize}
+
+RabbitMQ permite usar plugins de mucha utilidad. Para esta aplicación ha sido de especial interés el plugin \textit{rabbitmq-management} que nos permite acceder desde el navegador a diferentes métricas de nuestro clúster: número de colas, conexiones, exnchanges, además del uso de memoria.
+
+Una vez nuestro clúster esta desplegado, basta con lanzar nuestra aplicación de Spring en cada máquina.
+
+
+\textbf{Problemas en el desarrollo}
+
+En contraste a las otras tecnologías que son toolkits completos, con RabbitMQ y Spring nos encontramos el problema de lidiar con un servicio externo. La mayor dificultad de esta aplicación fué distribuir los nodos de RabbitMQ, comprender la importancia de la \textit{erlang-cookie} y manejar la unión de nodos, que si no se seguian los pasos en un orden concreto, era imposible de realizar. Aunque la documentación oficial es muy completa, si duda ha sido gracias a la comunidad y a la lectura de numerosos ejemplos de terceros lo que ha hecho posible la comprensión de este proceso.
+
+Otro problema que surgió a raiz de un desconocimiento de la gestión de recursos del cliente AMQP fué el no cerrar apropiadamente las conexiones de los usuarios. Esto provocaba un aumento constante de la memoria RAM utilizada por la máquina, que para las pruebas más exigentes provocaba la parada del servicio. Gracias al plugin antes mencionado, se pudo monitorizar los nodos para detectar este problema, haciendo los cambios pertinentes con resultados satisfactorios.
+
 \section{Pruebas}
+
+Las aplicaciones desarrolladas carecen de pruebas unitarias o de integración propias, comparten un cliente común capaz de probarlas de forma completa y distribuida.
+
+A lo largo de este apartado hablaremos de este cliente, su implementación y de sus características.
+
+El código de esta aplicación se puede encontrar en un repositorio en GitHub de la organización antes mencionada bajo en nombre de \textit{DistributedWebChatClient}\footnote{\url{https://github.com/TFG-DistributedWebChat/DistributedWebChatClient}}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 		   5. Estudio comparativo             %
@@ -614,8 +1001,58 @@ Mis conclusiones
 
 \cleardoublepage
 \appendix
-\chapter{Manual de usuario}
-\label{app:manual}
+\chapter{Despliegue de instancias en AWS}
+\label{appendix1}
 
+Para desplegar las instancias necesarias que usaremos indistintamente para cualquier tecnología necesitaremos cumplir los siguientes requisitos:
+
+\begin{itemize}  
+	\item Disponer de una cuenta en AWS (se recomienda que tenga en vigencia el año de capa gratuita para evitar costes)
+	\item Tener instalada la interfaz de línea de comandos de AWS (aws-shell)
+\end{itemize}
+
+Una vez cumplimos los requisitos, será necesario crear un grupo de seguridad para nuestras instancias al que llamaremos \textit{Cluster}.
+
+A continuación se muestra cómo crear un \textit{SecurityGroup} mediante aws-shell, dónde \textit{security-group-id} será el id devuelto por el primer comando.
+
+\begin{lstlisting}
+	aws ec2 create-security-group \
+		--group-name Cluster \
+		--description "My security group"
+		
+	aws ec2 authorize-security-group-ingress  \
+		--group-id security-group-id \
+		--protocol -1 --cidr 0.0.0.0/0
+	
+	aws ec2 authorize-security-group-ingress \
+		--group-id security-group-id \
+		--protocol tcp \
+		--port 22 \
+		--cidr 0.0.0.0/0
+\end{lstlisting}
+
+Estos comandos nos generarán un \textit{SecurityGroup} con unas reglas de entrada poco restrictivas pero muy flexibles de forma que no tengamos problemas para ninguna tecnlología. También permite que el desarrollador pueda conectarse mediante SSH. Puede especificarse una IP concreta para aumentar la seguridad.
+
+Una vez creado el \textit{SecurityGroup}, lo utilizaremos para lanzar nuestras instancias. Para este experimento se han hecho uso de instancias t2.micro con la AMI correspondiente a una máquina Ubuntu Server 16.04 LTS, de forma que nos mantenemos en la capa gratuita. Para lanzar las instancias, haremos uso de nuevo del cliente por terminal ejecutando el siguiente script:
+
+\begin{lstlisting}
+	aws ec2 run-instances \
+		--image-id ami-58d7e821 \
+		--count N \
+		--instance-type t2.micro \
+		--key-name MyPem \
+		--security-group-ids security-group-id \
+		--subnet-id subnet-dd426694
+\end{lstlisting}
+
+
+\begin{itemize}  
+	\item \textit{N} es el número de instancias a crear
+	\item \textit{MyPem} es el par de claves de seguridad para poder conectarnos a la instancia mediante SSH. Si no disponemos de un par, podemos crearlas desde la consola web\footnote{\url{https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair}}.
+	\item \textit{security-group-id} es el id del \textit{SecurityGroup} creado en el paso anterior.
+	\item La subnet \textit{subnet-dd426694} corresponde a la subnet por defecto de la zona eu-west-1a.
+\end{itemize}
+
+Una vez las instancias esten lanzadas y disponibles, podremos desplegar cualquiera de nuestras aplicaciones.
 
 \end{document}
