@@ -286,6 +286,29 @@ Los conceptos básicos que debemos comprender de Akka son:
 
 La diferencia entre un ActorPath y una ActorReference es que el segundo tiene el mismo ciclo de vida que el actor. Si el actor se destruye su ActorReference también, sin embargo un ActorPath puede existir perfectamente a pesar de que no exista el actor.
 
+\subsection{Hazelcast}
+\label{subsec:hazelcast}
+
+\begin{center}
+	\includegraphics[scale=0.3]{img/logos/hazelcast-logo.png}
+\end{center}
+
+Hazelcast \footnote{\url{https://hazelcast.com/}} es un DataGrid de Java, una herramienta escalable para la distribución de datos.
+
+Entre algunos de sus usos principales, se encuentran:
+
+\begin{itemize}
+	\item Cacheo de datos de forma distribuida.
+	\item Ejecución paralela.
+	\item Mensajería distribuida.
+	\item Escalado dinámico.
+	\item Transacciones sobre los datos.
+	\item Querys sobre los datos.
+\end{itemize}
+
+Para este proyecto nos interesa la mensajeria distribuida, que funciona mediante un patrón publicar-subscribir sencillo de distribuir entre diferentes nodos.
+
+
 \subsection{Vert.x}
 \label{subsec:vertx}
 
@@ -312,6 +335,8 @@ Los conceptos básicos que debemos comprender de Vert.x son:
 	\end{itemize}
 \end{itemize}
 
+Vert.x utiliza Hazelcast por defecto para distribuir su bus de eventos y otras funcionalidades distribuidas, aunque puede usarse también con Ignite\footnote{\url{https://ignite.apache.org/}}, Infinispan\footnote{\url{http://infinispan.org/}} o Zookeeper\footnote{\url{http://zookeeper.apache.org/}}. Para este proyecto usaremos la configuración por defecto con Hazelcast.
+
 \subsection{SpringBoot}
 \label{subsec:springboot}
 
@@ -332,8 +357,6 @@ Spring Boot\footnote{\url{http://projects.spring.io/spring-boot/}} comprende un 
 Además, cuenta con el Sistema de Inversión de Control de Spring\footnote{\url{https://en.wikipedia.org/wiki/Inversion_of_control}}\footnote{\url{https://docs.spring.io/spring/docs/current/spring-framework-reference/html/beans.html}}, que permite la configuración de los componentes de la aplicación, mientras que la administración del ciclo de vida de los objetos se lleva a cabo a través de la inyección de dependencias\footnote{\url{https://en.wikipedia.org/wiki/Dependency_injection}} (que a su vez es una forma de inversión de control).
 
 La versión utilizada de Spring para este proyecto es la 1.4.3
-
-\clearpage
 
 \subsection{RabbitMQ}
 \label{subsec:rabbitmq}
@@ -398,10 +421,7 @@ Entre sus características, destacamos:
 	\item Una numerosa comunidad y una extensa documentación
 \end{itemize}
 
-
-
 Utilizaremos Angular para ofrecer un cliente web en el que mostrar los resultados del experimento.
-
 
 \section{Herramientas}
 
@@ -916,11 +936,11 @@ Por otro lado, cada aplicación/nodo cuenta con un ChatManager, una clase que imp
 \textbf{Funcionamiento}
 
 \begin{itemize}
-	\item \textbf{Conexión}: Al iniciarse la conexión, se crea un objeto de la clase \textit{User} que manejara dicha conexión. Se ejecutará el método \textit{@OnOpen}, que obtiene una referencia al \textit{ChatManager}. El mensaje de conexión, en cambio, es capturado por el método bajo la anotación \textit{@OnMessage}, que tras validar que el usuario asociado a esa sesión no tiene aún atributos como ?name? o ?chat?, comprueba que el nombre sea único y se los asigna. Se informa al \textit{ChatManager} para que se le incluya y le subscriba a su sala de chat, asignandole al \textit{User} su conexión con el \textit{Exchange}.
+	\item \textbf{Conexión}: Al iniciarse la conexión, se crea un objeto de la clase \textit{User} que manejara dicha conexión. Se ejecutará el método \textit{@OnOpen}, que obtiene una referencia al \textit{ChatManager}. El mensaje de conexión, en cambio, es capturado por el método bajo la anotación \textit{@OnMessage}, que tras validar que el usuario asociado a esa sesión no tiene aún atributos como name o chat, comprueba que el nombre sea único y se los asigna. Se informa al \textit{ChatManager} para que se le incluya y le subscriba a su sala de chat, asignandole al \textit{User} su conexión con el \textit{Exchange}.
 	
 	\item \textbf{Re-envío de mensajes}: Un \textit{User} recibirá mensajes de dos formas:
 	\begin{itemize}
-		\item Un nuevo mensaje del cliente llega desde el WebSocket y ejecuta el método bajo la anotación \textit{@OnMessage}. Este mensaje será enviado al \textit{Exchange}, que se ocupará de distribuir dicho mensaje a todas las colas de otros usuarios, siendo el topic de este envío su sala de chat.
+		\item Un nuevo mensaje del cliente llega desde el WebSocket y ejecuta el método \textit{handleMessage()}. Este mensaje será enviado al \textit{Exchange}, que se ocupará de distribuir dicho mensaje a todas las colas de otros usuarios, siendo el topic de este envío su sala de chat.
 \begin{lstlisting}[language=Java]
 this.channel.basicPublish(EXCHANGE_NAME, chat, null, message.getBytes());
 \end{lstlisting} 
@@ -956,6 +976,61 @@ En contraste a las otras tecnologías que son toolkits completos, con RabbitMQ y 
 
 Otro problema que surgió a raiz de un desconocimiento de la gestión de recursos del cliente AMQP fué el no cerrar apropiadamente las conexiones de los usuarios. Esto provocaba un aumento constante de la memoria RAM utilizada por la máquina, que para las pruebas más exigentes provocaba la parada del servicio. Gracias al plugin antes mencionado, se pudo monitorizar los nodos para detectar este problema, haciendo los cambios pertinentes con resultados satisfactorios.
 
+\subsection{Spring + Hazelcast}
+
+El código de esta aplicación se puede encontrar en un repositorio en GitHub de la organización antes mencionada bajo en nombre de \textit{SpringBoot-RabbitMQ-DistributedWebChat}\footnote{\url{https://github.com/TFG-DistributedWebChat/SpringBoot-RabbitMQ-DistributedWebChat}}
+
+\textbf{Diseño y arquitectura}
+
+\begin{center}
+	\includegraphics[scale=0.6]{img/diagrams/Spring-Hazelcast-Diagram.png}
+\end{center}
+
+Al contrario que la aplicación de Spring junto a RabbitMQ, esta aplicación usa una arquitectura más similar a Vert.x (ambos usan Hazelcast), pero es muy parecida en cuanto a código se refiere a la primera, por lo que se mencionaran los cambios realizados.
+
+La aplicación hace uso de la anotación @ServerEndpoint sobre la clase User de nuevo, no varia su implementación salvo para el envío y recepción de mensajes de otros usuarios.
+
+Cada \textit{User} implementa la interfaz \textit{MessageListener} que le permite subscribirse y recibir mensajes de Hazelcast. El \textit{ChatManager}, de nuevo único para la aplicación, se limitara a gestionar las altas y bajas de usuarios, manteniendo una referencia a la instancia de Hazelcast para ello.
+
+\textbf{Funcionamiento}
+
+El funcionamiento general de la aplicación es muy similar al de su versión con RabbitMQ.
+
+\begin{itemize}
+	\item \textbf{Conexión}: Al iniciarse la conexión, se crea un objeto de la clase \textit{User} que manejara dicha conexión. Se ejecutará el método \textit{@OnOpen}, que obtiene una referencia al \textit{ChatManager}. El mensaje de conexión, en cambio, es capturado por el método bajo la anotación \textit{@OnMessage}, que tras validar que el usuario asociado a esa sesión no tiene aún atributos como name o chat, comprueba que el nombre sea único y se los asigna. Se informa al \textit{ChatManager} para que le subscriba a su sala de chat, devolviendole un \textit{topic}, una referencia a su sala de chat para poder interactuar con ella. Además, se guarda junto a su nombre un identificador único con el que poder darse de baja más adelante.
+	
+	\item \textbf{Re-envío de mensajes}: Un \textit{User} recibirá mensajes de dos formas:
+	\begin{itemize}
+		\item Un nuevo mensaje del cliente llega desde el WebSocket y ejecuta el método \textit{handleMessage()}. Este mensaje será enviado a través de la referencia del topic a todos los usuarios subscritos a él.
+		\begin{lstlisting}[language=Java]
+		@OnMessage
+		public void handleMessage(Session session, String message){
+			// ...
+			this.topic.publish(message);
+			// ...
+		}
+		\end{lstlisting} 
+		\item Un nuevo mensaje de su topic y que recoge en el metodo \textit{onMessage()} que lo envía directamente por WebSocket al cliente.
+		\begin{lstlisting}[language=Java]
+		@Override
+		public void onMessage(Message<String> message) {
+			this.send(message.getMessageObject());
+		}
+		\end{lstlisting} 
+	\end{itemize}
+	\item \textbf{Desconexión}: Cúando un cliente se desconecta (se cierra su conexión Websocket), se ejecuta el método bajo la anotación \textit{@OnClose}. Se informa al \textit{ChatManager} para que le tramite la baja y le desubscriba del topic.
+\end{itemize}
+
+\textbf{Despliegue en clúster}
+
+El despliegue en clúster es idéntico al de la aplicación de Vert.x. Al usar Hazelcast, no se distingue al hacer uso de el tanto en local cómo en distribuido. Sólo es necesario definir el archivo de configuración de hazelcast, al igual que en Vert.x.
+
+Se proporciona, al igual que en otras tecnologías, los scripts necesarios para automatizar este proceso
+
+\textbf{Problemas en el desarrollo}
+
+Fué relativamente sencillo construir y lanzar esta aplicación en un clúster tras comprender cómo funciona Hazelcast en la aplicación de Vert.x. Se intentó automatizar aún más su despligue haciendo uso de los servicios de AWS, pero se llegó a la conclusión que era mucho más laborioso y no aportaba ningun valor añadido.
+
 \section{Pruebas}
 
 Las aplicaciones desarrolladas carecen de pruebas unitarias o de integración propias, comparten un cliente común capaz de probarlas de forma completa y distribuida.
@@ -964,6 +1039,47 @@ A lo largo de este apartado hablaremos de este cliente, su implementación y de s
 
 El código de esta aplicación se puede encontrar en un repositorio en GitHub de la organización antes mencionada bajo en nombre de \textit{DistributedWebChatClient}\footnote{\url{https://github.com/TFG-DistributedWebChat/DistributedWebChatClient}}
 
+\subsection{Cliente heredado}
+Al igual que las aplicaciones, se contaba con un cliente de pruebas heredado del proyecto anterior. Este cliente usaba JUnit junto a herramientas de testing de Vert.x para probar las distintas aplicaciones de chat. El funcionamiento de este cliente era el siguiente:
+
+\begin{enumerate}
+	\item Se escribe un archivo de configuración dónde se definia cada aplicación a probar en local y testeaba una tras otra.odía probarse tanto cómo si ya estaba lanzada cómo si no, en este caso, el propio cliente era capaz de lanzarla.
+	\item Se abre un cliente web en el navegador por defecto dónde van apareciendo los resultados.
+	\item Generaba X clientes para Y salas de chat, de forma que cada cliente enviaba (además de su mensaje de conexión) 500 mensajes al resto de usuarios en un periodo de 5 segundos.
+	\item El mensaje contiene el momento (en milisegundos) en el que es enviado el mensaje. Cada cliente va recibiendo los mensajes y almacenando el tiempo que tardan en llegar (momento actual ? momento que trae el mensaje).
+	\item Cuando todos los clientes han recibido todos los mensajes (sin pérdidas) se divide el tiempo total entre el número total de mensajes (Nº usuarios x Nº usuarios x 500). Este proceso se repite 10 veces de forma identica para obtener mayor homogeneidad. Al terminar estas iteraciones, en envíaba el resultado al cliente web.
+	\item De forma paralela, se recogen métricas de uso de CPU y de memoria para ese proceso.
+\end{enumerate}
+
+Los pasos 3, 4, 5 y 6 se repiten para cada aplicación con distinto número de clientes y salas de chat.
+
+\subsection{Desarrollo e implementación}
+
+El cliente descrito en la sección anterior estaba límitado a aplicaciones en local, aunque era capaz de medir la latencia en máquinas externas es necesario incluir una forma de medir el resto de métricas.
+
+Dado que usar archivos de test dificultaba bastante seguir el flujo de la aplicación, se optó por re-escribir dicho cliente desde 0 (incluyendo el cliente web), manteniendo las funcionalidades principales.
+
+Entre los objetivos de esta re-implementación se encuentran:
+
+\begin{itemize}
+	\item Re-estructurar la ejecución de los casos de prueba para que funcione cómo una aplicación normal y no cómo un proceso de test.
+	\item Permitir obtener métricas de máquinas remotas (métrica por nodo/máquina).
+	\item Notificar al usuario de la aplicación web del progreso de las iteraciones.
+	\item Re-escribir el cliente web de forma que permita una nueva forma de entrada de configuración (en lugar de en un archivo)y permita mostrar las diferentes métricas por nodos.
+\end{itemize}
+
+\textbf{Re-estructuración}
+
+En este primer paso, re-escribiremos la aplicación de Java para que no haga uso de ningun framework de test, aunque seguiremos usando el toolkit Vert.x para gestionar los callbacks de las pruebas.
+
+
+\begin{center}
+	\includegraphics[scale=0.3]{img/screenshots/web1.png}
+\end{center}
+
+
+
+\subsection{Funcionamiento}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 		   5. Estudio comparativo             %
