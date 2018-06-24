@@ -1357,13 +1357,102 @@ Tras ver estos resultados, podemos afirmar que Vert.x es una tecnología pensada 
 
 \section{Uso de CPU}
 
-\subsection{Uso de CPU en 3 nodos}
+Tal y como se ha desarrollado la obtención de métricas, el uso de CPU calculado es la media del uso de este recurso por nodo del clúster haciendo uso del comando top mediante SSH. Al probarse sobre máquinas de un único procesador, esta métrica no sobrepasará el 100\%.
+
+\subsection{Uso de CPU en 2 nodos}
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[scale=0.6]{img/labels3.png}
+		\includegraphics[scale=0.6]{img/2nodes/1roomcpu.png}
+	\caption{1 room(s) - CPU - 2 nodes}
+\end{figure}
+
+Para el primer caso se aprecia cómo el uso de cpu de SpringBoot+RabbitMQ llega a duplicar el valor de las aplicaciones que usan Hazelcast. Estas últimas muestran un uso de CPU casi idéntico. El uso de este recurso en Akka aumenta en mayor medida que las aplicaciones de Hazelcast, pero sin sobrepasar a SpringBoot+RabbitMQ.
+
+\pagebreak
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[scale=0.6]{img/labels3.png}
+		\includegraphics[scale=0.6]{img/2nodes/2roomcpu.png}
+	\caption{2 room(s) - CPU - 2 nodes}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/2nodes/4roomcpu.png}
+	\caption{4 room(s) - CPU - 2 nodes}
+\end{figure}
+
+El uso de memoria se mantiene estable en todas las aplicaciones para 2 y 4 salas de chat. Las basadas en Hazelcast mantienen resultados similares.
+
+\pagebreak
 
 \subsection{Uso de CPU en 3 nodos}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/3nodes/1roomcpu.png}
+	\caption{1 room(s) - CPU - 3 nodes}
+\end{figure}
+
+En todas las tecnologías se observa un uso menor de este recurso, debido a la distribución de carga de usuarios entre los nodos.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/3nodes/2roomcpu.png}
+	\caption{2 room(s) - CPU - 3 nodes}
+\end{figure}
+
+\pagebreak
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/3nodes/4roomcpu.png}
+	\caption{4 room(s) - CPU - 3 nodes}
+\end{figure}
+
+Al aumentar el número de salas a 2 y 4, nos encontramos con el mismo comportamiento que en el caso de 2 nodos: uso de CPU estable ante la carga de trabajo.
 
 \subsection{Uso de CPU en 4 nodos}
 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/4nodes/1roomcpu.png}
+	\caption{1 room(s) - CPU - 4 nodes}
+\end{figure}
+
+Aumentando el número de nodos a 4 vemos cómo Akka muestra un coportamiento irregular haciendo un uso mayor de CPU con un número reducido de usuarios, estabilizandose a medida que aumenta la carga.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/4nodes/2roomcpu.png}
+	\caption{2 room(s) - CPU - 4 nodes}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/4nodes/4roomcpu.png}
+	\caption{4 room(s) - CPU - 4 nodes}
+\end{figure}
+
+Al aumentar en número de salas para 4 nodos a 2 y 4 se observa que la aplicación de SpringBoot se reduce en mayor medida que las demás, situándose cercana a Akka.
+
 \subsection{Conclusión del estudio: Uso de CPU}
+
+Apreciamos una coorelación de esta métrica con la latencia, con la salvedad de SpringBoot+Hazelcast, que se equipara prácticamente con Vert.x. Ambas aplicaciones suponen la mejor opción al ofrecer los mejores resultados para esta métrica. Parece que el uso de Hazelcast resulta ligero frente a otras opciones en cuanto al uso de CPU.
+
+Podemos determinar, comparandola con su versión con Hazelcast, que SpringBoot+RabbitMQ, al hacer uso de un servicio externo (en la propia máquina) consume bastante más CPU para ejecutar ambas aplicaciones (RabbitMQ y el WebChat en SpringBoot).
+
+Akka presenta un uso sensiblemente superior de CPU respecto a las aplicaciones que usan Hazelcast. Es posible que los actores de esta librería sean más pesados que los de Vert.x.
 
 \section{Uso de memoria}
 
