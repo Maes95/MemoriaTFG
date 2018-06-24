@@ -201,6 +201,7 @@ Las tecnologías que compararemos en este proyecto serán:
 	\item Akka
 	\item Vert.x
 	\item SpringBoot + RabbitMQ
+	\item SpringBoot + Hazelcast
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -262,7 +263,7 @@ Java es un lenguaje de programación de propósito general, concurrente y orientad
 	\includegraphics[scale=0.2]{img/logos/akka-logo.png}
 \end{center}
 
-Akka\footnote{\url{http://akka.io/}} es un toolkit para crear aplicaciones concurrentes y distribuidas. También se ejecuta sobre la JVM. Se puede utilizar con Java y Scala, lenguaje con el que está escrito y del que su implementación de los actores forma parte de la librería estándar desde la versión 2,10. Otras de sus características son:
+Akka\footnote{\url{http://akka.io/}} es un toolkit para crear aplicaciones concurrentes y distribuidas. También se ejecuta sobre la JVM. Se puede utilizar con Java y Scala, lenguaje con el que está escrito y del que su implementación de los actores forma parte de la librería estándar desde la versión 2.10. Otras de sus características son:
 
 
 \begin{itemize}  
@@ -1046,7 +1047,7 @@ Al igual que las aplicaciones, se contaba con un cliente de pruebas heredado del
 	\item Se escribe un archivo de configuración dónde se definia cada aplicación a probar en local y testeaba una tras otra.odía probarse tanto cómo si ya estaba lanzada cómo si no, en este caso, el propio cliente era capaz de lanzarla.
 	\item Se abre un cliente web en el navegador por defecto dónde van apareciendo los resultados.
 	\item Generaba X clientes para Y salas de chat, de forma que cada cliente enviaba (además de su mensaje de conexión) 500 mensajes al resto de usuarios en un periodo de 5 segundos.
-	\item El mensaje contiene el momento (en milisegundos) en el que es enviado el mensaje. Cada cliente va recibiendo los mensajes y almacenando el tiempo que tardan en llegar (momento actual ? momento que trae el mensaje).
+	\item El mensaje contiene el momento (en milisegundos) en el que es enviado el mensaje. Cada cliente va recibiendo los mensajes y almacenando el tiempo que tardan en llegar (momento actual - momento que trae el mensaje).
 	\item Cuando todos los clientes han recibido todos los mensajes (sin pérdidas) se divide el tiempo total entre el número total de mensajes (Nº usuarios x Nº usuarios x 500). Este proceso se repite 10 veces de forma identica para obtener mayor homogeneidad. Al terminar estas iteraciones, en envíaba el resultado al cliente web.
 	\item De forma paralela, se recogen métricas de uso de CPU y de memoria para ese proceso.
 \end{enumerate}
@@ -1068,26 +1069,164 @@ Entre los objetivos de esta re-implementación se encuentran:
 	\item Re-escribir el cliente web de forma que permita una nueva forma de entrada de configuración (en lugar de en un archivo)y permita mostrar las diferentes métricas por nodos.
 \end{itemize}
 
+\pagebreak
 \textbf{Re-estructuración}
 
-En este primer paso, re-escribiremos la aplicación de Java para que no haga uso de ningun framework de test, aunque seguiremos usando el toolkit Vert.x para gestionar los callbacks de las pruebas.
+En este primer paso, re-escribiremos la aplicación de Java para que no haga uso de archivos de test, aunque seguiremos usando el toolkit Vert.x para gestionar los callbacks de las pruebas.
 
+Para comunicar los distintos componentes de la aplicación (incluso en el cliente web) usaremos el EventBus de Vert.x. Los componentes principales de la aplicación son:
+
+\begin{itemize}
+	\item \textbf{TestResultsServer}: un sencillo servidor de Vert.x que nos permite ofrecer un cliente web con una conexión directa con él. Es el encargado de lanzar al ClientManager dentro del contexto de Vert.x. Del cliente, el cual detallaremos más a delante, llegará la configuración concreta de las pruebas que se quieren realizar, que enviará al \textit{ClientManager}
+	\item \textbf{ClientManager}: un actor de Vert.x que atenderá las peticiones de nuevas pruebas y las ejecutará, comunicando los resultados directamente al cliente web mediante el bus de eventos.
+	\item \textbf{ClientGenerator}: un actor de Vert.x que recibirá un caso de prueba a realizar por parte del \textit{ClientManager} y lo ejecutará, obteniendo las diferentes métricas.
+\end{itemize}
+
+La configuración que recibe el ClientManager se estructura cómo un JSON. Un ejemplo de esta configuración sería la siguiente:
+
+\begin{lstlisting}[language=Javascript]
+	{
+		name: "RabbitMQ",
+		address: "127.0.0.1",
+		port: 5000,
+		pem: "TFG.pem",
+		isDistributed: true,
+		nodes: [
+			"ec2-34-244-127-84.eu-west-1.compute.amazonaws.com",
+			"ec2-34-243-28-134.eu-west-1.compute.amazonaws.com"
+		],
+		cases: [
+			{ numChats: 1, numUsers: 10 },
+			{ numChats: 2, numUsers: 20 },
+			{ numChats: 3, numUsers: 25 }
+		]
+	}
+\end{lstlisting}
+
+dónde:
+
+\begin{itemize}
+	\item \textit{name} es el nombre que daremos a la aplicación
+	\item \textit{address} es la dirección del punto de entrada del proxy.
+	\item \textit{port} es el puerto en el cual escucha el proxy.
+	\item \textit{pem} es el nombre del archivo PEM que utilizaremos más adelante.
+	\item \textit{isDistributed} nos indica si la aplicación es distribuida o local.
+	\item \textit{nodes} son las direcciones DNS de los nodos concretos de la aplicación (en el caso de ser esta distribuida)
+	\item \textit{cases} son los casos para los que queremos probar nuestra aplicación. Se compone de una tupla con el número de salas de chat que habrá y el número de usuarios por cada una de estas salas.
+\end{itemize}
+
+A partir de esa configuración, el \textit{ClientManager}   ejecutará cada caso 10 veces. En cada iteración de del caso de prueba se hará uso de un \textit{ClientGenerator}, que es el encargado de generar los clientes que interactuarán con la aplicación. Este \textit{ClientGenerator} resultaría muy similar en cuanto a funcionamiento al heredado, siendo capaz de recoger la latencia media de cada caso. 
+
+Al acabar cada iteración, se devuelve el resultado de la misma al \textit{ClientManager} que lo seguirá completando con las iteraciones posteriores y lanza un evento en el bus de eventos dónde informa de la iteración completada.
+
+De esta forma ya tendriamos un cliente de pruebas sencillo y funcional. 
+
+El siguiente paso sería incluir una recogida de métricas (uso de CPU y memoria) para cada nodo definido en la configuración. Para hacerlo lo más homogéneo posible, recogeremos esta métricas para la máquina completa (cuyo uso es exclusivo para ejecutar la aplicación de chat). Las máquinas que utilizaremos estarán basadas en Linux, concretamente en Ubuntu, por lo que podremos usar los siguientes scripts para obtener las métricas por nodo/máquina:
+
+\textbf{Obtención de uso de CPU:}
+\begin{lstlisting}[language=Bash]
+#!/bin/bash
+ssh -i pems/$PEM $MACHINE top -b -n 2 | grep "Cpu(s):" | awk '{ print $2 }'
+\end{lstlisting}
+
+\textbf{Obtención de uso de memoria:}
+\begin{lstlisting}[language=Bash]
+#!/bin/bash
+ssh -i pems/$PEM $MACHINE free -m | grep "Mem:" | awk '{ print $3 }'
+\end{lstlisting}
+
+Dónde \textit{PEM} es el nombre del archivo .pem\footnote{Un archivo .pem nos permite realizar una conexión ssh con una máquina remota y ejecutar comandos sobre ella.} definido en la configuración y MACHINE será la dirección de la máquina también definida en la configuración. Este archivo debe estar presente en la carpeta \textit{/pems} antes de iniciar la aplicación.
+
+En la aplicación será el \textit{ClientGenerator} la entidad que hará uso de estos scripts desde Java. En cada iteración de cada caso, esta entidad generará un hilo de ejecución que ejecutará estos scripts de forma periodica (cada segundo). Tras finalizar la iteración, se hara la media de cada métrica para incluirlo en el resultado.
+
+Por último, habría que re-escribir el cliente web (escrito en Angular) para soportar este nuevo servidor las opciones que ofrece.
+
+Para ello se proporcionará una interfaz en la que poder introducir la configuración completa cómo se puede apreciar en la imagen:
 
 \begin{center}
 	\includegraphics[scale=0.3]{img/screenshots/web1.png}
 \end{center}
 
+Una vez se introduzcan la configuración de las pruebas a realizar, la siguiente pantalla deberá visualizar el progreso de la misma mientras se van mostrando los resultados, incluyendo las métricas de CPU y memoria por nodo:
 
+\begin{center}
+	\includegraphics[scale=0.3]{img/screenshots/web2.png}
+\end{center}
+
+Al finalizar las pruebas, obtendremos los datos en formato JSON.
+
+La arquitectura de nuestro sistema de pruebas resultante es la siguiente:
+
+\begin{center}
+	\includegraphics[scale=0.7]{img/diagrams/TestArquitecture.png}
+\end{center}
+
+Esta aplicación nos permite obtener las métricas de latencia, uso de CPU y memoria de una aplicación distribuida. Una vez tengamos los resultados de varias aplicaciones, se pueden comparar en un sencillo dashboard interactivo:
+
+\begin{center}
+	\includegraphics[scale=0.3]{img/screenshots/web3.png}
+\end{center}
 
 \subsection{Funcionamiento}
+
+A continuación se detalla el flujo del funcionamiento de la aplicación:
+
+\begin{itemize}
+	\item \textbf{Paso 0:} Antes de comenzar, nos aseguramos de que las máquinas y el proxy esten operativos, situamos el archivo PEM bajo la carpeta \textit{/pems} del proyecto de la aplicación de pruebas y lanzamos la aplicación. Esto abrirá automaticamente el cliente en nuestro navegador.
+	\item \textbf{Paso 1:} Introducimos la configuración de las pruebas que queremos realizar (configuración del proxy, los nodos y los casos) en el navegador y los enviamos al servidor.
+	\item \textbf{Paso 2:} El \textit{ClientManager} recibe la configuración, crea un \textit{ClientGenerator} y lo lanza junto a un caso de prueba.
+	\item \textbf{Paso 3:} El \textit{ClientGenerator} genera tantos clientes Websocket cómo define la configuración para que se conecten a la aplicación a través del proxy (Estos clientes pueden pertenecer a salas diferentes). A la vez, de forma periodica, recoge las distintas métricas para cada nodo que forma la aplicación distribuida a probar.
+	\item \textbf{Paso 4:} Tras recoger los tiempos de respuesta y las métricas de CPU y memoria, se guardan en un resultado y se devuelven en un callback al \textit{ClientManager}
+	\item \textbf{Paso 5:} El \textit{ClientManager} recibe el callback y emite un evento de finalización de la iteración. Este evento es capturado por el cliente web que muestra el progreso de ese caso por pantalla.
+	
+	Los pasos 2-5 se repiten para cada iteración de cada caso.
+	
+	\item \textbf{Paso 6:} Cuando no hay mas casos que probar, el \textit{ClientManager} lanza un evento de finalización, de nuevo capturado por el cliente web que provoca la descarga de los resultados en un JSON
+	
+	\item \textbf{Paso 7:} Una vez hemos probado varias aplicaciones, situamos dichos archivosen la carpeta \textit{src/main/resources/webroot/results}, los declaramos en el archivo \textit{index.json}, relanzamos la aplicación de pruebas vamos a la ruta \textit{/comparative} para visualizar la comparativa por cada métrica entre las distintas aplicaciones para distintos criterios (número de salas de chat y número de máquinas).
+	
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 		   5. Estudio comparativo             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\cleardoublepage
 \chapter{Estudio comparativo}
 \label{sec:comparativa} 
+
+Una vez disponemos de todas las aplicaciones desarrolladas y una herramienta para probarlas, llega el momento de realizar la comparativa entre tecnologías.
+
+Las aplicaciones han usado cómo máquinas para albergar sus nodos instancias EC2 de AWS, concretamente el modelo t2.micro \footnote{\url{https://aws.amazon.com/es/ec2/instance-types/}} debido a que es el único que entra dentro de la capa gratuita y no es necesario probarlas en máquinas con mayor capacidad para compararlas. Esta instancia cuenta con 1 CPU y 1 GB de memoria RAM. El sistema operativo elegido para las instancias ha sido Ubuntu 16.04 por su estabilidad, la comunidad detrás ante cualquier problema y el hecho de que las pruebas en local se realizaron en el mismo sistema operativo.
+
+En lugar de usar una máquina remota, se ha usado HAProxy en la misma máquina en la que se lanza el cliente de pruebas, un sistema Ubuntu 16.04 con 16 GB de memoria RAM y 4 procesadores.
+
+Los casos definidos para esta prueba han sido:
+
+\begin{itemize}
+	\item 1 sala de chat con 10, 20, 30, 40, 50 y 60 usuarios
+	\item 2 salas de chat con 20, 25, 30 y 35 usuarios en cada una
+	\item 4 salas de chat con 10, 12, 15 y 17 usuarios en cada una
+\end{itemize}
+
+Se han repetido los caso para el uso por máquina de 2, 3 y 4 nodos.
+
+Debido a que las máquinas remotas son menos potentes que la utilizada para el escalado vertical del proyecto anterior, se ha reducido los mensajes por usuario de 500 a 100.
+
+Desglosaremos la comparativa en las distintas métricas que vamos a medir: latencia, uso de CPU y uso de memoria, además de comparar la dificultad/complejidad del desarrollo. Una vez realizado el estudio, procederemos a formular una serie de conclusiones.
+
+Para interpretar las gráficas que usaremos para mostrar los resultados de las pruebas es importante comprender su estructura:
+
+Cada gráfica contiene los resultados de una métrica concreta para un número de salas concreto.
+
+En el eje Y encontraremos la métrica estudiada
+
+En el eje X encontraremos el número de mensajes que se han enviado en total. Este número se obtiene de la siguiente fórmula:
+
+$$
+N_odeMensajes = (N_0UsuariosPorSala)^2 * N_0DeSalas * 100
+$$
+
+Junto a cada métrica, se comentarán los resultados del estudio comparativo previo.
 
 \section{Latencia}
 
