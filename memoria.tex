@@ -1208,7 +1208,7 @@ Los casos definidos para esta prueba han sido:
 	\item 4 salas de chat con 10, 12, 15 y 17 usuarios en cada una
 \end{itemize}
 
-Se han repetido los caso para el uso por máquina de 2, 3 y 4 nodos.
+Se han repetido los casos para 2, 3 y 4 nodos.
 
 Debido a que las máquinas remotas son menos potentes que la utilizada para el escalado vertical del proyecto anterior, se ha reducido los mensajes por usuario de 500 a 100.
 
@@ -1226,13 +1226,154 @@ $$
 N_odeMensajes = (N_0UsuariosPorSala)^2 * N_0DeSalas * 100
 $$
 
-Junto a cada métrica, se comentarán los resultados del estudio comparativo previo.
+Junto a cada métrica, se comentarán los resultados del estudio comparativo previo para valorar la diferencia entre una aplicación en un solo nodo o en varios.
 
 \section{Latencia}
 
+Para nuestro caso de estudio, podemos definir la latencia o tiempo de respuesta como el retardo en milisegundos producido por la demora en la propagación de los mensajes.
+
+\begin{center}
+	\includegraphics[scale=0.6]{img/latency.png}
+\end{center}
+
+Conviene recordar que:
+\begin{itemize}
+	\item Para obtener esta métrica, el mensaje recoge en su contenido el momento (en ms) en el que es enviado, calculándose la diferencia a su llegada, que será el retardo.
+	\item Los resultados que podemos encontrar en las gráficas son la media aritmética de los N mensajes enviados en un total de 10 iteraciones.
+\end{itemize}
+
+A continuación se muestran los resultados de latencia para distinto número de salas de chat en distinto número de nodos:
+
+\subsection{Latencia en 2 nodos}
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[scale=0.6]{img/labels3.png}
+		\includegraphics[scale=0.6]{img/2nodes/1roomtime.png}
+	\caption{1 room(s) - Time - 2 nodes}
+\end{figure}
+
+Observamos una clara diferencia entre las aplicaciones basadas en actores que las de SpringBoot, obteniendo las primeras resultados significativamente mejores.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[scale=0.6]{img/labels3.png}
+		\includegraphics[scale=0.6]{img/2nodes/2roomtime.png}
+	\caption{2 room(s) - Time - 2 nodes}
+\end{figure}
+
+Al aumentar en número de chats a 2, no parece haber grandes cambios respecto a la anterior gráfica. Destacamos que a un menor número de mensajes (180.000 frente a 250.000) la aplicación de SpringBoot+RabbitMQ empeora bastante haciendo evidente que aumentar el número de \textit{topics} en RabbitMQ aumenta la latencia global.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[scale=0.6]{img/labels3.png}
+		\includegraphics[scale=0.6]{img/2nodes/4roomtime.png}
+	\caption{4 room(s) - Time - 2 nodes}
+\end{figure}
+
+Con 4 salas de chat el mayor cambio se produce en la aplicación de SpringBoot+Hazelcast, que reduce considerablemente su latencia hasta equipararse con Akka y Vert.x (recordemos que Vert.x hace uso internamente de Hazelcast). Aunque el número de mensajes es sustancialmente menor, para 90.000 ofrece 836 ms de latencia, por los 2439 ms que ofrece para 80.000  mensajes en 2 salas de chat. 
+
+\subsection{Latencia en 3 nodos}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/3nodes/1roomtime.png}
+	\caption{1 room(s) - Time - 3 nodes}
+\end{figure}
+
+Al aumentar el número de nodos de 2 a 3 observamos ligeras mejoras en las aplicaciones de Vert.x y Akka, pero dónde realmente se nota esta nueva instancia es en las aplicaciones de SpringBoot, que reducen su latencia en 1/3.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/3nodes/2roomtime.png}
+	\caption{2 room(s) - Time - 3 nodes}
+\end{figure}
+
+En el caso de 2 salas de chat, la diferencia más significativa es la de Hazelcast, que al igual que ocurria en el caso de 4 salas de chat en 2 nodos, la latencia desciende de forma considerable hasta equipararse con Vert.x y Akka.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/3nodes/4roomtime.png}
+	\caption{4 room(s) - Time - 3 nodes}
+\end{figure}
+
+En este caso, vemos cómo el aumento de salas de chat hace que se solapen las aplicaciones de Vert.x y SpringBoot+Hazelcast en cuando a la métrica medida. RabbitMQ mejora discretamente al incluir este nodo extra.
+
+\pagebreak
+
+\subsection{Latencia en 4 nodos}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/4nodes/1roomtime.png}
+	\caption{1 room(s) - Time - 4 nodes}
+\end{figure}
+
+Al hacer uso de un nodo adicional, comprobamos de nuevo cómo los cambios más drásticos se producen en las aplicaciones de SpringBoot, especialmente en su variante con RabbitMQ, que ofrece una bajada de latencia a más de la mitad que en su versión con 2 nodos. Las aplicaciones de Akka y Vert.x siguen ofreciendo buenos resultados, reduciendo sensiblemente la latencia que el aumento de los nodos.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/4nodes/2roomtime.png}
+	\caption{2 room(s) - Time - 4 nodes}
+\end{figure}
+
+Haciendo uso de dos salas de chat, la única diferencia notable parece ser un peor resultado para la aplicación de SpringBoot+Hazelcast. Se revisó y se realizaron de nuevo las pruebas pero los resultados eran similares. Es posible que el número de instancias/nodos sea lo suficientemente grande para que se degrade las prestaciones de la aplicación y aumente la latencia. Esto ocurre, en mucha menor medida, en el resto de aplicaciones.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/4nodes/4roomtime.png}
+	\caption{4 room(s) - Time - 4 nodes}
+\end{figure}
+
+En este último caso, vemos cómo la latencia media de las aplicaciones se iguala hasta algo menos de 60.000 mensajes, manteniendose casi lineal la aplicación de Vert.x, aumentando ligeramente la de Akka y creciendo casi 4 veces las aplicaciones basadas en SpringBoot.
+
+\subsection{Conclusión del estudio: Latencia}
+
+Tras estudiar los distintos casos (combinaciones de salas de chat y número de instancias) podemos determinar que las aplicaciones que mejor escalan atendiendo a la latencia son las basadas en modelos de actores, Akka y Vertx, siendo esta última la que ofrece mejores resultados globales para todos los caso.
+
+Por el contrario, las aplicaciones de SpringBoot ofrecen un peor escalado horizontal, aumentando considerablemente la latencia cuando aumenta el flujo de datos en la aplicación, aunque son las que más mejoran cuando se aumenta el número de instancias.
+
+Podemos deducir que Hazelcast (tecnología sobre la que funciona la aplicación de SpringBoot con mismo nombre y la de Vert.x) ofrece altas prestaciones en cuanto a latencia se refiere, siendo capaz de mejorar los tiempos al sustituir una tecnología de cola de mensajes como es RabbitMQ.
+
+\subsection{Restrospectiva}
+
+Para finalizar el estudio de la latencia, echemos un vistazo a los resultados del proyecto anterior (escalado vertical):
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/old/1roomtime.png}
+	\caption{1 room(s) - Time - 1 node}
+\end{figure}
+
+Cómo podemos observar, los resultados en un solo nodo son completamente distintos. La aplicación de Vert.x ofrece los peores resultados con diferencia, mientras que en SpringBoot la latencia apenas aumenta aún cuando la carga de mensajes sobrepasa el millón. Cabe mencionar que la aplicación de SpringBoot no hace uso de ningun sistema externo o libreria para la distribución de mensajes, se gestiona a nivel de aplicación con llamadas a funciones.
+
+Tras ver estos resultados, podemos afirmar que Vert.x es una tecnología pensada para distribuirse y no ofrece soluciones eficientes en lo que a latencia respecta para una aplicación monolítica. Por otro lado SpringBoot invierte este enunciado, siendo una solución monolítica sin apenas latencia pero sin utilidad a la hora de distribuirse, pues requiere de librerias externas que merman su eficiencia. Por último, mencionar que Akka resulta ser una buena tecnología en ambos casos.
+
 \section{Uso de CPU}
 
+\subsection{Uso de CPU en 3 nodos}
+
+\subsection{Uso de CPU en 3 nodos}
+
+\subsection{Uso de CPU en 4 nodos}
+
+\subsection{Conclusión del estudio: Uso de CPU}
+
 \section{Uso de memoria}
+
+\subsection{Uso de memoria en 3 nodos}
+
+\subsection{Uso de memoria en 3 nodos}
+
+\subsection{Uso de memoria en 4 nodos}
+
+\subsection{Conclusión del estudio: Uso de memoria}
 
 \section{Desarrollo}
 
