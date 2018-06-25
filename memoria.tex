@@ -118,17 +118,33 @@ Tutor : Micael Gallego Carrillo
 
 \markboth{RESUMEN}{RESUMEN} % encabezado
 
-Aquí viene un resumen del proyecto. Ha de constar de tres o cuatro párrafos, donde se presente de manera clara y concisa de qué va el proyecto. 
-Han de quedar respondidas las siguientes preguntas:
+En este proyecto abordaremos una comparativa entre diferentes tecnologías basadas en WebSockets. Para ello construiremos un total de 4 aplicaciones de chat utilizando diferentes tecnologías:
 
 \begin{itemize}
-  \item ¿De qué va este proyecto? ¿Cuál es su objetivo principal?
-  \item ¿Cómo se ha realizado? ¿Qué tecnologías están involucradas?
-  \item ¿En qué contexto se ha realizado el proyecto? ¿Es un proyecto
-dentro de un marco general?
+	\item Akka
+	\item Vert.x
+	\item SpringBoot
 \end{itemize}
 
-Lo mejor es escribir el resumen al final.
+
+Además de una aplicación para cada tecnología, completaremos el conjunto de las aplicaciones con dos variantes para la tecnología SpringBoot con el fin de encontrar su versión más óptima:
+
+\begin{itemize}
+	\item SpringBoot con RabbitMQ
+	\item SpringBoot con Hazelcast
+\end{itemize}
+
+Para realizar esta comparativa de una forma justa, se desarrollará un cliente común a todas las aplicaciones que se encargue de tomar diferentes métricas, concretamente:
+
+\begin{itemize}
+	\item La latencia (o tiempo de respuesta)
+	\item El uso de CPU
+	\item El uso de memoria
+\end{itemize}
+
+Una vez la construcción de las aplicaciones haya finalizado, usaremos el cliente para obtener métricas de cada aplicación ante distintas cargas de trabajo.
+
+Por último, analizaremos los resultados obtenidos para evaluar que tecnología resulta ser la más óptima para trabajar con WebSockets de forma distribuida.
 
 %%%%%%%%%%%%%%%%%%%%
 % ÍNDICES %
@@ -1341,7 +1357,7 @@ Por el contrario, las aplicaciones de SpringBoot ofrecen un peor escalado horizo
 
 Podemos deducir que Hazelcast (tecnología sobre la que funciona la aplicación de SpringBoot con mismo nombre y la de Vert.x) ofrece altas prestaciones en cuanto a latencia se refiere, siendo capaz de mejorar los tiempos al sustituir una tecnología de cola de mensajes como es RabbitMQ.
 
-\subsection{Restrospectiva}
+\subsection{Restrospectiva: Latencia}
 
 Para finalizar el estudio de la latencia, echemos un vistazo a los resultados del proyecto anterior (escalado vertical):
 
@@ -1454,19 +1470,168 @@ Podemos determinar, comparandola con su versión con Hazelcast, que SpringBoot+Ra
 
 Akka presenta un uso sensiblemente superior de CPU respecto a las aplicaciones que usan Hazelcast. Es posible que los actores de esta librería sean más pesados que los de Vert.x.
 
+\subsection{Restrospectiva: Uso de CPU}
+
+Para finalizar el estudio del uso de CPU, volvamos a echar un vistazo a los resultados del proyecto anterior. Cabe destacar que las pruebas del estudio anterior se realizaron en una máquina con 8 cores de procesamiento, por lo que el uso de la CPU puede superar el 100\% (hasta un 800\%)
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/old/1roomcpu.png}
+	\caption{1 room(s) - CPU - 1 node}
+\end{figure}
+
+En esta ocasión, se corresponde en gran medida a las nuevas métricas que hemos recogido, donde Spring y Vert.x hacen un uso de CPU similar mientras que Akka hace un uso bastante superior. Por lo tanto, la mayor diferencia la notariamos al hacer uso de RabbitMQ.
+
 \section{Uso de memoria}
 
-\subsection{Uso de memoria en 3 nodos}
+Al igual que el uso de la CPU, esta métrica se obtuvo mediante SSH, en esta ocasión haciendo uso del comando \textit{free} de linux. Corresponde a la cantidad (en MBytes) media de memoria utilizada por los nodos del clúster.
+
+\pagebreak
+
+\subsection{Uso de memoria en 2 nodos}
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[scale=0.6]{img/labels3.png}
+		\includegraphics[scale=0.6]{img/2nodes/1roomram.png}
+	\caption{1 room(s) - Memory - 2 nodes}
+\end{figure}
+
+Observamos cómo la aplicación que de nuevo hace un uso mayor del recurso es SpringBoot+RabbitMQ, mientras que las tecnologías basadas en actores necesitan la mitad de memoria para funcionar. Vemos una notable diferencia entre la aplicación de SpringBoot+Hazelcast con la de Vert.x.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/2nodes/2roomram.png}
+	\caption{2 room(s) - Memory - 2 nodes}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/2nodes/4roomram.png}
+	\caption{4 room(s) - Memory - 2 nodes}
+\end{figure}
+
+\pagebreak
+
+Apreciamos estabilidad a la hora de aumentar el número de salas de chat, sin diferencias reseñables frente a lo anteriormente comentado.
 
 \subsection{Uso de memoria en 3 nodos}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/3nodes/1roomram.png}
+	\caption{1 room(s) - Memory - 3 nodes}
+\end{figure}
+
+Aumentar el número de nodos, reduce sensiblemente la memoria utilizada, especialmente en SpringBoot+RabbitMQ, que se asemeja en el uso de este recurso a su versión con Hazelcast.
+
+\pagebreak
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/3nodes/2roomram.png}
+	\caption{2 room(s) - Memory - 3 nodes}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/3nodes/4roomram.png}
+	\caption{4 room(s) - Memory - 3 nodes}
+\end{figure}
+
+
+Al aumentar el número de salas, observamos la misma estabilidad que con dos nodos, volviendose aún mas similar el uso de este recurso en las aplicaciones de SpringBoot.
 
 \subsection{Uso de memoria en 4 nodos}
 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/4nodes/1roomram.png}
+	\caption{1 room(s) - Memory - 4 nodes}
+\end{figure}
+
+Observamos que las aplicaciones hacen un uso de memoria muy parecido al caso con 3 nodos.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/4nodes/2roomram.png}
+	\caption{2 room(s) - Memory - 4 nodes}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/4nodes/4roomram.png}
+	\caption{4 room(s) - Memory - 4 nodes}
+\end{figure}
+
+Al igual que antes, el uso de memoria se estabiliza para todas las aplicaciones, pero en este caso aumenta para la aplicación de SpringBoot+Hazelcast, situándola por encima de su versión con RabbitMQ.
+
 \subsection{Conclusión del estudio: Uso de memoria}
+
+Podemos afirmar que el uso de Hazelcast en este caso no es tan determinante, si no el cliente web. Esto puede observarse en la diferencia entre Vert.x y SpringBoot+Hazelcast, dónde la aplicación de SpringBoot hace un uso muy superior de este recurso, al igual que su versión con RabbitMQ.
+
+Akka se mantiene en un uso de memoria similar a Vert.x, pero ligeramente superior en todos los caso, por lo que podemos afirmar que Vert.x es la mejor opción atendiendo a esta métrica.
+
+\subsection{Restrospectiva: Uso de memoria}
+
+Para finalizar el estudio del uso de CPU, echemos de nuevo un vistazo a los resultados del proyecto anterior. Cabe destacar que las pruebas del estudio anterior se realizaron en una máquina con 6 GBytes de memoria RAM, frente a 1 GByte que posee cada uno de los nodos de cualquier aplicación. En este caso, la memoria está en KBytes.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/old/1roomram.png}
+	\caption{1 room(s) - Memory - 1 node}
+\end{figure}
+
+Contrario a lo que podriamos observar en el uso de CPU, en el estudio anterior Vert.x mostraba un uso de memoria muy alto en cuanto el flujo de mensajes comenzaba a escalar demasiado (a partir de unos 450.000 mensajes). Podemos ver cómo Vert.x, al igual que en la comparativa actual, comienza siendo la que hace un uso menor de este recurso.
+
+Este aumento repentino puede ser debido a una mala gestión de la memoria, concretamente a la eliminación de los \textit{handlers} que en la nueva versión si se solucionó. No se ha podido comprobar si al aumentar la carga de trabajo progresivamente (hasta, por ejemplo, los 1.8 millones de mensajes del estudio anterior) debido a las limitaciones de las máquinas disponibles.
+
+Por otro lado, Akka y SpringBoot muestran tendencias similares al nuevo estudio, evidenciando que en este caso, al igual que al medir el uso de CPU, el uso de un servio externo como RabbitMQ aumenta considerablemente la memoria utilizada por la máquina que actúa cómo nodo de nuestro clúster.
 
 \section{Desarrollo}
 
+A la hora de desarrollar, también debemos plantearnos el tiempo y/o dificultad que nos puede entrañar, en este caso, crear un sistema de mensajería.
+
+Tanto las aplicaciones de Akka y Vert.x disponen de amplias librerías que conllevan una curva de aprendiza inicial bastante mayor que el resto de tecnologías mostradas, introduciendo el modelo de actores de cara a resolver problemas de concurrencia. En el caso de Akka, además, se le añade la dificultad de incrustar nuestra aplicación en el framework Play para obtener un servidor WebSocket. Esta dificultad se ve recompensada con una sistema de comunicación entre nodos bastante sencilla una vez hemos construido una aplicación monolítica.
+
+Por otro lado, las aplicaciones de SpringBoot son mucho más sencillas y rápidas de construir gracias a su inversión de control, aunque deja en manos del usuario solventar posibles problemas de concurrencia. Sin embargo, SpringBoot no proporciona ningún sistema de comunicación entre los distintos nodos, teniendo que hacer uso de librerias o servicios externos que degradan su prestaciones en comparación a Akka y Vert.x, que integran todas sus funcionalidades en un mismo toolkit.
+
+\pagebreak
+
 \section{Conclusiones generales de la comparativa}
+
+Para obtener una visión global de la comparativa, haremos uso un gráfico de dispersión para el caso más representativo por su alta carga de trabajo, 50 usuarios en una sola sala de chat, con un total de 250.000 de mensajes enviados y recibidos. La latencia queda reflejada por el tamaño de los puntos.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/labels3.png}
+	\includegraphics[scale=0.6]{img/bubblechart.png}
+	\caption{4 room(s) - Memory - 3 nodes}
+\end{figure}
+
+Los resultados del experimento quedan resumidos en la siguiente tabla.
+
+\begin{center}
+	\begin{tabular}{ | l | l | l | l | l |}
+		\hline
+		\textbf{Tecnología} & \textbf{Latencia} & \textbf{Uso de CPU} & \textbf{Uso de Memoria} & \textbf{Dificultad de desarrollo} \\ 
+		\hline Akka & Baja & Medio & Bajo & Medio \\ 
+		\hline Vert.x & Baja & Bajo & Bajo & Bajo \\ 
+		\hline RabbitMQ & Alta & Alto & Alto & Medio \\ 
+		\hline Hazelcast & Medio & Bajo & Medio & Bajo \\ \hline
+	\end{tabular}
+\end{center}
+
+Tras estudiar las distintas métricas, podemos afirmar que si buscamos una aplicación basada en Websockets distribuida, fiable ante grandes cargas de trabajo y que no haga un uso excesivo de los recursos de las máquinas en las que se ejecuta, la tecnología óptima sería Vert.x
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 6. Conclusiones del proyecto y trabajos futuros %
@@ -1476,7 +1641,18 @@ Akka presenta un uso sensiblemente superior de CPU respecto a las aplicaciones q
 \chapter{Conclusiones del proyecto y trabajos futuros}
 \label{sec:conclusiones} 
 
-Mis conclusiones
+Este proyecto ha sido un desafío y una fuente de aprendizaje sobre los sistemas distribuidos que me ha permitido enfrentarme a los problemas que podré encontrarme en un futuro al desarrollar este tipo de sistemas.
+
+Quedan satisfechos los objetivos de este proyecto cómo continuación del proyecto anterior, que estudiaba la escalabilidad vertical de las tecnologías.
+
+La posibilidad de ampliar este proyecto ha estado presente durante todo el desarrollo, facilitando en gran medida la inclusión de nuevas aplicaciones mediante un diseño flexible , una documentación detallada y un cliente de pruebas fácil de usar.
+
+Entre las posibles ampliaciones/continuaciones del proyecto, destacaría:
+
+\begin{itemize}
+	\item La inclusión de nuevas tecnologías, no necesariamente basadas en Java, si no en otros lenguajes que proponen modelos de concurrencia interesantes cómo Erlang o Go.
+	\item El desarrollo para cada tecnología de una distribución de carga propio (en lugar del \textit{round-robin} proporcionado por HAProxy) de forma que, por ejemplo, se situén usuarios con la misma sala en un mismo nodo.
+\end{itemize}
 
 
 
