@@ -84,7 +84,7 @@
 \vspace{1cm}
 
 \Large
-TITULACIÓN EN INGENIERÍA DEL SOFTWARE
+GRADO INGENIERÍA DEL SOFTWARE
 
 \vspace{0.4cm}
 
@@ -95,12 +95,12 @@ Curso Académico 2017/2018
 
 Trabajo Fin de Grado
 
-\vspace{2.5cm}
+\vspace{2cm}
 
 \LARGE
-Comparativa de tecnologías de servidor para servicios basados en websocket
+Comparativa de tecnologías de sistemas distribuidos para implementación de un servicio de salas de chat multiusuario 
 
-\vspace{4cm}
+\vspace{2cm}
 
 \large
 Autor : Michel Maes Bermejo \\
@@ -118,7 +118,7 @@ Tutor : Micael Gallego Carrillo
 
 \markboth{RESUMEN}{RESUMEN} % encabezado
 
-En este proyecto abordaremos una comparativa entre diferentes tecnologías basadas en WebSockets. Para ello construiremos un total de 4 aplicaciones de chat utilizando diferentes tecnologías:
+En este proyecto abordaremos una comparativa entre diferentes tecnologías de sistemas distribuidos para implementación de chats multiusuario basadas en WebSockets. Para ello construiremos un total de 4 aplicaciones de chat utilizando diferentes tecnologías:
 
 \begin{itemize}
 	\item Akka
@@ -169,7 +169,7 @@ Hoy en día, un desarrollador de software tiene múltiples herramientas (entre len
 
 Es una práctica común usar una tecnología concreta sobre la que sentimos predilección o las que creemos que pueden resolver mejor nuestro problema. En ocasiones, nos equivocamos en nuestra elección y descartamos opciones mucho más efectivas.
 
-Este problema de desinformación puede abordarse mediante el estudio de las distintas tecnologías que proponen una solución al mismo, pero dado que el ámbito del desarrollo software es muy amplio, vamos a centrarnos en las tecnologías de servidor para servicios basados en WebSockets.
+Este problema de desinformación puede abordarse mediante el estudio de las distintas tecnologías que proponen una solución al mismo, pero dado que el ámbito del desarrollo software es muy amplio, vamos a centrarnos en las tecnologías de sistemas distribuidos que permitan implementar chats multiusuario con conexión mediante WebSockets.
 
 Estas tecnologías proporcionan una comunicación en tiempo real con clientes muy diversos (aplicaciones móviles, navegadores, otro servidores). Un ejemplo actual son los servicios de mensajería instantánea cómo WhatsApp o Telegram, cuyo crecimiento de usuarios se ha disparado en los últimos años. Hoy en día este tipo de aplicaciones tienen un impacto drástico en la vida diaria, siendo casi una herramienta imprescindible, por lo que prevenir una caída de servicio ante un alto número de clientes es fundamental.
 
@@ -189,6 +189,8 @@ Para ello, tomaremos como punto de partida las tecnologías reactivas, que siguie
 
 Para este proyecto, nos centraremos en Java, un lenguaje consolidado que cuenta con librerias y frameworks que nos ayudarán a abordar esta comparativa.
 
+Este proyecto supone una continuación de otro trabajo anterior realizado por el mismo autor del proyecto que nos ocupa. En el anterior proyecto, se realizó una comparativa entre aplicaciones de Akka, Vert.x, SpringBoot y NodeJS, las cuales se compararon haciendo uso de una sola máquina (escalado vertical). La ampliación consistirá en abordar el problema de la escalabilidad horizontal (aplicaciones distribuidas en varias máquina) haciendo uso de las herramientas que nos proporciona cada tecnología o haciendo uso de herramientas externas.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %             2. Objetivos                    %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -197,13 +199,13 @@ Para este proyecto, nos centraremos en Java, un lenguaje consolidado que cuenta 
 \chapter{Objetivos}
 \label{sec:objetivos} 
 
-El objetivo principal de este proyecto será realizar una comparativa entre distintas tecnologías que den solución a la comunicación en tiempo real mediante el uso de WebSockets. Dicha comparativa se realizará en base al rendimiento y el consumo de recursos de cada una de las tecnologías comparadas, ante diferentes niveles de carga y haciendo uso de un número variado de servidores.
+El objetivo principal de este proyecto será realizar una comparativa entre distintas tecnologías distribuidas que den solución a la comunicación en tiempo real mediante el uso de WebSockets. Dicha comparativa se realizará en base al rendimiento y el consumo de recursos de cada una de las tecnologías comparadas, ante diferentes niveles de carga y haciendo uso de un número variado de servidores.
 
 Con este fin, se implementará un servidor de mensajería instantánea (que a partir de ahora denominaremos simplemente Chat) para cada tecnología y un cliente que se conectará a ese servidor simulando varios usuarios enviando mensajes que podrá medir el tiempo que tarda un mensaje desde que se envía hasta que se recibe.
 
 Otro objetivo relevante del proyecto será su extensibilidad, de forma que cualquier desarrollador pueda implementar su aplicación de chat, sumarla a la comparativa y así contribuir al proyecto.
 
-El proyecto base corresponde al realizado por el mismo autor de el proyecto que nos ocupa, en el que se realizó una comparativa entre las aplicaciones de Akka, Vert.x, SpringBoot y NodeJS, las cuales se compararón haciendo uso de una sola máquina. Este proyecto pretende ser una continuación y expansión del anterior, concretamente:
+Este proyecto pretende ser una continuación y expansión del anteriormente mencionado, concretamente:
 
 \begin{itemize}  
 	\item Distribuir cada aplicación para que pueda ser lanzada en varias máquinas que formen un clúster.
@@ -279,7 +281,7 @@ Java es un lenguaje de programación de propósito general, concurrente y orientad
 	\includegraphics[scale=0.2]{img/logos/akka-logo.png}
 \end{center}
 
-Akka\footnote{\url{http://akka.io/}} es un toolkit para crear aplicaciones concurrentes y distribuidas. También se ejecuta sobre la JVM. Se puede utilizar con Java y Scala, lenguaje con el que está escrito y del que su implementación de los actores forma parte de la librería estándar desde la versión 2.10. Otras de sus características son:
+Akka\footnote{\url{http://akka.io/}} es un toolkit para crear aplicaciones concurrentes y distribuidas. También se ejecuta sobre la JVM. Se puede utilizar con Java y Scala, lenguaje con el que está implementado y del que su implementación de los actores forma parte de la librería estándar desde la versión 2.10. Otras de sus características son:
 
 
 \begin{itemize}  
@@ -338,7 +340,7 @@ Vert.x\footnote{\url{http://vertx.io/}} es otro toolkit de Java que permite cons
 Los conceptos básicos que debemos comprender de Vert.x son:
 
 \begin{itemize}  
-	\item \textbf{Verticle}\footnote{\url{http://vertx.io/docs/vertx-core/java/#verticles}}: modelo de concurrencia que propone Vertx. Un Verticle es una clase que se comporta como un actor\footnote{\url{https://en.wikipedia.org/wiki/Actor_model}}, cuyo comportamiento está orientado a enviar/recibir mensajes. Para facilitar el desarrollo, Vertx asegura que el código de un verticle nunca va a ser ejecutado por más de un thread a la vez.\\
+	\item \textbf{Verticle}\footnote{\url{http://vertx.io/docs/vertx-core/java/#verticles}}: modelo de concurrencia que propone Vertx. Un Verticle es una clase que se comporta como un actor\footnote{\url{https://en.wikipedia.org/wiki/Actor_model}}, cuyo comportamiento está orientado a enviar/recibir mensajes. Para facilitar el desarrollo, Vertx asegura que el código de un verticle nunca va a ser ejecutado por más de un thread a la vez.
 	\item \textbf{EventBus}: es uno de sus principales recursos que le da su carácter reactivo. Consiste en un bus transversal a la aplicación que permite la comunicación entre los verticles de distintas formas\footnote{\url{http://vertx.io/docs/apidocs/io/vertx/core/eventbus/EventBus.html}}:
 	\item \textbf{Publicar-Subscribir}: Diversos verticles se subscriben a un determinado topic proporcionando un handler que opere con la respuesta. Tras esto, basta con publicar un mensaje bajo ese topic para que todos los componentes subscritos lo reciban.
 	\item \textbf{Punto a punto}: Al igual que el anterior, envía un mensaje bajo un topic, pero en este caso, solo a uno de los subscriptores, elegido mediante un algoritmo de round-robin no estricto.
@@ -348,9 +350,10 @@ Los conceptos básicos que debemos comprender de Vert.x son:
 		\item Event-loop: ejecuta los handlers de forma que un mismo handler es ejecutado únicamente en un Thread y este no debe ser bloqueante de ninguna manera (uso de herramientas de bloqueo condicional, llamadas a bases de datos, ejecuciones del sistema largas, etc?). Este modelo no es dependiente la sincronización y dota a Vertx, junto al EventBus de su reactividad, además de su carácter no bloqueante. Es el context usado por defecto.
 		\item Worker: contexto ligado a los verticles, que siguen asegurando que se ejecutan en un solo Thread, pero permiten su bloqueo.
 		\item Multi-Thread Worker: Permite la ejecución de un verticle en diferentes threads, de forma que pueda realizar las tareas de forma concurrente, delegando en el desarrollador la responsabilidad de asegurar la concurrencia y sincronización.
-		\item Además de los recursos mencionados, cuenta con una extensa API que abarca desde múltiples herramientas de testing hasta servidores y clientes de TCP/SSL, HTTP/HTTPS y WebSockets, cobrando estos últimos especial importancia de cara al desarrollo de la aplicación.
 	\end{itemize}
 \end{itemize}
+
+Además de los recursos mencionados, cuenta con una extensa API que abarca desde múltiples herramientas de testing hasta servidores y clientes de TCP/SSL, HTTP/HTTPS y WebSockets, cobrando estos últimos especial importancia de cara al desarrollo de la aplicación.
 
 Vert.x utiliza Hazelcast por defecto para distribuir su bus de eventos y otras funcionalidades distribuidas, aunque puede usarse también con Ignite\footnote{\url{https://ignite.apache.org/}}, Infinispan\footnote{\url{http://infinispan.org/}} o Zookeeper\footnote{\url{http://zookeeper.apache.org/}}. Para este proyecto usaremos la configuración por defecto con Hazelcast.
 
@@ -373,7 +376,7 @@ Spring Boot\footnote{\url{http://projects.spring.io/spring-boot/}} comprende un 
 
 Además, cuenta con el Sistema de Inversión de Control de Spring\footnote{\url{https://en.wikipedia.org/wiki/Inversion_of_control}}\footnote{\url{https://docs.spring.io/spring/docs/current/spring-framework-reference/html/beans.html}}, que permite la configuración de los componentes de la aplicación, mientras que la administración del ciclo de vida de los objetos se lleva a cabo a través de la inyección de dependencias\footnote{\url{https://en.wikipedia.org/wiki/Dependency_injection}} (que a su vez es una forma de inversión de control).
 
-La versión utilizada de Spring para este proyecto es la 1.4.3
+La versión utilizada de Spring para este proyecto es la 2.0.3
 
 \subsection{RabbitMQ}
 \label{subsec:rabbitmq}
@@ -382,9 +385,9 @@ La versión utilizada de Spring para este proyecto es la 1.4.3
 	\includegraphics[scale=0.3]{img/logos/rabbitmq-logo.png}
 \end{center}
 
-RabbitMQ\footnote{\url{https://www.rabbitmq.com/}} es un software de mensajería de código abierto escrito en Erlang\footnote{\url{https://www.erlang.org/}} que implementa el protocolo de cola de mensajes avanzados (AMQP\footnote{\url{https://es.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol}}), además de otros protocolos que ha ido añadiendo  cómo STOMP\footnote{\url{https://en.wikipedia.org/wiki/Streaming_Text_Oriented_Messaging_Protocol}} y MQTT\footnote{\url{https://en.wikipedia.org/wiki/MQTT}}. Para este proyecto usaremos la versión 3.5.7.
+RabbitMQ\footnote{\url{https://www.rabbitmq.com/}} es un software de mensajería de código abierto implementado en Erlang\footnote{\url{https://www.erlang.org/}} que implementa el protocolo de cola de mensajes avanzados (AMQP\footnote{\url{https://es.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol}}), además de otros protocolos que ha ido añadiendo  cómo STOMP\footnote{\url{https://en.wikipedia.org/wiki/Streaming_Text_Oriented_Messaging_Protocol}} y MQTT\footnote{\url{https://en.wikipedia.org/wiki/MQTT}}. Para este proyecto usaremos la versión 3.5.7.
 
-Entre las caracteristicas mas relevantes que encontramos en esta tecnología, que comparte con otras tecnologías de colas de mensajes, encontramos:
+Entre las caracteristicas mas relevantes que encontramos en esta tecnología, que comparte con otras tecnologías de colas de mensajes, están las siguientes:
 
 \begin{itemize}  
 	\item \textbf{Garantía de entrega y orden}: los mensajes se consumen en el mismo orden que se llegaron a la cola y son consumidos una única vez.
@@ -556,18 +559,17 @@ Por lo tanto, para cada aplicación que implementásemos, debíamos desarrollarla d
 
 En este apartado se abordará la construcción del proyecto. Todo el proyecto (que incluye tanto las aplicaciones de chat como el cliente de pruebas, pueden encontrarse como repositorios en la organización de GitHub: \textit{TFG-DistributedWebChat}\footnote{\url{https://github.com/TFG-DistributedWebChat}}.
 
-
-
 El proyecto realizado consta de 3 aplicaciones de chat y un cliente de pruebas. Las aplicaciones construidas y que entran a formar parte de la comparativa son:
 
 \begin{itemize}  
 	\item Akka
 	\item Vert.x
 	\item SpringBoot + RabbitMQ
+	\item SpringBoot + Hazelcast
 \end{itemize}
 
 
-La comparativa tomará en cuenta la escalabilidad horizontal, por lo que todas las aplicaciones se desarrollaran para funcionar en 2 o más máquinas
+La comparativa tomará en cuenta la escalabilidad horizontal, por lo que todas las aplicaciones se desarrollaran para funcionar de forma distribuida en 2 o más máquinas
 
 \section{Requisitos}
 
@@ -657,7 +659,7 @@ A continuación, se expondrá el diseño e implementación de cada aplicación constr
 
 \subsection{Akka}
 
-El código de esta aplicación se puede encontrar en un repositorio en GitHub de la organización antes mencionada bajo en nombre de \textit{Akka-DistributedWebChat}\footnote{\url{https://github.com/TFG-DistributedWebChat/Akka-DistributedWebChat}}
+El código de esta aplicación se puede encontrar en un repositorio en GitHub de la organización antes mencionada bajo el nombre de \textit{Akka-DistributedWebChat}\footnote{\url{https://github.com/TFG-DistributedWebChat/Akka-DistributedWebChat}}
 
 \textbf{Diseño y arquitectura}
 
@@ -725,7 +727,7 @@ La aplicación de Akka, tal y cómo vemos en la figura hace uso del patron Publica
 	);
 	\end{lstlisting}
 	
-	De forma previa a esta subscripción, se válida que el nombre del usuario no está repetido. De ser así, el actor se \textit{suicida} (mandandose una \textit{PoisonPill} a sí mismo) y cierra la conexión con el cliente:
+	De forma previa a esta subscripción, se valida que el nombre del usuario no está repetido. De ser así, el actor se \textit{suicida} (mandandose una \textit{PoisonPill} a sí mismo) y cierra la conexión con el cliente:
 	
 	\begin{lstlisting}[language=Java]
 	// /app/actors/User.java
@@ -934,7 +936,7 @@ Cada vez que un cliente se conecta, se crea una instancia de User que se encarga
 \begin{lstlisting}[language=Java]
 	// /src/main/java/com/chat/WebChatSpringBootApplication.java
 	@Bean
-	public ChatManager reverseWebSocketEndpoint() {
+	public User reverseWebSocketEndpoint() {
 		return new User();
 	}
 \end{lstlisting} 
@@ -943,12 +945,7 @@ Todas las anotaciones utilizadas pertenecen a la librería WebSocket de Java\foot
 
 La clase \textit{User} implementa tambien la interfaz (a partir de una clase intermedia, \textit{UserConsumer}) \textit{Consumer}, que le permite ser subscriptor a una cola de RabbitMQ.
 
-Por otro lado, cada aplicación/nodo cuenta con un ChatManager, una clase que implementa el patron \textit{Singleton}\footnote{\url{https://es.wikipedia.org/wiki/Singleton}} y a la que los User tienen acceso. Esta clase permite a un User:
-
-\begin{itemize}
-	\item Darse de alta en el registro de usuarios (comprobando previamente si existe el nombre).
-	\item Subscribirse a un topic (nombre de la sala de chat). El Chat Manager se encarga de crear la conexión.
-\end{itemize}
+Por otro lado, cada aplicación/nodo cuenta con un ChatManager, una clase que implementa el patron \textit{Singleton}\footnote{\url{https://es.wikipedia.org/wiki/Singleton}} y a la que los User tienen acceso. Esta clase permite a un User subscribirse a un topic (nombre de la sala de chat). El Chat Manager se encarga de crear la conexión.
 
 \textbf{Funcionamiento}
 
@@ -1005,7 +1002,7 @@ El código de esta aplicación se puede encontrar en un repositorio en GitHub de l
 
 Al contrario que la aplicación de Spring junto a RabbitMQ, esta aplicación usa una arquitectura más similar a Vert.x (ambos usan Hazelcast), pero es muy parecida en cuanto a código se refiere a la primera, por lo que se mencionaran los cambios realizados.
 
-La aplicación hace uso de la anotación @ServerEndpoint sobre la clase User de nuevo, no varia su implementación salvo para el envío y recepción de mensajes de otros usuarios.
+La aplicación hace uso de la anotación @ServerEndpoint sobre la clase User de nuevo, no varía su implementación salvo para el envío y recepción de mensajes de otros usuarios.
 
 Cada \textit{User} implementa la interfaz \textit{MessageListener} que le permite subscribirse y recibir mensajes de Hazelcast. El \textit{ChatManager}, de nuevo único para la aplicación, se limitara a gestionar las altas y bajas de usuarios, manteniendo una referencia a la instancia de Hazelcast para ello.
 
@@ -1035,7 +1032,7 @@ El funcionamiento general de la aplicación es muy similar al de su versión con R
 		}
 		\end{lstlisting} 
 	\end{itemize}
-	\item \textbf{Desconexión}: Cúando un cliente se desconecta (se cierra su conexión Websocket), se ejecuta el método bajo la anotación \textit{@OnClose}. Se informa al \textit{ChatManager} para que le tramite la baja y le desubscriba del topic.
+	\item \textbf{Desconexión}: Cúando un cliente se desconecta (se cierra su conexión Websocket), se ejecuta el método bajo la anotación \textit{@OnClose}. Se informa al \textit{ChatManager} para que le tramite la baja y le desuscriba del topic.
 \end{itemize}
 
 \textbf{Despliegue en clúster}
@@ -1153,7 +1150,7 @@ ssh -i pems/$PEM $MACHINE free -m | grep "Mem:" | awk '{ print $3 }'
 
 Dónde \textit{PEM} es el nombre del archivo .pem\footnote{Un archivo .pem nos permite realizar una conexión ssh con una máquina remota y ejecutar comandos sobre ella.} definido en la configuración y MACHINE será la dirección de la máquina también definida en la configuración. Este archivo debe estar presente en la carpeta \textit{/pems} antes de iniciar la aplicación.
 
-En la aplicación será el \textit{ClientGenerator} la entidad que hará uso de estos scripts desde Java. En cada iteración de cada caso, esta entidad generará un hilo de ejecución que ejecutará estos scripts de forma periodica (cada segundo). Tras finalizar la iteración, se hara la media de cada métrica para incluirlo en el resultado.
+En la aplicación será el \textit{ClientGenerator} la entidad que hará uso de estos scripts desde Java. En cada iteración de cada caso, esta entidad generará un hilo de ejecución que ejecutará estos scripts de forma periodica (cada segundo). Tras finalizar la iteración, se hará la media de cada métrica para incluirlo en el resultado.
 
 Por último, habría que re-escribir el cliente web (escrito en Angular) para soportar este nuevo servidor las opciones que ofrece.
 
@@ -1212,7 +1209,7 @@ A continuación se detalla el flujo del funcionamiento de la aplicación:
 
 Una vez disponemos de todas las aplicaciones desarrolladas y una herramienta para probarlas, llega el momento de realizar la comparativa entre tecnologías.
 
-Las aplicaciones han usado cómo máquinas para albergar sus nodos instancias EC2 de AWS, concretamente el modelo t2.micro \footnote{\url{https://aws.amazon.com/es/ec2/instance-types/}} debido a que es el único que entra dentro de la capa gratuita y no es necesario probarlas en máquinas con mayor capacidad para compararlas. Esta instancia cuenta con 1 CPU y 1 GB de memoria RAM. El sistema operativo elegido para las instancias ha sido Ubuntu 16.04 por su estabilidad, la comunidad detrás ante cualquier problema y el hecho de que las pruebas en local se realizaron en el mismo sistema operativo.
+Las aplicaciones han usado como máquinas para albergar sus nodos instancias EC2 de AWS, concretamente el modelo t2.micro \footnote{\url{https://aws.amazon.com/es/ec2/instance-types/}} debido a que es el único que entra dentro de la capa gratuita y no es necesario probarlas en máquinas con mayor capacidad para compararlas. Esta instancia cuenta con 1 CPU y 1 GB de memoria RAM. El sistema operativo elegido para las instancias ha sido Ubuntu 16.04 por su estabilidad, la comunidad detrás ante cualquier problema y el hecho de que las pruebas en local se realizaron en el mismo sistema operativo.
 
 En lugar de usar una máquina remota, se ha usado HAProxy en la misma máquina en la que se lanza el cliente de pruebas, un sistema Ubuntu 16.04 con 16 GB de memoria RAM y 4 procesadores.
 
@@ -1582,7 +1579,7 @@ Akka se mantiene en un uso de memoria similar a Vert.x, pero ligeramente superio
 
 \subsection{Restrospectiva: Uso de memoria}
 
-Para finalizar el estudio del uso de CPU, echemos de nuevo un vistazo a los resultados del proyecto anterior. Cabe destacar que las pruebas del estudio anterior se realizaron en una máquina con 6 GBytes de memoria RAM, frente a 1 GByte que posee cada uno de los nodos de cualquier aplicación. En este caso, la memoria está en KBytes.
+Para finalizar el estudio del uso de memoria, echemos de nuevo un vistazo a los resultados del proyecto anterior. Cabe destacar que las pruebas del estudio anterior se realizaron en una máquina con 6 GBytes de memoria RAM, frente a 1 GByte que posee cada uno de los nodos de cualquier aplicación. En este caso, la memoria está en KBytes.
 
 \begin{figure}[h!]
 	\centering
@@ -1602,7 +1599,7 @@ A la hora de desarrollar, también debemos plantearnos el tiempo y/o dificultad q
 
 Tanto las aplicaciones de Akka y Vert.x disponen de amplias librerías que conllevan una curva de aprendiza inicial bastante mayor que el resto de tecnologías mostradas, introduciendo el modelo de actores de cara a resolver problemas de concurrencia. En el caso de Akka, además, se le añade la dificultad de incrustar nuestra aplicación en el framework Play para obtener un servidor WebSocket. Esta dificultad se ve recompensada con una sistema de comunicación entre nodos bastante sencilla una vez hemos construido una aplicación monolítica.
 
-Por otro lado, las aplicaciones de SpringBoot son mucho más sencillas y rápidas de construir gracias a su inversión de control, aunque deja en manos del usuario solventar posibles problemas de concurrencia. Sin embargo, SpringBoot no proporciona ningún sistema de comunicación entre los distintos nodos, teniendo que hacer uso de librerias o servicios externos que degradan su prestaciones en comparación a Akka y Vert.x, que integran todas sus funcionalidades en un mismo toolkit.
+Por otro lado, las aplicaciones de SpringBoot son mucho más sencillas y rápidas de construir gracias a su inversión de control, aunque deja en manos del usuario solventar posibles problemas de concurrencia. Sin embargo, SpringBoot no proporciona ningún sistema de comunicación entre los distintos nodos, teniendo que hacer uso de librerias o servicios externos que degradan sus prestaciones en comparación a Akka y Vert.x, que integran todas sus funcionalidades en un mismo toolkit.
 
 \pagebreak
 
