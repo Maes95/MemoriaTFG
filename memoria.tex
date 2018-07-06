@@ -23,6 +23,8 @@
 \definecolor{darkgray}{rgb}{.4,.4,.4}
 \definecolor{purple}{rgb}{0.65, 0.12, 0.82}
 
+%\renewcommand{\footnotesize}{\scriptsize}
+
 \lstdefinelanguage{Bash}{
 	sensitive=false
 }
@@ -230,22 +232,29 @@ Las tecnologías que compararemos en este proyecto serán:
 \chapter{Tecnologías, Herramientas y Metodologías}
 \label{sec:tecnologias} 
 
-De la multitud de lenguajes de programación que existen válidos para afrontar el desarrollo de un servidor basado en WebSocket nuestra primera opción ha sido seleccionar Java, que dispone de múltiples librerías interesantes para abordar el problema además de ser uno de los lenguajes de programación más extendidos, populares y con una amplia comunidad, como demuestra el informe TIOBE.
+De la multitud de lenguajes de programación que existen válidos para afrontar el desarrollo de un servidor basado en WebSocket nuestra primera opción ha sido seleccionar Java, que dispone de múltiples librerías interesantes para abordar el problema además de ser uno de los lenguajes de programación más extendidos, populares y con una amplia comunidad, como demuestra el informe TIOBE (Ver figura~\ref{figura:tiobe}).
 
-\begin{center}
+
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.5]{img/tiobe.png}
-\end{center}
+	\caption{Índice TIOBE}
+	\label{figura:tiobe}
+\end{figure}
 
 \section{Tecnologías}
 
 \subsection{Websockets}
 \label{subsec:websockets}
 
-\begin{center}
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.5]{img/logos/ws-logo.png}
-\end{center}
+	\caption{Logo WebSockets}
+	\label{figura:ws}
+\end{figure}
 
-RFC 6455\footnote{\url{https://tools.ietf.org/html/rfc6455}} define WebSocket como un protocolo que proporciona un canal de comunicación bidireccional y full-dúplex sobre un único socket TCP. Aunque inicialmente estaba pensado para cualquier tipo de comunicaciones entre el navegador y el servidor web, puede usarse también para aplicaciones cliente/servidor.
+RFC 6455\footnote{\url{https://tools.ietf.org/html/rfc6455}} define WebSocket (Figura~\ref{figura:ws}) como un protocolo que proporciona un canal de comunicación bidireccional y full-dúplex sobre un único socket TCP. Aunque inicialmente estaba pensado para cualquier tipo de comunicaciones entre el navegador y el servidor web, puede usarse también para aplicaciones cliente/servidor.
 
 Por otro lado, W3C se encarga de normalizar la API\footnote{\url{https://www.w3.org/TR/2011/WD-websockets-20110929}} de WebSocket. Define una interfaz para el navegador compuesta por 4 métodos que corresponden a manejadores o gestores (\textsl{handlers}) para cada evento. 
 
@@ -268,20 +277,30 @@ Podemos ver un ejemplo de estos manejadores en el código mostrado a continuación
 \subsection{Java}
 \label{subsec:java}
 
-\begin{center}
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.06]{img/logos/java-logo.png}
-\end{center}
+	\caption{Logo Java}
+	\label{figura:java}
+\end{figure}
 
-Java es un lenguaje de programación de propósito general, concurrente y orientado a objetos. Su sintaxis deriva en gran medida de C y C++. Uno de los principales atractivos de Java es su máquina virtual (JVM) que nos permite ejecutar nuestro código Java en cualquier dispositivo, independientemente de la arquitectura. Las tecnologías basadas en Java seleccionadas para la comparativa son explicadas a continuación.
+Java (Figura~\ref{figura:java}) es un lenguaje de programación de propósito general, concurrente y orientado a objetos. Su sintaxis deriva en gran medida de C y C++. Uno de los principales atractivos de Java es su máquina virtual (JVM) que nos permite ejecutar nuestro código Java en cualquier dispositivo, independientemente de la arquitectura. Las tecnologías basadas en Java seleccionadas para la comparativa son explicadas a continuación.
 
 \subsection{Akka}
 \label{subsec:akka}
 
 \begin{center}
-	\includegraphics[scale=0.2]{img/logos/akka-logo.png}
+	
 \end{center}
 
-Akka\footnote{\url{http://akka.io/}} es un toolkit para crear aplicaciones concurrentes y distribuidas. También se ejecuta sobre la JVM. Se puede utilizar con Java y Scala, lenguaje con el que está implementado y del que su implementación de los actores forma parte de la librería estándar desde la versión 2.10. Otras de sus características son:
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.2]{img/logos/akka-logo.png}
+	\caption{Logo Akka}
+	\label{figura:akka}
+\end{figure}
+
+Akka\footnote{\url{http://akka.io/}}(Figura~\ref{figura:akka}) es un toolkit para crear aplicaciones concurrentes y distribuidas. También se ejecuta sobre la JVM. Se puede utilizar con Java y Scala, lenguaje con el que está implementado y del que su implementación de los actores forma parte de la librería estándar desde la versión 2.10. Otras de sus características son:
 
 
 \begin{itemize}  
@@ -309,10 +328,17 @@ La diferencia entre un ActorPath y una ActorReference es que el segundo tiene el
 \label{subsec:hazelcast}
 
 \begin{center}
-	\includegraphics[scale=0.3]{img/logos/hazelcast-logo.png}
+	
 \end{center}
 
-Hazelcast \footnote{\url{https://hazelcast.com/}} es un DataGrid de Java, una herramienta escalable para la distribución de datos.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.3]{img/logos/hazelcast-logo.png}
+	\caption{Logo Hazelcast}
+	\label{figura:hazelcast}
+\end{figure}
+
+Hazelcast \footnote{\url{https://hazelcast.com/}} (Figura~\ref{figura:hazelcast}) es un DataGrid de Java, una herramienta escalable para la distribución de datos.
 
 Entre algunos de sus usos principales, se encuentran:
 
@@ -327,15 +353,19 @@ Entre algunos de sus usos principales, se encuentran:
 
 Para este proyecto nos interesa la mensajeria distribuida, que funciona mediante un patrón publicar-subscribir sencillo de distribuir entre diferentes nodos.
 
+\pagebreak
 
 \subsection{Vert.x}
 \label{subsec:vertx}
 
-\begin{center}
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.1]{img/logos/vertx-logo.png}
-\end{center}
+	\caption{Logo Vert.x}
+	\label{figura:vertx}
+\end{figure}
 
-Vert.x\footnote{\url{http://vertx.io/}} es otro toolkit de Java que permite construir aplicaciones reactivas. Se autodenomina dirigido por eventos y no bloqueante, está inspirado en Node.js. La versión utilizada en el proyecto es la 3.5.
+Vert.x\footnote{\url{http://vertx.io/}} (Figura~\ref{figura:vertx}) es otro toolkit de Java que permite construir aplicaciones reactivas. Se autodenomina dirigido por eventos y no bloqueante, está inspirado en Node.js. La versión utilizada en el proyecto es la 3.5.
 
 Los conceptos básicos que debemos comprender de Vert.x son:
 
@@ -347,7 +377,7 @@ Los conceptos básicos que debemos comprender de Vert.x son:
 	\item \textbf{Petición-Respuesta}: Similar al anterior, con la única diferencia que se proporciona un handler para una posible respuesta.
 	\item \textbf{Context}\footnote{\url{https://github.com/vietj/vertx-materials/blob/master/src/main/asciidoc/Demystifying_the_event_loop.adoc}}: se encarga de controlar un ámbito concreto de la aplicación, además del orden en el que los callbacks/handlers son ejecutados. Vertx dispone de 3 tipos diferentes de contexts:
 	\begin{itemize}
-		\item Event-loop: ejecuta los handlers de forma que un mismo handler es ejecutado únicamente en un Thread y este no debe ser bloqueante de ninguna manera (uso de herramientas de bloqueo condicional, llamadas a bases de datos, ejecuciones del sistema largas, etc?). Este modelo no es dependiente la sincronización y dota a Vertx, junto al EventBus de su reactividad, además de su carácter no bloqueante. Es el context usado por defecto.
+		\item Event-loop: ejecuta los handlers de forma que un mismo handler es ejecutado únicamente en un Thread y este no debe ser bloqueante de ninguna manera (uso de herramientas de bloqueo condicional, llamadas a bases de datos, ejecuciones del sistema largas, etc ...). Este modelo no es dependiente la sincronización y dota a Vertx, junto al EventBus de su reactividad, además de su carácter no bloqueante. Es el context usado por defecto.
 		\item Worker: contexto ligado a los verticles, que siguen asegurando que se ejecutan en un solo Thread, pero permiten su bloqueo.
 		\item Multi-Thread Worker: Permite la ejecución de un verticle en diferentes threads, de forma que pueda realizar las tareas de forma concurrente, delegando en el desarrollador la responsabilidad de asegurar la concurrencia y sincronización.
 	\end{itemize}
@@ -357,14 +387,19 @@ Además de los recursos mencionados, cuenta con una extensa API que abarca desde 
 
 Vert.x utiliza Hazelcast por defecto para distribuir su bus de eventos y otras funcionalidades distribuidas, aunque puede usarse también con Ignite\footnote{\url{https://ignite.apache.org/}}, Infinispan\footnote{\url{http://infinispan.org/}} o Zookeeper\footnote{\url{http://zookeeper.apache.org/}}. Para este proyecto usaremos la configuración por defecto con Hazelcast.
 
+\pagebreak
+
 \subsection{SpringBoot}
 \label{subsec:springboot}
 
-\begin{center}
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.7]{img/logos/springboot-logo.png}
-\end{center}
+	\caption{Logo SpringBoot}
+	\label{figura:springboot}
+\end{figure}
 
-Spring Boot\footnote{\url{http://projects.spring.io/spring-boot/}} comprende un módulo de Spring\footnote{\url{https://spring.io/}} (un framework para el desarrollo de aplicaciones web) que provee de todo lo necesario para crear una aplicación con un mínimo de configuración lista para lanzar. Spring Boot proporciona:
+Spring Boot\footnote{\url{http://projects.spring.io/spring-boot/}}  (Figura~\ref{figura:springboot}) comprende un módulo de Spring\footnote{\url{https://spring.io/}} (un framework para el desarrollo de aplicaciones web) que provee de todo lo necesario para crear una aplicación con un mínimo de configuración lista para lanzar. Spring Boot proporciona:
 
 \begin{itemize}  
 	\item Una experiencia de iniciación muy rápida
@@ -381,11 +416,14 @@ La versión utilizada de Spring para este proyecto es la 2.0.3
 \subsection{RabbitMQ}
 \label{subsec:rabbitmq}
 
-\begin{center}
-	\includegraphics[scale=0.3]{img/logos/rabbitmq-logo.png}
-\end{center}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.2]{img/logos/rabbitmq-logo.png}
+	\caption{Logo RabbitMQ}
+	\label{figura:rabbit}
+\end{figure}
 
-RabbitMQ\footnote{\url{https://www.rabbitmq.com/}} es un software de mensajería de código abierto implementado en Erlang\footnote{\url{https://www.erlang.org/}} que implementa el protocolo de cola de mensajes avanzados (AMQP\footnote{\url{https://es.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol}}), además de otros protocolos que ha ido añadiendo  cómo STOMP\footnote{\url{https://en.wikipedia.org/wiki/Streaming_Text_Oriented_Messaging_Protocol}} y MQTT\footnote{\url{https://en.wikipedia.org/wiki/MQTT}}. Para este proyecto usaremos la versión 3.5.7.
+RabbitMQ\footnote{\url{https://www.rabbitmq.com/}} (Figura~\ref{figura:rabbit}) es un software de mensajería de código abierto implementado en Erlang\footnote{\url{https://www.erlang.org/}} que implementa el protocolo de cola de mensajes avanzados (AMQP\footnote{\url{https://es.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol}}), además de otros protocolos que ha ido añadiendo  cómo STOMP\footnote{\url{https://en.wikipedia.org/wiki/Streaming_Text_Oriented_Messaging_Protocol}} y MQTT\footnote{\url{https://en.wikipedia.org/wiki/MQTT}}. Para este proyecto usaremos la versión 3.5.7.
 
 Entre las caracteristicas mas relevantes que encontramos en esta tecnología, que comparte con otras tecnologías de colas de mensajes, están las siguientes:
 
@@ -418,20 +456,29 @@ Los conceptos principales para entender RabbitMQ son:
 \subsection{HA PROXY}
 \label{subsec:haproxy}
 
-\begin{center}
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.5]{img/logos/haproxy-logo.png}
-\end{center}
+	\caption{Logo HAProxy}
+	\label{figura:ha}
+\end{figure}
 
-HAProxy es una solución gratuita, muy rápida y confiable que ofrece alta disponibilidad, balanceo de carga y proxying para aplicaciones TCP y HTTP. Es especialmente adecuado para sitios web de mucho tráfico. Está escrito en C y tiene la reputación de ser rápido y eficiente en términos de uso del procesador y consumo de memoria. Con el paso de los años, se ha convertido en el estándar de facto del balanceador de carga opensource, ahora se incluye con la mayoría de las distribuciones de Linux, y a menudo se implementa de manera predeterminada en las plataformas en la nube.
+HAProxy (Figura~\ref{figura:ha}) es una solución gratuita, muy rápida y confiable que ofrece alta disponibilidad, balanceo de carga y proxying para aplicaciones TCP y HTTP. Es especialmente adecuado para sitios web de mucho tráfico. Está escrito en C y tiene la reputación de ser rápido y eficiente en términos de uso del procesador y consumo de memoria. Con el paso de los años, se ha convertido en el estándar de facto del balanceador de carga opensource, ahora se incluye con la mayoría de las distribuciones de Linux, y a menudo se implementa de manera predeterminada en las plataformas en la nube.
+
+\pagebreak
 
 \subsection{Angular}
 \label{subsec:angular}
 
-\begin{center}
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.1]{img/logos/angular-logo.png}
-\end{center}
+	\caption{Logo Angular}
+	\label{figura:angular}
+\end{figure}
 
-Angular\footnote{\url{https://angular.io/}} es un framework de JavaScript (aunque comúnmente se utiliza con Typescript\footnote{\url{https://www.typescriptlang.org/}}, un superconjunto de Javascript) de código abierto desarrollado por Google. Nos permite desarrollar SPAs (Single Page Applications), que siguiendo el MVC (modelo-vista-controlador), facilitan la presentación y manipulación de los datos en el lado cliente (frontend), reduciendo la carga lógica del lado servidor (backend). La versión utilizada para este proyecto es la 5.2.
+Angular\footnote{\url{https://angular.io/}} (Figura~\ref{figura:angular})
+es un framework de JavaScript (aunque comúnmente se utiliza con Typescript\footnote{\url{https://www.typescriptlang.org/}}, un superconjunto de Javascript) de código abierto desarrollado por Google. Nos permite desarrollar SPAs (Single Page Applications), que siguiendo el MVC (modelo-vista-controlador), facilitan la presentación y manipulación de los datos en el lado cliente (frontend), reduciendo la carga lógica del lado servidor (backend). La versión utilizada para este proyecto es la 5.2.
 
 Entre sus características, destacamos:
 
@@ -448,11 +495,15 @@ Utilizaremos Angular para ofrecer un cliente web en el que mostrar los resultado
 \subsection{Control de versiones: Git}
 \label{subsec:git}
 
-\begin{center}
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.15]{img/logos/git-logo.png}
-\end{center}
+	\caption{Logo Git}
+	\label{figura:git}
+\end{figure}
 
-Git\footnote{\url{https://git-scm.com/}} es un software de control de versiones diseñado por Linus Torvalds, pensando en la eficiencia y la confiabilidad del mantenimiento de versiones de aplicaciones cuando éstas tienen un gran número de archivos de código fuente.
+
+Git\footnote{\url{https://git-scm.com/}} (Figura~\ref{figura:git}) es un software de control de versiones diseñado por Linus Torvalds, pensando en la eficiencia y la confiabilidad del mantenimiento de versiones de aplicaciones cuando éstas tienen un gran número de archivos de código fuente.
 
 Para el desarrollo de este proyecto hemos usado GitHub\footnote{\url{https://github.com}}, una plataforma de desarrollo colaborativa para alojar proyectos Git.
 
@@ -466,34 +517,44 @@ Debido a la pluralidad de tecnologías, hemos utilizado distintos gestores de dep
 
 \subsubsection{Maven}
 
-\begin{center}
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.5]{img/logos/maven-logo.png}
-\end{center}
+	\caption{Logo Maven}
+	\label{figura:maven}
+\end{figure}
 
 
-Maven\footnote{\url{https://maven.apache.org/}} es una herramienta de software para la gestión y construcción de proyectos Java creada por Jason van Zyl. Hace uso de un POM (Project Object Model), un archivo XML que describe las dependencias y permite añadir opciones de ejecución, test y desplegamiento de la aplicación.
+Maven\footnote{\url{https://maven.apache.org/}} (Figura~\ref{figura:maven}) es una herramienta de software para la gestión y construcción de proyectos Java creada por Jason van Zyl. Hace uso de un POM (Project Object Model), un archivo XML que describe las dependencias y permite añadir opciones de ejecución, test y desplegamiento de la aplicación.
 
 Se ha utilizado para configurar los proyectos en Vert.x y Spring Boot.
 
 \subsubsection{SBT}
 
-\begin{center}
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.4]{img/logos/sbt-logo.png}
-\end{center}
+	\caption{Logo SBT}
+	\label{figura:sbt}
+\end{figure}
 
 
-SBT\footnote{\url{http://www.scala-sbt.org/}} es una herramienta de software para construcción de proyectos en Scala y estándar para contruir aplicaciones en Play Framework, similar a Maven o Ant (propios de Java). Entre sus características, permite el uso conjunto de Java y Scala en el mismo proyecto. Su archivo de configuración es un.stb, que dispone dispone de sintaxis propia.
+SBT\footnote{\url{http://www.scala-sbt.org/}} (Figura~\ref{figura:sbt}) es una herramienta de software para construcción de proyectos en Scala y estándar para contruir aplicaciones en Play Framework, similar a Maven o Ant (propios de Java). Entre sus características, permite el uso conjunto de Java y Scala en el mismo proyecto. Su archivo de configuración es un.stb, que dispone dispone de sintaxis propia.
 
 Se ha utilizado para configurar el proyecto de Akka.
 
 \subsection{AWS}
 \label{subsec:aws}
 
-\begin{center}
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.05]{img/logos/aws-logo.png}
-\end{center}
+	\caption{Logo AWS}
+	\label{figura:aws}
+\end{figure}
 
-Amazon Web Services\footnote{\url{https://aws.amazon.com}} (AWS) es una plataforma de servicios de nube que ofrece potencia de cómputo, almacenamiento de bases de datos, entrega de contenido y otras funcionalidades.
+
+Amazon Web Services\footnote{\url{https://aws.amazon.com}} (AWS) (Figura~\ref{figura:aws}) es una plataforma de servicios de nube que ofrece potencia de cómputo, almacenamiento de bases de datos, entrega de contenido y otras funcionalidades.
 
 Concretamente se ha utilizado su servicio EC2\footnote{\url{https://aws.amazon.com/es/ec2}}, que nos permite lanzar instancias que contengan nuetras aplicaciones en la nube. Para este proyecto se ha hecho uso de la capa gratuita.
 
@@ -505,11 +566,15 @@ Para hacer uso de esta plataforma, se ha utilizado su interfaz mediante línea de
 
 \subsubsection{IntelliJ}
 
-\begin{center}
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.6]{img/logos/intellij-logo.png}
-\end{center}
+	\caption{Logo IntelliJ}
+	\label{figura:intellij}
+\end{figure}
 
-IntelliJ\footnote{\url{https://www.jetbrains.com/idea/} }es un IDE para Java desarollado por JetBrains ideado para mejorar la productividad del programador. Entre sus características incluye:
+
+IntelliJ\footnote{\url{https://www.jetbrains.com/idea/}} (Figura~\ref{figura:intellij}) es un IDE para Java desarollado por JetBrains ideado para mejorar la productividad del programador. Entre sus características incluye:
 
 \begin{itemize}  
 	\item Soporte para los lenguajes basados en la JVM (Java, Scala, Groovy y Kotlin)
@@ -523,18 +588,22 @@ Se ha utilizado este IDE para desarrollar los distintos servidores de chat, ya q
 
 \subsubsection{Atom}
 
-\begin{center}
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.4]{img/logos/atom-logo.jpg}
-\end{center}
+	\caption{Logo Atom}
+	\label{figura:atom}
+\end{figure}
 
-Atom\footnote{\url{https://atom.io/}} es un editor de texto sencillo, ligero y extensible creado por Github. Cuenta con una gran librería de paquetes aportados por la comunidad para facilitar el desarrollo software. Por defecto, no cuenta con ningún tipo de compilador o intérprete.
+
+Atom\footnote{\url{https://atom.io/}} (Figura~\ref{figura:atom}) es un editor de texto sencillo, ligero y extensible creado por Github. Cuenta con una gran librería de paquetes aportados por la comunidad para facilitar el desarrollo software. Por defecto, no cuenta con ningún tipo de compilador o intérprete.
 
 Se ha utilizado de forma conjunta con IntelliJ para desarrollar la aplicación de pruebas, ya que cuenta con paquetes que nos ayudan a desarrollar aplicaciones en Angular y soporte para Typescript.
 
 
 \section{Metodologías}
 
-El modelo de desarrollo de este proyecto se ha llevado a cabo a través de TDD\footnote{\url{https://es.wikipedia.org/wiki/Desarrollo_guiado_por_pruebas}}(Test-driven Development, o en español, desarrollo guiado por pruebas), una práctica de Ingeniería del Software cuya principal idea es hacer que los requistos sean traducidos a pruebas.
+El modelo de desarrollo de este proyecto se ha llevado a cabo a través de TDD\footnote{\url{https://es.wikipedia.org/wiki/Desarrollo_guiado_por_pruebas}}(Test-driven Development, o en español, desarrollo guiado por pruebas, ver figura~\ref{figura:tdd}), una práctica de Ingeniería del Software cuya principal idea es hacer que los requistos sean traducidos a pruebas.
 
 Las razones que han llevado a utilizar un ciclo de desarrollo conducido por pruebas son:
 
@@ -543,9 +612,13 @@ Las razones que han llevado a utilizar un ciclo de desarrollo conducido por prue
 	\item La herencia de un proyecto, que proporcionaba dichas pruebas de integración necesarias para validar cualquier aplicación.
 \end{itemize}
 
-\begin{center}
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=1.2]{img/tdd.png}
-\end{center}
+	\caption{Ciclo del TDD}
+	\label{figura:tdd}
+\end{figure}
+
 
 Por lo tanto, para cada aplicación que implementásemos, debíamos desarrollarla de acuerdo a las pruebas, de forma que una vez las pasasen, solo debíamos refactorizar la aplicación para mejorar su rendimiento y mantenibilidad.
 
@@ -645,11 +718,15 @@ Dado el carácter comparativo que posee el proyecto, nos centraremos en los requi
 
 \section{Diseño e Implementación}
 
-El proyecto seguirá la arquitectura planteada en la siguiente figura:
+El proyecto seguirá la arquitectura planteada en figura~\ref{figura:design}.
 
-\begin{center}
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.7]{img/diagrams/design.png}
-\end{center}
+	\caption{Arquitectura del proyecto}
+	\label{figura:desing}
+\end{figure}
+
 
 Al iniciar el experimento (una vez desplegados los nodos de la aplicación en clúster), el cliente abrirá varias conexiones WebSocket con el servidor, simulando varios usuarios, enviando mensajes a través de ellas y recogiendo diversas métricas. Estas métricas serán enviadas a través de WebSocket a una aplicación web en el navegador, que mostrará dichas métricas mediante el uso de gráficas en tiempo real. Las métricas podrán ser descargadas desde el navegador en formato JSON.
 
@@ -663,11 +740,15 @@ El código de esta aplicación se puede encontrar en un repositorio en GitHub de l
 
 \textbf{Diseño y arquitectura}
 
-\begin{center}
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.5]{img/diagrams/Akka-Diagram.png}
-\end{center}
+	\caption{Arquitectura de la aplicación de Akka}
+	\label{figura:akka_ds}
+\end{figure}
 
-La aplicación de Akka, tal y cómo vemos en la figura hace uso del patron Publicar-Subscribir\footnote{\url{https://en.wikipedia.org/wiki/Publish-subscribe_pattern}}, permitiendo que el actor \textit{User} sea capaz de interactura con otros de su mismo tipo incluso aunque se encuentren en otra máquina distinta bajo un topic que será en nombre de su sala de chat. Este actor es capaz de:
+
+La aplicación de Akka, tal y cómo vemos en la figura~\ref{figura:akka_ds} hace uso del patron Publicar-Subscribir\footnote{\url{https://en.wikipedia.org/wiki/Publish-subscribe_pattern}}, permitiendo que el actor \textit{User} sea capaz de interactura con otros de su mismo tipo incluso aunque se encuentren en otra máquina distinta bajo un topic que será en nombre de su sala de chat. Este actor es capaz de:
 \begin{itemize}  
 	\item Publicar nuevos mensajes que lleguen del cliente bajo un topic al resto de usuarios de la sala.
 	\item Recibir (mediante subscripción) mensajes de un topic y enviarselos al cliente.
@@ -809,11 +890,15 @@ El código de esta aplicación se puede encontrar en un repositorio en GitHub de l
 
 \textbf{Diseño y arquitectura}
 
-\begin{center}
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.5]{img/diagrams/Vertx-Diagram.png}
-\end{center}
+	\caption{Arquitectura de la aplicación de Vertx}
+	\label{figura:vertx_ds}
+\end{figure}
 
-En el caso de esta aplicación, el funcionamiento y la arquitectura de la aplicación es muy similar a la versión monolítica ya que lo único que se distribuye es el bus de eventos.
+
+En el caso de esta aplicación, el funcionamiento y la arquitectura (Ver figura~\ref{figura:vertx_ds}) de la aplicación es muy similar a la versión monolítica ya que lo único que se distribuye es el bus de eventos.
 
 La aplicación se compone de:
 \begin{itemize} 
@@ -907,11 +992,14 @@ El código de esta aplicación se puede encontrar en un repositorio en GitHub de l
 
 \textbf{Diseño y arquitectura}
 
-\begin{center}
-	\includegraphics[scale=0.6]{img/diagrams/Spring-Diagram.png}
-\end{center}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.5]{img/diagrams/Spring-Diagram.png}
+	\caption{Arquitectura de la aplicación de SprinBoot+RabbitMQ}
+	\label{figura:rabbit_ds}
+\end{figure}
 
-Cómo podemos apreciar, parte de la lógica del sistema se encuentra fuera de la aplicación de Java, en el servidor de RabbitMQ, será necesario por tanto una libreria/cliente AMQP para poder conectarnos a dicho servidor.
+Cómo podemos apreciar en la figura~\ref{figura:rabbit_ds}, parte de la lógica del sistema se encuentra fuera de la aplicación de Java, en el servidor de RabbitMQ, será necesario por tanto una libreria/cliente AMQP para poder conectarnos a dicho servidor.
 
 Utilizaremos una cola para cada usuario y un único \textit{Exchange} para todo el sistema. De esta forma, los usuarios comunicarán al \textit{Exchange} sus mensajes y este se encargará de hacerlos llegar a las colas de los usuarios en su misma sala.
 
@@ -986,7 +1074,7 @@ Una vez nuestro clúster esta desplegado, basta con lanzar nuestra aplicación de 
 
 \textbf{Problemas en el desarrollo}
 
-En contraste a las otras tecnologías que son toolkits completos, con RabbitMQ y Spring nos encontramos el problema de lidiar con un servicio externo. La mayor dificultad de esta aplicación fué distribuir los nodos de RabbitMQ, comprender la importancia de la \textit{erlang-cookie} y manejar la unión de nodos, que si no se seguian los pasos en un orden concreto, era imposible de realizar. Aunque la documentación oficial es muy completa, si duda ha sido gracias a la comunidad y a la lectura de numerosos ejemplos de terceros lo que ha hecho posible la comprensión de este proceso.
+En contraste a las otras tecnologías que son toolkits completos, con RabbitMQ y Spring nos encontramos el problema de lidiar con un servicio externo. La mayor dificultad de esta aplicación fué distribuir los nodos de RabbitMQ, comprender la importancia de la \textit{erlang-cookie} y manejar la unión de nodos, que si no se seguian los pasos en un orden concreto, era imposible de realizar. Aunque la documentación oficial es muy completa, sin duda ha sido gracias a la comunidad y a la lectura de numerosos ejemplos de terceros lo que ha hecho posible la comprensión de este proceso.
 
 Otro problema que surgió a raiz de un desconocimiento de la gestión de recursos del cliente AMQP fué el no cerrar apropiadamente las conexiones de los usuarios. Esto provocaba un aumento constante de la memoria RAM utilizada por la máquina, que para las pruebas más exigentes provocaba la parada del servicio. Gracias al plugin antes mencionado, se pudo monitorizar los nodos para detectar este problema, haciendo los cambios pertinentes con resultados satisfactorios.
 
@@ -996,11 +1084,15 @@ El código de esta aplicación se puede encontrar en un repositorio en GitHub de l
 
 \textbf{Diseño y arquitectura}
 
-\begin{center}
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.6]{img/diagrams/Spring-Hazelcast-Diagram.png}
-\end{center}
+	\caption{Arquitectura de la aplicación de SpringBoot+Hazelcast}
+	\label{figura:hazelcast_ds}
+\end{figure}
 
-Al contrario que la aplicación de Spring junto a RabbitMQ, esta aplicación usa una arquitectura más similar a Vert.x (ambos usan Hazelcast), pero es muy parecida en cuanto a código se refiere a la primera, por lo que se mencionaran los cambios realizados.
+
+Al contrario que la aplicación de Spring junto a RabbitMQ, esta aplicación usa una arquitectura (Ver figura~\ref{figura:hazelcast_ds}) más similar a Vert.x (ambos usan Hazelcast), pero es muy parecida en cuanto a código se refiere a la primera, por lo que se mencionaran los cambios realizados.
 
 La aplicación hace uso de la anotación @ServerEndpoint sobre la clase User de nuevo, no varía su implementación salvo para el envío y recepción de mensajes de otros usuarios.
 
@@ -1154,31 +1246,47 @@ En la aplicación será el \textit{ClientGenerator} la entidad que hará uso de est
 
 Por último, habría que re-escribir el cliente web (escrito en Angular) para soportar este nuevo servidor las opciones que ofrece.
 
-Para ello se proporcionará una interfaz en la que poder introducir la configuración completa cómo se puede apreciar en la imagen:
+Para ello se proporcionará una interfaz en la que poder introducir la configuración completa cómo se puede apreciar en la figura~\ref{figura:web1}.
 
-\begin{center}
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.3]{img/screenshots/web1.png}
-\end{center}
+	\caption{Cliente web - Pantalla de configuración de la prueba}
+	\label{figura:web1}
+\end{figure}
 
-Una vez se introduzcan la configuración de las pruebas a realizar, la siguiente pantalla deberá visualizar el progreso de la misma mientras se van mostrando los resultados, incluyendo las métricas de CPU y memoria por nodo:
 
-\begin{center}
+Una vez se introduzcan la configuración de las pruebas a realizar, la siguiente pantalla deberá visualizar el progreso de la misma mientras se van mostrando los resultados, incluyendo las métricas de CPU y memoria por nodo (Ver figura~\ref{figura:web2}).
+
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.3]{img/screenshots/web2.png}
-\end{center}
+	\caption{Cliente web - Informe de progreso y métricas}
+	\label{figura:web2}
+\end{figure}
+
 
 Al finalizar las pruebas, obtendremos los datos en formato JSON.
 
-La arquitectura de nuestro sistema de pruebas resultante es la siguiente:
+La arquitectura de nuestro sistema de pruebas resultante puede apreciarse en la figura~\ref{figura:arquitec}.
 
-\begin{center}
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.7]{img/diagrams/TestArquitecture.png}
-\end{center}
+	\caption{Arquitectura del sistema}
+	\label{figura:arquitec}
+\end{figure}
 
-Esta aplicación nos permite obtener las métricas de latencia, uso de CPU y memoria de una aplicación distribuida. Una vez tengamos los resultados de varias aplicaciones, se pueden comparar en un sencillo dashboard interactivo:
 
-\begin{center}
+Esta aplicación nos permite obtener las métricas de latencia, uso de CPU y memoria de una aplicación distribuida. Una vez tengamos los resultados de varias aplicaciones, se pueden comparar en un sencillo dashboard interactivo (Ver figura~\ref{figura:web3}).
+
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.3]{img/screenshots/web3.png}
-\end{center}
+	\caption{Cliente web - Dashboard comparativo}
+	\label{figura:web3}
+\end{figure}
+
 
 \subsection{Funcionamiento}
 
@@ -1243,11 +1351,15 @@ Junto a cada métrica, se comentarán los resultados del estudio comparativo previ
 
 \section{Latencia}
 
-Para nuestro caso de estudio, podemos definir la latencia o tiempo de respuesta como el retardo en milisegundos producido por la demora en la propagación de los mensajes.
+Para nuestro caso de estudio, podemos definir la latencia o tiempo de respuesta (Ver figrua~\ref{figura:latency}) como el retardo en milisegundos producido por la demora en la propagación de los mensajes.
 
-\begin{center}
+\begin{figure}[h!]
+	\centering
 	\includegraphics[scale=0.6]{img/latency.png}
-\end{center}
+	\caption{Latencia}
+	\label{figura:latency}
+\end{figure}
+
 
 Conviene recordar que:
 \begin{itemize}
@@ -1264,27 +1376,30 @@ A continuación se muestran los resultados de latencia para distinto número de sa
 		\includegraphics[scale=0.6]{img/labels3.png}
 		\includegraphics[scale=0.6]{img/2nodes/1roomtime.png}
 	\caption{1 room(s) - Time - 2 nodes}
+	\label{figura:lat2-1}
 \end{figure}
 
-Observamos una clara diferencia entre las aplicaciones basadas en actores que las de SpringBoot, obteniendo las primeras resultados significativamente mejores.
+Observamos una clara diferencia (Ver figura~\ref{figura:lat2-1}) entre las aplicaciones basadas en actores que las de SpringBoot, obteniendo las primeras resultados significativamente mejores.
 
 \begin{figure}[h!]
 	\centering
 		\includegraphics[scale=0.6]{img/labels3.png}
 		\includegraphics[scale=0.6]{img/2nodes/2roomtime.png}
 	\caption{2 room(s) - Time - 2 nodes}
+	\label{figura:lat2-2}
 \end{figure}
 
-Al aumentar en número de chats a 2, no parece haber grandes cambios respecto a la anterior gráfica. Destacamos que a un menor número de mensajes (180.000 frente a 250.000) la aplicación de SpringBoot+RabbitMQ empeora bastante haciendo evidente que aumentar el número de \textit{topics} en RabbitMQ aumenta la latencia global.
+Al aumentar en número de chats a 2 (Ver figura~\ref{figura:lat2-2}), no parece haber grandes cambios respecto a la anterior gráfica. Destacamos que a un menor número de mensajes (180.000 frente a 250.000) la aplicación de SpringBoot+RabbitMQ empeora bastante haciendo evidente que aumentar el número de \textit{topics} en RabbitMQ aumenta la latencia global.
 
 \begin{figure}[h!]
 	\centering
 		\includegraphics[scale=0.6]{img/labels3.png}
 		\includegraphics[scale=0.6]{img/2nodes/4roomtime.png}
 	\caption{4 room(s) - Time - 2 nodes}
+	\label{figura:lat2-4}
 \end{figure}
 
-Con 4 salas de chat el mayor cambio se produce en la aplicación de SpringBoot+Hazelcast, que reduce considerablemente su latencia hasta equipararse con Akka y Vert.x (recordemos que Vert.x hace uso internamente de Hazelcast). Aunque el número de mensajes es sustancialmente menor, para 90.000 ofrece 836 ms de latencia, por los 2439 ms que ofrece para 80.000  mensajes en 2 salas de chat. 
+Con 4 salas (Ver figura~\ref{figura:lat2-4}) de chat el mayor cambio se produce en la aplicación de SpringBoot+Hazelcast, que reduce considerablemente su latencia hasta equipararse con Akka y Vert.x (recordemos que Vert.x hace uso internamente de Hazelcast). Aunque el número de mensajes es sustancialmente menor, para 90.000 ofrece 836 ms de latencia, por los 2439 ms que ofrece para 80.000  mensajes en 2 salas de chat. 
 
 \subsection{Latencia en 3 nodos}
 
@@ -1293,27 +1408,30 @@ Con 4 salas de chat el mayor cambio se produce en la aplicación de SpringBoot+Ha
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/3nodes/1roomtime.png}
 	\caption{1 room(s) - Time - 3 nodes}
+	\label{figura:lat3-1}
 \end{figure}
 
-Al aumentar el número de nodos de 2 a 3 observamos ligeras mejoras en las aplicaciones de Vert.x y Akka, pero dónde realmente se nota esta nueva instancia es en las aplicaciones de SpringBoot, que reducen su latencia en 1/3.
+Al aumentar el número de nodos de 2 a 3 (Ver figura~\ref{figura:lat3-1}) observamos ligeras mejoras en las aplicaciones de Vert.x y Akka, pero dónde realmente se nota esta nueva instancia es en las aplicaciones de SpringBoot, que reducen su latencia en 1/3.
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/3nodes/2roomtime.png}
 	\caption{2 room(s) - Time - 3 nodes}
+	\label{figura:lat3-2}
 \end{figure}
 
-En el caso de 2 salas de chat, la diferencia más significativa es la de Hazelcast, que al igual que ocurria en el caso de 4 salas de chat en 2 nodos, la latencia desciende de forma considerable hasta equipararse con Vert.x y Akka.
+En el caso de 2 salas de chat (Ver figura~\ref{figura:lat3-2}), la diferencia más significativa es la de Hazelcast, que al igual que ocurria en el caso de 4 salas de chat en 2 nodos, la latencia desciende de forma considerable hasta equipararse con Vert.x y Akka.
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/3nodes/4roomtime.png}
 	\caption{4 room(s) - Time - 3 nodes}
+	\label{figura:lat3-4}
 \end{figure}
 
-En este caso, vemos cómo el aumento de salas de chat hace que se solapen las aplicaciones de Vert.x y SpringBoot+Hazelcast en cuando a la métrica medida. RabbitMQ mejora discretamente al incluir este nodo extra.
+En este caso (Ver figura~\ref{figura:lat3-4}), vemos cómo el aumento de salas de chat hace que se solapen las aplicaciones de Vert.x y SpringBoot+Hazelcast en cuando a la métrica medida. RabbitMQ mejora discretamente al incluir este nodo extra.
 
 \pagebreak
 
@@ -1324,27 +1442,30 @@ En este caso, vemos cómo el aumento de salas de chat hace que se solapen las apl
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/4nodes/1roomtime.png}
 	\caption{1 room(s) - Time - 4 nodes}
+	\label{figura:lat4-1}
 \end{figure}
 
-Al hacer uso de un nodo adicional, comprobamos de nuevo cómo los cambios más drásticos se producen en las aplicaciones de SpringBoot, especialmente en su variante con RabbitMQ, que ofrece una bajada de latencia a más de la mitad que en su versión con 2 nodos. Las aplicaciones de Akka y Vert.x siguen ofreciendo buenos resultados, reduciendo sensiblemente la latencia que el aumento de los nodos.
+Al hacer uso de un nodo adicional (Ver figura~\ref{figura:lat4-1}), comprobamos de nuevo cómo los cambios más drásticos se producen en las aplicaciones de SpringBoot, especialmente en su variante con RabbitMQ, que ofrece una bajada de latencia a más de la mitad que en su versión con 2 nodos. Las aplicaciones de Akka y Vert.x siguen ofreciendo buenos resultados, reduciendo sensiblemente la latencia que el aumento de los nodos.
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/4nodes/2roomtime.png}
 	\caption{2 room(s) - Time - 4 nodes}
+	\label{figura:lat4-2}
 \end{figure}
 
-Haciendo uso de dos salas de chat, la única diferencia notable parece ser un peor resultado para la aplicación de SpringBoot+Hazelcast. Se revisó y se realizaron de nuevo las pruebas pero los resultados eran similares. Es posible que el número de instancias/nodos sea lo suficientemente grande para que se degrade las prestaciones de la aplicación y aumente la latencia. Esto ocurre, en mucha menor medida, en el resto de aplicaciones.
+Haciendo uso de dos salas de chat (Ver figura~\ref{figura:lat4-2}), la única diferencia notable parece ser un peor resultado para la aplicación de SpringBoot+Hazelcast. Se revisó y se realizaron de nuevo las pruebas pero los resultados eran similares. Es posible que el número de instancias/nodos sea lo suficientemente grande para que se degrade las prestaciones de la aplicación y aumente la latencia. Esto ocurre, en mucha menor medida, en el resto de aplicaciones.
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/4nodes/4roomtime.png}
 	\caption{4 room(s) - Time - 4 nodes}
+	\label{figura:lat4-4}
 \end{figure}
 
-En este último caso, vemos cómo la latencia media de las aplicaciones se iguala hasta algo menos de 60.000 mensajes, manteniendose casi lineal la aplicación de Vert.x, aumentando ligeramente la de Akka y creciendo casi 4 veces las aplicaciones basadas en SpringBoot.
+En este último caso (Ver figura~\ref{figura:lat4-4}), vemos cómo la latencia media de las aplicaciones se iguala hasta algo menos de 60.000 mensajes, manteniendose casi lineal la aplicación de Vert.x, aumentando ligeramente la de Akka y creciendo casi 4 veces las aplicaciones basadas en SpringBoot.
 
 \subsection{Conclusión del estudio: Latencia}
 
@@ -1356,15 +1477,16 @@ Podemos deducir que Hazelcast (tecnología sobre la que funciona la aplicación de
 
 \subsection{Restrospectiva: Latencia}
 
-Para finalizar el estudio de la latencia, echemos un vistazo a los resultados del proyecto anterior (escalado vertical):
+Para finalizar el estudio de la latencia, echemos un vistazo a los resultados del proyecto anterior (escalado vertical).
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/old/1roomtime.png}
 	\caption{1 room(s) - Time - 1 node}
+	\label{figura:old_latency}
 \end{figure}
 
-Cómo podemos observar, los resultados en un solo nodo son completamente distintos. La aplicación de Vert.x ofrece los peores resultados con diferencia, mientras que en SpringBoot la latencia apenas aumenta aún cuando la carga de mensajes sobrepasa el millón. Cabe mencionar que la aplicación de SpringBoot no hace uso de ningun sistema externo o libreria para la distribución de mensajes, se gestiona a nivel de aplicación con llamadas a funciones.
+Cómo podemos observar en la figura~\ref{figura:old_latency}, los resultados en un solo nodo son completamente distintos. La aplicación de Vert.x ofrece los peores resultados con diferencia, mientras que en SpringBoot la latencia apenas aumenta aún cuando la carga de mensajes sobrepasa el millón. Cabe mencionar que la aplicación de SpringBoot no hace uso de ningun sistema externo o libreria para la distribución de mensajes, se gestiona a nivel de aplicación con llamadas a funciones.
 
 Tras ver estos resultados, podemos afirmar que Vert.x es una tecnología pensada para distribuirse y no ofrece soluciones eficientes en lo que a latencia respecta para una aplicación monolítica. Por otro lado SpringBoot invierte este enunciado, siendo una solución monolítica sin apenas latencia pero sin utilidad a la hora de distribuirse, pues requiere de librerias externas que merman su eficiencia. Por último, mencionar que Akka resulta ser una buena tecnología en ambos casos.
 
@@ -1379,9 +1501,10 @@ Tal y como se ha desarrollado la obtención de métricas, el uso de CPU calculado 
 		\includegraphics[scale=0.6]{img/labels3.png}
 		\includegraphics[scale=0.6]{img/2nodes/1roomcpu.png}
 	\caption{1 room(s) - CPU - 2 nodes}
+	\label{figura:cpu2-1}
 \end{figure}
 
-Para el primer caso se aprecia cómo el uso de cpu de SpringBoot+RabbitMQ llega a duplicar el valor de las aplicaciones que usan Hazelcast. Estas últimas muestran un uso de CPU casi idéntico. El uso de este recurso en Akka aumenta en mayor medida que las aplicaciones de Hazelcast, pero sin sobrepasar a SpringBoot+RabbitMQ.
+Para el primer caso (Ver figura~\ref{figura:cpu2-1}) se aprecia cómo el uso de cpu de SpringBoot+RabbitMQ llega a duplicar el valor de las aplicaciones que usan Hazelcast. Estas últimas muestran un uso de CPU casi idéntico. El uso de este recurso en Akka aumenta en mayor medida que las aplicaciones de Hazelcast, pero sin sobrepasar a SpringBoot+RabbitMQ.
 
 \pagebreak
 
@@ -1390,6 +1513,7 @@ Para el primer caso se aprecia cómo el uso de cpu de SpringBoot+RabbitMQ llega a
 		\includegraphics[scale=0.6]{img/labels3.png}
 		\includegraphics[scale=0.6]{img/2nodes/2roomcpu.png}
 	\caption{2 room(s) - CPU - 2 nodes}
+	\label{figura:cpu2-2}
 \end{figure}
 
 \begin{figure}[h!]
@@ -1397,9 +1521,10 @@ Para el primer caso se aprecia cómo el uso de cpu de SpringBoot+RabbitMQ llega a
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/2nodes/4roomcpu.png}
 	\caption{4 room(s) - CPU - 2 nodes}
+	\label{figura:cpu2-4}
 \end{figure}
 
-El uso de memoria se mantiene estable en todas las aplicaciones para 2 y 4 salas de chat. Las basadas en Hazelcast mantienen resultados similares.
+El uso de memoria se mantiene estable en todas las aplicaciones para 2 y 4 salas de chat  (Ver figuras~\ref{figura:cpu2-2} y \ref{figura:cpu2-4}). Las basadas en Hazelcast mantienen resultados similares.
 
 \pagebreak
 
@@ -1410,15 +1535,17 @@ El uso de memoria se mantiene estable en todas las aplicaciones para 2 y 4 salas
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/3nodes/1roomcpu.png}
 	\caption{1 room(s) - CPU - 3 nodes}
+	\label{figura:cpu3-1}
 \end{figure}
 
-En todas las tecnologías se observa un uso menor de este recurso, debido a la distribución de carga de usuarios entre los nodos.
+En todas las tecnologías (Ver figura~\ref{figura:cpu3-1}) se observa un uso menor de este recurso, debido a la distribución de carga de usuarios entre los nodos.
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/3nodes/2roomcpu.png}
 	\caption{2 room(s) - CPU - 3 nodes}
+	\label{figura:cpu3-2}
 \end{figure}
 
 \pagebreak
@@ -1428,9 +1555,10 @@ En todas las tecnologías se observa un uso menor de este recurso, debido a la di
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/3nodes/4roomcpu.png}
 	\caption{4 room(s) - CPU - 3 nodes}
+	\label{figura:cpu3-4}
 \end{figure}
 
-Al aumentar el número de salas a 2 y 4, nos encontramos con el mismo comportamiento que en el caso de 2 nodos: uso de CPU estable ante la carga de trabajo.
+Al aumentar el número de salas a 2 y 4 (Ver figuras~\ref{figura:cpu3-2} y \ref{figura:cpu3-4}), nos encontramos con el mismo comportamiento que en el caso de 2 nodos: uso de CPU estable ante la carga de trabajo.
 
 \subsection{Uso de CPU en 4 nodos}
 
@@ -1439,15 +1567,17 @@ Al aumentar el número de salas a 2 y 4, nos encontramos con el mismo comportamie
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/4nodes/1roomcpu.png}
 	\caption{1 room(s) - CPU - 4 nodes}
+	\label{figura:cpu4-1}
 \end{figure}
 
-Aumentando el número de nodos a 4 vemos cómo Akka muestra un coportamiento irregular haciendo un uso mayor de CPU con un número reducido de usuarios, estabilizandose a medida que aumenta la carga.
+Aumentando el número de nodos a 4 (Ver figura~\ref{figura:cpu4-1}) vemos cómo Akka muestra un coportamiento irregular haciendo un uso mayor de CPU con un número reducido de usuarios, estabilizandose a medida que aumenta la carga.
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/4nodes/2roomcpu.png}
 	\caption{2 room(s) - CPU - 4 nodes}
+	\label{figura:cpu4-2}
 \end{figure}
 
 \begin{figure}[h!]
@@ -1455,9 +1585,10 @@ Aumentando el número de nodos a 4 vemos cómo Akka muestra un coportamiento irreg
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/4nodes/4roomcpu.png}
 	\caption{4 room(s) - CPU - 4 nodes}
+	\label{figura:cpu4-4}
 \end{figure}
 
-Al aumentar en número de salas para 4 nodos a 2 y 4 se observa que la aplicación de SpringBoot se reduce en mayor medida que las demás, situándose cercana a Akka.
+Al aumentar en número de salas para 4 nodos a 2 y 4 (Ver figuras ~\ref{figura:cpu4-2} y \ref{figura:cpu4-4})se observa que la aplicación de SpringBoot se reduce en mayor medida que las demás, situándose cercana a Akka.
 
 \subsection{Conclusión del estudio: Uso de CPU}
 
@@ -1475,9 +1606,10 @@ Para finalizar el estudio del uso de CPU, volvamos a echar un vistazo a los resu
 	\centering
 	\includegraphics[scale=0.6]{img/old/1roomcpu.png}
 	\caption{1 room(s) - CPU - 1 node}
+	\label{figura:old_cpu}
 \end{figure}
 
-En esta ocasión, se corresponde en gran medida a las nuevas métricas que hemos recogido, donde Spring y Vert.x hacen un uso de CPU similar mientras que Akka hace un uso bastante superior. Por lo tanto, la mayor diferencia la notariamos al hacer uso de RabbitMQ.
+En esta ocasión (Ver figura~\ref{figura:old_cpu}), se corresponde en gran medida a las nuevas métricas que hemos recogido, donde Spring y Vert.x hacen un uso de CPU similar mientras que Akka hace un uso bastante superior. Por lo tanto, la mayor diferencia la notariamos al hacer uso de RabbitMQ.
 
 \section{Uso de memoria}
 
@@ -1492,15 +1624,17 @@ Al igual que el uso de la CPU, esta métrica se obtuvo mediante SSH, en esta ocas
 		\includegraphics[scale=0.6]{img/labels3.png}
 		\includegraphics[scale=0.6]{img/2nodes/1roomram.png}
 	\caption{1 room(s) - Memory - 2 nodes}
+	\label{figura:mem2-1}
 \end{figure}
 
-Observamos cómo la aplicación que de nuevo hace un uso mayor del recurso es SpringBoot+RabbitMQ, mientras que las tecnologías basadas en actores necesitan la mitad de memoria para funcionar. Vemos una notable diferencia entre la aplicación de SpringBoot+Hazelcast con la de Vert.x.
+En la figura~\ref{figura:mem2-1} observamos cómo la aplicación que de nuevo hace un uso mayor del recurso es SpringBoot+RabbitMQ, mientras que las tecnologías basadas en actores necesitan la mitad de memoria para funcionar. Vemos una notable diferencia entre la aplicación de SpringBoot+Hazelcast con la de Vert.x.
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/2nodes/2roomram.png}
 	\caption{2 room(s) - Memory - 2 nodes}
+	\label{figura:mem2-2}
 \end{figure}
 
 \begin{figure}[h!]
@@ -1508,11 +1642,12 @@ Observamos cómo la aplicación que de nuevo hace un uso mayor del recurso es Spri
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/2nodes/4roomram.png}
 	\caption{4 room(s) - Memory - 2 nodes}
+	\label{figura:mem2-4}
 \end{figure}
 
 \pagebreak
 
-Apreciamos estabilidad a la hora de aumentar el número de salas de chat, sin diferencias reseñables frente a lo anteriormente comentado.
+Apreciamos estabilidad a la hora de aumentar el número de salas de chat(Ver figuras~\ref{figura:mem2-2} y \ref{figura:mem2-4}), sin diferencias reseñables frente a lo anteriormente comentado.
 
 \subsection{Uso de memoria en 3 nodos}
 
@@ -1521,9 +1656,10 @@ Apreciamos estabilidad a la hora de aumentar el número de salas de chat, sin dif
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/3nodes/1roomram.png}
 	\caption{1 room(s) - Memory - 3 nodes}
+	\label{figura:mem3-1}
 \end{figure}
 
-Aumentar el número de nodos, reduce sensiblemente la memoria utilizada, especialmente en SpringBoot+RabbitMQ, que se asemeja en el uso de este recurso a su versión con Hazelcast.
+Aumentar el número de nodos (Ver figura~\ref{figura:mem3-1}), reduce sensiblemente la memoria utilizada, especialmente en SpringBoot+RabbitMQ, que se asemeja en el uso de este recurso a su versión con Hazelcast.
 
 \pagebreak
 
@@ -1532,6 +1668,7 @@ Aumentar el número de nodos, reduce sensiblemente la memoria utilizada, especial
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/3nodes/2roomram.png}
 	\caption{2 room(s) - Memory - 3 nodes}
+	\label{figura:mem3-2}
 \end{figure}
 
 \begin{figure}[h!]
@@ -1539,10 +1676,11 @@ Aumentar el número de nodos, reduce sensiblemente la memoria utilizada, especial
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/3nodes/4roomram.png}
 	\caption{4 room(s) - Memory - 3 nodes}
+	\label{figura:mem3-4}
 \end{figure}
 
 
-Al aumentar el número de salas, observamos la misma estabilidad que con dos nodos, volviendose aún mas similar el uso de este recurso en las aplicaciones de SpringBoot.
+Al aumentar el número de salas (Ver figuras~\ref{figura:mem3-2} y \ref{figura:mem3-4}), observamos la misma estabilidad que con dos nodos, volviendose aún mas similar el uso de este recurso en las aplicaciones de SpringBoot.
 
 \subsection{Uso de memoria en 4 nodos}
 
@@ -1551,15 +1689,17 @@ Al aumentar el número de salas, observamos la misma estabilidad que con dos nodo
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/4nodes/1roomram.png}
 	\caption{1 room(s) - Memory - 4 nodes}
+	\label{figura:mem4-1}
 \end{figure}
 
-Observamos que las aplicaciones hacen un uso de memoria muy parecido al caso con 3 nodos.
+En la figura ~\ref{figura:mem4-1} que las aplicaciones hacen un uso de memoria muy parecido al caso con 3 nodos.
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/4nodes/2roomram.png}
 	\caption{2 room(s) - Memory - 4 nodes}
+	\label{figura:mem4-2}
 \end{figure}
 
 \begin{figure}[h!]
@@ -1567,9 +1707,10 @@ Observamos que las aplicaciones hacen un uso de memoria muy parecido al caso con
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/4nodes/4roomram.png}
 	\caption{4 room(s) - Memory - 4 nodes}
+	\label{figura:mem4-4}
 \end{figure}
 
-Al igual que antes, el uso de memoria se estabiliza para todas las aplicaciones, pero en este caso aumenta para la aplicación de SpringBoot+Hazelcast, situándola por encima de su versión con RabbitMQ.
+Al igual que antes, el uso de memoria se estabiliza para todas las aplicaciones (Ver figuras~\ref{figura:mem4-2} y \ref{figura:mem4-4}), pero en este caso aumenta para la aplicación de SpringBoot+Hazelcast, situándola por encima de su versión con RabbitMQ.
 
 \subsection{Conclusión del estudio: Uso de memoria}
 
@@ -1585,9 +1726,10 @@ Para finalizar el estudio del uso de memoria, echemos de nuevo un vistazo a los 
 	\centering
 	\includegraphics[scale=0.6]{img/old/1roomram.png}
 	\caption{1 room(s) - Memory - 1 node}
+	\label{figura:old_memory}
 \end{figure}
 
-Contrario a lo que podriamos observar en el uso de CPU, en el estudio anterior Vert.x mostraba un uso de memoria muy alto en cuanto el flujo de mensajes comenzaba a escalar demasiado (a partir de unos 450.000 mensajes). Podemos ver cómo Vert.x, al igual que en la comparativa actual, comienza siendo la que hace un uso menor de este recurso.
+Contrario a lo que podriamos observar en el uso de CPU, en el estudio anterior (Ver figura~\ref{figura:old_memory}) Vert.x mostraba un uso de memoria muy alto en cuanto el flujo de mensajes comenzaba a escalar demasiado (a partir de unos 450.000 mensajes). Podemos ver cómo Vert.x, al igual que en la comparativa actual, comienza siendo la que hace un uso menor de este recurso.
 
 Este aumento repentino puede ser debido a una mala gestión de la memoria, concretamente a la eliminación de los \textit{handlers} que en la nueva versión si se solucionó. No se ha podido comprobar si al aumentar la carga de trabajo progresivamente (hasta, por ejemplo, los 1.8 millones de mensajes del estudio anterior) debido a las limitaciones de las máquinas disponibles.
 
@@ -1605,13 +1747,14 @@ Por otro lado, las aplicaciones de SpringBoot son mucho más sencillas y rápidas 
 
 \section{Conclusiones generales de la comparativa}
 
-Para obtener una visión global de la comparativa, haremos uso un gráfico de dispersión para el caso más representativo por su alta carga de trabajo, 50 usuarios en una sola sala de chat, con un total de 250.000 de mensajes enviados y recibidos. La latencia queda reflejada por el tamaño de los puntos.
+Para obtener una visión global de la comparativa, haremos uso un gráfico de dispersión (Ver figura~\ref{figura:dispersion}) para el caso más representativo por su alta carga de trabajo, 50 usuarios en una sola sala de chat, con un total de 250.000 de mensajes enviados y recibidos. La latencia queda reflejada por el tamaño de los puntos.
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
 	\includegraphics[scale=0.6]{img/bubblechart.png}
 	\caption{4 room(s) - Memory - 3 nodes}
+	\label{figura:dispersion}
 \end{figure}
 
 Los resultados del experimento quedan resumidos en la siguiente tabla.
@@ -1627,7 +1770,7 @@ Los resultados del experimento quedan resumidos en la siguiente tabla.
 	\end{tabular}
 \end{center}
 
-Tras estudiar las distintas métricas, podemos afirmar que si buscamos una aplicación basada en Websockets distribuida, fiable ante grandes cargas de trabajo y que no haga un uso excesivo de los recursos de las máquinas en las que se ejecuta, la tecnología óptima sería Vert.x
+Tras estudiar las distintas métricas, podemos afirmar que si buscamos una aplicación basada en Websockets distribuida, fiable ante grandes cargas de trabajo y que no haga un uso excesivo de los recursos de las máquinas en las que se ejecuta, la tecnología óptima sería Vert.x.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
