@@ -300,7 +300,7 @@ Java (Figura~\ref{figura:java}) es un lenguaje de programación de propósito gene
 	\label{figura:akka}
 \end{figure}
 
-Akka\footnote{\url{http://akka.io/}}(Figura~\ref{figura:akka}) es un toolkit para crear aplicaciones concurrentes y distribuidas. También se ejecuta sobre la JVM. Se puede utilizar con Java y Scala, lenguaje con el que está implementado y del que su implementación de los actores forma parte de la librería estándar desde la versión 2.10. Otras de sus características son:
+Akka\footnote{\url{http://akka.io/}} (Figura~\ref{figura:akka}) es un toolkit para crear aplicaciones concurrentes y distribuidas. También se ejecuta sobre la JVM. Se puede utilizar con Java y Scala, lenguaje con el que está implementado y del que su implementación de los actores forma parte de la librería estándar desde la versión 2.10. Otras de sus características son:
 
 
 \begin{itemize}  
@@ -603,7 +603,7 @@ Se ha utilizado de forma conjunta con IntelliJ para desarrollar la aplicación de
 
 \section{Metodologías}
 
-El modelo de desarrollo de este proyecto se ha llevado a cabo a través de TDD\footnote{\url{https://es.wikipedia.org/wiki/Desarrollo_guiado_por_pruebas}}(Test-driven Development, o en español, desarrollo guiado por pruebas, ver figura~\ref{figura:tdd}), una práctica de Ingeniería del Software cuya principal idea es hacer que los requistos sean traducidos a pruebas.
+El modelo de desarrollo de este proyecto se ha llevado a cabo a través de TDD\footnote{\url{https://es.wikipedia.org/wiki/Desarrollo_guiado_por_pruebas}}(Test-driven Development, o en español, \textbf{desarrollo guiado por pruebas}, ver figura~\ref{figura:tdd}), una práctica de Ingeniería del Software cuya principal idea es hacer que los requistos sean traducidos a pruebas. En este proyecto, los requisitos (que se detallarán mas adelante), son probados en conjunto en lugar de individualmente.
 
 Las razones que han llevado a utilizar un ciclo de desarrollo conducido por pruebas son:
 
@@ -619,8 +619,7 @@ Las razones que han llevado a utilizar un ciclo de desarrollo conducido por prue
 	\label{figura:tdd}
 \end{figure}
 
-
-Por lo tanto, para cada aplicación que implementásemos, debíamos desarrollarla de acuerdo a las pruebas, de forma que una vez las pasasen, solo debíamos refactorizar la aplicación para mejorar su rendimiento y mantenibilidad.
+Junto a un desarrollo dirigido por pruebas, usamos una metodología \textbf{iterativa-incremental} dónde, una vez que hacemos pasar las pruebas, procedemos a refactorizar la aplicación para mejorar su rendimiento (mejores métricas de latencia y consumo de recursos) y su mantenibilidad (fácilidad para ampliar o cambiar el código de la aplicación), pasando las pruebas de nuevo con cada iteración.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 		 4. Descripción informática           %
@@ -718,7 +717,7 @@ Dado el carácter comparativo que posee el proyecto, nos centraremos en los requi
 
 \section{Diseño e Implementación}
 
-El proyecto seguirá la arquitectura planteada en figura~\ref{figura:design}.
+El proyecto seguirá la arquitectura planteada en figura~\ref{figura:desing}.
 
 \begin{figure}[h!]
 	\centering
@@ -1250,7 +1249,7 @@ Para ello se proporcionará una interfaz en la que poder introducir la configurac
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=0.3]{img/screenshots/web1.png}
+	\includegraphics[scale=0.25]{img/screenshots/web1.png}
 	\caption{Cliente web - Pantalla de configuración de la prueba}
 	\label{figura:web1}
 \end{figure}
@@ -1260,7 +1259,7 @@ Una vez se introduzcan la configuración de las pruebas a realizar, la siguiente 
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=0.3]{img/screenshots/web2.png}
+	\includegraphics[scale=0.25]{img/screenshots/web2.png}
 	\caption{Cliente web - Informe de progreso y métricas}
 	\label{figura:web2}
 \end{figure}
@@ -1272,7 +1271,7 @@ La arquitectura de nuestro sistema de pruebas resultante puede apreciarse en la 
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=0.7]{img/diagrams/TestArquitecture.png}
+	\includegraphics[scale=0.6]{img/diagrams/TestArquitecture.png}
 	\caption{Arquitectura del sistema}
 	\label{figura:arquitec}
 \end{figure}
@@ -1282,7 +1281,7 @@ Esta aplicación nos permite obtener las métricas de latencia, uso de CPU y memor
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=0.3]{img/screenshots/web3.png}
+	\includegraphics[scale=0.25]{img/screenshots/web3.png}
 	\caption{Cliente web - Dashboard comparativo}
 	\label{figura:web3}
 \end{figure}
@@ -1290,7 +1289,7 @@ Esta aplicación nos permite obtener las métricas de latencia, uso de CPU y memor
 
 \subsection{Funcionamiento}
 
-A continuación se detalla el flujo del funcionamiento de la aplicación:
+A continuación se detalla el flujo del funcionamiento de la aplicación (Ver figura~\ref{figura:func}):
 
 \begin{itemize}
 	\item \textbf{Paso 0:} Antes de comenzar, nos aseguramos de que las máquinas y el proxy esten operativos, situamos el archivo PEM bajo la carpeta \textit{/pems} del proyecto de la aplicación de pruebas y lanzamos la aplicación. Esto abrirá automaticamente el cliente en nuestro navegador.
@@ -1307,6 +1306,13 @@ A continuación se detalla el flujo del funcionamiento de la aplicación:
 	\item \textbf{Paso 7:} Una vez hemos probado varias aplicaciones, situamos dichos archivosen la carpeta \textit{src/main/resources/webroot/results}, los declaramos en el archivo \textit{index.json}, relanzamos la aplicación de pruebas vamos a la ruta \textit{/comparative} para visualizar la comparativa por cada métrica entre las distintas aplicaciones para distintos criterios (número de salas de chat y número de máquinas).
 	
 \end{itemize}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/diagrams/funcionamiento.png}
+	\caption{Funcionamiento de la aplicación de pruebas}
+	\label{figura:func}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 		   5. Estudio comparativo             %
@@ -1374,7 +1380,7 @@ A continuación se muestran los resultados de latencia para distinto número de sa
 \begin{figure}[h!]
 	\centering
 		\includegraphics[scale=0.6]{img/labels3.png}
-		\includegraphics[scale=0.6]{img/2nodes/1roomtime.png}
+		\includegraphics[scale=0.55]{img/2nodes/1roomtime.png}
 	\caption{1 room(s) - Time - 2 nodes}
 	\label{figura:lat2-1}
 \end{figure}
@@ -1384,7 +1390,7 @@ Observamos una clara diferencia (Ver figura~\ref{figura:lat2-1}) entre las aplic
 \begin{figure}[h!]
 	\centering
 		\includegraphics[scale=0.6]{img/labels3.png}
-		\includegraphics[scale=0.6]{img/2nodes/2roomtime.png}
+		\includegraphics[scale=0.55]{img/2nodes/2roomtime.png}
 	\caption{2 room(s) - Time - 2 nodes}
 	\label{figura:lat2-2}
 \end{figure}
@@ -1394,7 +1400,7 @@ Al aumentar en número de chats a 2 (Ver figura~\ref{figura:lat2-2}), no parece h
 \begin{figure}[h!]
 	\centering
 		\includegraphics[scale=0.6]{img/labels3.png}
-		\includegraphics[scale=0.6]{img/2nodes/4roomtime.png}
+		\includegraphics[scale=0.55]{img/2nodes/4roomtime.png}
 	\caption{4 room(s) - Time - 2 nodes}
 	\label{figura:lat2-4}
 \end{figure}
@@ -1406,7 +1412,7 @@ Con 4 salas (Ver figura~\ref{figura:lat2-4}) de chat el mayor cambio se produce 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/3nodes/1roomtime.png}
+	\includegraphics[scale=0.55]{img/3nodes/1roomtime.png}
 	\caption{1 room(s) - Time - 3 nodes}
 	\label{figura:lat3-1}
 \end{figure}
@@ -1416,7 +1422,7 @@ Al aumentar el número de nodos de 2 a 3 (Ver figura~\ref{figura:lat3-1}) observa
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/3nodes/2roomtime.png}
+	\includegraphics[scale=0.55]{img/3nodes/2roomtime.png}
 	\caption{2 room(s) - Time - 3 nodes}
 	\label{figura:lat3-2}
 \end{figure}
@@ -1426,7 +1432,7 @@ En el caso de 2 salas de chat (Ver figura~\ref{figura:lat3-2}), la diferencia má
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/3nodes/4roomtime.png}
+	\includegraphics[scale=0.55]{img/3nodes/4roomtime.png}
 	\caption{4 room(s) - Time - 3 nodes}
 	\label{figura:lat3-4}
 \end{figure}
@@ -1440,7 +1446,7 @@ En este caso (Ver figura~\ref{figura:lat3-4}), vemos cómo el aumento de salas de
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/4nodes/1roomtime.png}
+	\includegraphics[scale=0.55]{img/4nodes/1roomtime.png}
 	\caption{1 room(s) - Time - 4 nodes}
 	\label{figura:lat4-1}
 \end{figure}
@@ -1450,7 +1456,7 @@ Al hacer uso de un nodo adicional (Ver figura~\ref{figura:lat4-1}), comprobamos 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/4nodes/2roomtime.png}
+	\includegraphics[scale=0.55]{img/4nodes/2roomtime.png}
 	\caption{2 room(s) - Time - 4 nodes}
 	\label{figura:lat4-2}
 \end{figure}
@@ -1460,7 +1466,7 @@ Haciendo uso de dos salas de chat (Ver figura~\ref{figura:lat4-2}), la única dif
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/4nodes/4roomtime.png}
+	\includegraphics[scale=0.55]{img/4nodes/4roomtime.png}
 	\caption{4 room(s) - Time - 4 nodes}
 	\label{figura:lat4-4}
 \end{figure}
@@ -1481,7 +1487,7 @@ Para finalizar el estudio de la latencia, echemos un vistazo a los resultados de
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=0.6]{img/old/1roomtime.png}
+	\includegraphics[scale=0.55]{img/old/1roomtime.png}
 	\caption{1 room(s) - Time - 1 node}
 	\label{figura:old_latency}
 \end{figure}
@@ -1499,7 +1505,7 @@ Tal y como se ha desarrollado la obtención de métricas, el uso de CPU calculado 
 \begin{figure}[h!]
 	\centering
 		\includegraphics[scale=0.6]{img/labels3.png}
-		\includegraphics[scale=0.6]{img/2nodes/1roomcpu.png}
+		\includegraphics[scale=0.55]{img/2nodes/1roomcpu.png}
 	\caption{1 room(s) - CPU - 2 nodes}
 	\label{figura:cpu2-1}
 \end{figure}
@@ -1511,7 +1517,7 @@ Para el primer caso (Ver figura~\ref{figura:cpu2-1}) se aprecia cómo el uso de c
 \begin{figure}[h!]
 	\centering
 		\includegraphics[scale=0.6]{img/labels3.png}
-		\includegraphics[scale=0.6]{img/2nodes/2roomcpu.png}
+		\includegraphics[scale=0.55]{img/2nodes/2roomcpu.png}
 	\caption{2 room(s) - CPU - 2 nodes}
 	\label{figura:cpu2-2}
 \end{figure}
@@ -1519,7 +1525,7 @@ Para el primer caso (Ver figura~\ref{figura:cpu2-1}) se aprecia cómo el uso de c
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/2nodes/4roomcpu.png}
+	\includegraphics[scale=0.55]{img/2nodes/4roomcpu.png}
 	\caption{4 room(s) - CPU - 2 nodes}
 	\label{figura:cpu2-4}
 \end{figure}
@@ -1533,7 +1539,7 @@ El uso de memoria se mantiene estable en todas las aplicaciones para 2 y 4 salas
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/3nodes/1roomcpu.png}
+	\includegraphics[scale=0.55]{img/3nodes/1roomcpu.png}
 	\caption{1 room(s) - CPU - 3 nodes}
 	\label{figura:cpu3-1}
 \end{figure}
@@ -1543,7 +1549,7 @@ En todas las tecnologías (Ver figura~\ref{figura:cpu3-1}) se observa un uso meno
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/3nodes/2roomcpu.png}
+	\includegraphics[scale=0.55]{img/3nodes/2roomcpu.png}
 	\caption{2 room(s) - CPU - 3 nodes}
 	\label{figura:cpu3-2}
 \end{figure}
@@ -1553,7 +1559,7 @@ En todas las tecnologías (Ver figura~\ref{figura:cpu3-1}) se observa un uso meno
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/3nodes/4roomcpu.png}
+	\includegraphics[scale=0.55]{img/3nodes/4roomcpu.png}
 	\caption{4 room(s) - CPU - 3 nodes}
 	\label{figura:cpu3-4}
 \end{figure}
@@ -1565,7 +1571,7 @@ Al aumentar el número de salas a 2 y 4 (Ver figuras~\ref{figura:cpu3-2} y \ref{f
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/4nodes/1roomcpu.png}
+	\includegraphics[scale=0.55]{img/4nodes/1roomcpu.png}
 	\caption{1 room(s) - CPU - 4 nodes}
 	\label{figura:cpu4-1}
 \end{figure}
@@ -1575,7 +1581,7 @@ Aumentando el número de nodos a 4 (Ver figura~\ref{figura:cpu4-1}) vemos cómo Ak
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/4nodes/2roomcpu.png}
+	\includegraphics[scale=0.55]{img/4nodes/2roomcpu.png}
 	\caption{2 room(s) - CPU - 4 nodes}
 	\label{figura:cpu4-2}
 \end{figure}
@@ -1583,7 +1589,7 @@ Aumentando el número de nodos a 4 (Ver figura~\ref{figura:cpu4-1}) vemos cómo Ak
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/4nodes/4roomcpu.png}
+	\includegraphics[scale=0.55]{img/4nodes/4roomcpu.png}
 	\caption{4 room(s) - CPU - 4 nodes}
 	\label{figura:cpu4-4}
 \end{figure}
@@ -1604,7 +1610,7 @@ Para finalizar el estudio del uso de CPU, volvamos a echar un vistazo a los resu
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=0.6]{img/old/1roomcpu.png}
+	\includegraphics[scale=0.55]{img/old/1roomcpu.png}
 	\caption{1 room(s) - CPU - 1 node}
 	\label{figura:old_cpu}
 \end{figure}
@@ -1622,7 +1628,7 @@ Al igual que el uso de la CPU, esta métrica se obtuvo mediante SSH, en esta ocas
 \begin{figure}[h!]
 	\centering
 		\includegraphics[scale=0.6]{img/labels3.png}
-		\includegraphics[scale=0.6]{img/2nodes/1roomram.png}
+		\includegraphics[scale=0.55]{img/2nodes/1roomram.png}
 	\caption{1 room(s) - Memory - 2 nodes}
 	\label{figura:mem2-1}
 \end{figure}
@@ -1632,7 +1638,7 @@ En la figura~\ref{figura:mem2-1} observamos cómo la aplicación que de nuevo hace
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/2nodes/2roomram.png}
+	\includegraphics[scale=0.55]{img/2nodes/2roomram.png}
 	\caption{2 room(s) - Memory - 2 nodes}
 	\label{figura:mem2-2}
 \end{figure}
@@ -1640,7 +1646,7 @@ En la figura~\ref{figura:mem2-1} observamos cómo la aplicación que de nuevo hace
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/2nodes/4roomram.png}
+	\includegraphics[scale=0.55]{img/2nodes/4roomram.png}
 	\caption{4 room(s) - Memory - 2 nodes}
 	\label{figura:mem2-4}
 \end{figure}
@@ -1654,7 +1660,7 @@ Apreciamos estabilidad a la hora de aumentar el número de salas de chat(Ver figu
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/3nodes/1roomram.png}
+	\includegraphics[scale=0.55]{img/3nodes/1roomram.png}
 	\caption{1 room(s) - Memory - 3 nodes}
 	\label{figura:mem3-1}
 \end{figure}
@@ -1666,7 +1672,7 @@ Aumentar el número de nodos (Ver figura~\ref{figura:mem3-1}), reduce sensiblemen
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/3nodes/2roomram.png}
+	\includegraphics[scale=0.55]{img/3nodes/2roomram.png}
 	\caption{2 room(s) - Memory - 3 nodes}
 	\label{figura:mem3-2}
 \end{figure}
@@ -1674,7 +1680,7 @@ Aumentar el número de nodos (Ver figura~\ref{figura:mem3-1}), reduce sensiblemen
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/3nodes/4roomram.png}
+	\includegraphics[scale=0.55]{img/3nodes/4roomram.png}
 	\caption{4 room(s) - Memory - 3 nodes}
 	\label{figura:mem3-4}
 \end{figure}
@@ -1687,7 +1693,7 @@ Al aumentar el número de salas (Ver figuras~\ref{figura:mem3-2} y \ref{figura:me
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/4nodes/1roomram.png}
+	\includegraphics[scale=0.55]{img/4nodes/1roomram.png}
 	\caption{1 room(s) - Memory - 4 nodes}
 	\label{figura:mem4-1}
 \end{figure}
@@ -1697,7 +1703,7 @@ En la figura ~\ref{figura:mem4-1} que las aplicaciones hacen un uso de memoria m
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/4nodes/2roomram.png}
+	\includegraphics[scale=0.55]{img/4nodes/2roomram.png}
 	\caption{2 room(s) - Memory - 4 nodes}
 	\label{figura:mem4-2}
 \end{figure}
@@ -1705,7 +1711,7 @@ En la figura ~\ref{figura:mem4-1} que las aplicaciones hacen un uso de memoria m
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/4nodes/4roomram.png}
+	\includegraphics[scale=0.55]{img/4nodes/4roomram.png}
 	\caption{4 room(s) - Memory - 4 nodes}
 	\label{figura:mem4-4}
 \end{figure}
@@ -1724,7 +1730,7 @@ Para finalizar el estudio del uso de memoria, echemos de nuevo un vistazo a los 
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=0.6]{img/old/1roomram.png}
+	\includegraphics[scale=0.55]{img/old/1roomram.png}
 	\caption{1 room(s) - Memory - 1 node}
 	\label{figura:old_memory}
 \end{figure}
@@ -1752,7 +1758,7 @@ Para obtener una visión global de la comparativa, haremos uso un gráfico de disp
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.6]{img/labels3.png}
-	\includegraphics[scale=0.6]{img/bubblechart.png}
+	\includegraphics[scale=0.7]{img/bubblechart.png}
 	\caption{4 room(s) - Memory - 3 nodes}
 	\label{figura:dispersion}
 \end{figure}
