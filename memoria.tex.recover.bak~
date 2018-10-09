@@ -1,0 +1,201 @@
+% !BIB TS-program = biber
+\documentclass[a4paper, 12pt, oneside]{book}
+\usepackage[a4paper, left=2.5cm, right=2.5cm, top=3cm, bottom=3cm]{geometry}
+\usepackage{times}
+\usepackage[latin1]{inputenc}
+\usepackage[spanish]{babel} 
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{float} 
+\usepackage[nottoc, notlot, notlof, notindex]{tocbibind}
+\usepackage{latexsym}
+\usepackage[style=authoryear,backend=biber]{biblatex}
+
+\newcommand{\subsubsubsection}[1]{\paragraph{#1}\mbox{}\\}
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+
+\usepackage{listings}
+\usepackage{color}
+
+\title{Community Detection Algorithm}
+\author{Michel Maes Bermejo}
+
+\renewcommand{\baselinestretch}{1.5}
+
+\begin{document}
+
+\renewcommand{\refname}{Bibliografía} 
+\renewcommand{\appendixname}{Apéndice}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PORTADA
+\cleardoublepage
+\begin{titlepage}
+\begin{center}
+\begin{tabular}[c]{c c}
+\includegraphics[scale=0.6]{img/logos/urjc-logo.jpg} &
+\end{tabular}
+
+\vspace{1cm}
+
+\Large
+MASTER EN DATA SCIENCE
+
+\vspace{0.4cm}
+
+\large
+Curso Académico 2018/2019
+
+\vspace{0.8cm}
+
+Trabajo Fin de Master
+
+\vspace{2cm}
+
+\LARGE
+Divider Greedy algorithm for performing community detection in social networks
+
+\vspace{2cm}
+
+\large
+Autor : Michel Maes Bermejo \\
+Tutor : Jesús Sánchez-Oro Calvo
+
+\end{center}
+\end{titlepage}
+
+%%%%%%%%%%%%%%%%%%%%
+%%%% Resumen
+%%%%%%%%%%%%%%%%%%%%
+
+\chapter*{Resumen}
+\pagenumbering{gobble}
+
+\markboth{RESUMEN}{RESUMEN} % encabezado
+
+En este proyecto abordaremos la creación de un algoritmo capaz de detectar comunidades en redes sociales, un problema en el que los algoritmos tradicionales no ofrecen soluciones rápidas. Para ello usaremos un enfoque metaheurístico basado en la división de comunidades e intentaremos mejorar sus prestaciones a lo largo de varias iteraciones.
+
+%%%%%%%%%%%%%%%%%%%%
+% ÍNDICES %
+%%%%%%%%%%%%%%%%%%%%
+
+%%%% Índice de contenidos
+\tableofcontents 
+%%%% Índice de figuras
+\cleardoublepage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%       1.INTRODUCCIÓN Y MOTIVACIÓN           %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter{Introducción y motivación}
+\label{sec:intro} 
+\pagenumbering{arabic} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%             2. Objetivos                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter{Objetivos}
+\label{sec:objetivos} 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 3. Tecnologías, Herramientas y Metodologías %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter{Tecnologías, Herramientas y Metodologías}
+\label{sec:tecnologias} 
+
+\section{Tecnologías}
+
+\subsection{Java}
+\label{subsec:java}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.06]{img/logos/java-logo.png}
+	\caption{Logo Java}
+	\label{figura:java}
+\end{figure}
+
+Java (Figura~\ref{figura:java}) es un lenguaje de programación de propósito general, concurrente y orientado a objetos. Su sintaxis deriva en gran medida de C y C++. Uno de los principales atractivos de Java es su máquina virtual (JVM) que nos permite ejecutar nuestro código Java en cualquier dispositivo, independientemente de la arquitectura. Las tecnologías basadas en Java seleccionadas para la comparativa son explicadas a continuación.
+
+\section{Herramientas}
+
+\subsection{Control de versiones: Git}
+\label{subsec:git}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.15]{img/logos/git-logo.png}
+	\caption{Logo Git}
+	\label{figura:git}
+\end{figure}
+
+
+Git\footnote{\url{https://git-scm.com/}} (Figura~\ref{figura:git}) es un software de control de versiones diseñado por Linus Torvalds, pensando en la eficiencia y la confiabilidad del mantenimiento de versiones de aplicaciones cuando éstas tienen un gran número de archivos de código fuente.
+
+Para el desarrollo de este proyecto hemos usado GitHub\footnote{\url{https://github.com}}, una plataforma de desarrollo colaborativa para alojar proyectos Git.
+
+\subsection{Entorno de desarrollo: IntelliJ}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{img/logos/intellij-logo.png}
+	\caption{Logo IntelliJ}
+	\label{figura:intellij}
+\end{figure}
+
+
+IntelliJ\footnote{\url{https://www.jetbrains.com/idea/}} (Figura~\ref{figura:intellij}) es un IDE para Java desarollado por JetBrains ideado para mejorar la productividad del programador. 
+
+\section{Metodologías}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 		 4. Descripción informática           %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter{Descripción informática}
+\label{sec:descinformatica} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 		   5. Estudio comparativo             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter{Estudio comparativo}
+\label{sec:descinformatica} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 6. Conclusiones del proyecto y trabajos futuros %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter{Conclusiones del proyecto y trabajos futuros}
+\label{sec:descinformatica} 
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% BIBLIOGRAFIA %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+
+% Las siguientes dos instrucciones es todo lo que necesitas
+% para incluir las citas en la memoria
+\bibliographystyle{abbrv}
+\printbibliography{memoria}  % memoria.bib es el nombre del fichero que contiene
+% las referencias bibliográficas. Abre ese fichero y mira el formato que tiene,
+% que se conoce como BibTeX. Hay muchos sitios que exportan referencias en
+% formato BibTeX. Prueba a buscar en http://scholar.google.com por referencias
+% y verás que lo puedes hacer de manera sencilla.
+% Más información: 
+% http://texblog.org/2014/04/22/using-google-scholar-to-download-bibtex-citations/
