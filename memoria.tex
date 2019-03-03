@@ -8,6 +8,10 @@
 \usepackage{float} 
 \usepackage[nottoc, notlot, notlof, notindex]{tocbibind}
 \usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{setspace}
 
 \newcommand{\subsubsubsection}[1]{\paragraph{#1}\mbox{}\\}
 \setcounter{secnumdepth}{4}
@@ -15,6 +19,8 @@
 
 \usepackage{listings}
 \usepackage{color}
+\usepackage{tcolorbox}
+\tcbuselibrary{listingsutf8}
 
 \title{Community Detection Algorithm}
 \author{Michel Maes Bermejo}
@@ -130,7 +136,7 @@ Finalmente, compararemos nuestro algoritmo con otros preexistentes para valorar 
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=0.06]{img/logos/java-logo.png}
+	\includegraphics[scale=0.04]{img/logos/java-logo.png}
 	\caption{Logo Java}
 	\label{figura:java}
 \end{figure}
@@ -145,7 +151,7 @@ Java (Figura~\ref{figura:java}) es un lenguaje de programación de propósito gene
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=0.12]{img/logos/git-logo.png}
+	\includegraphics[scale=0.08]{img/logos/git-logo.png}
 	\caption{Logo Git}
 	\label{figura:git}
 \end{figure}
@@ -157,7 +163,7 @@ Git\footnote{\url{https://git-scm.com/}} (Figura~\ref{figura:git}) es un softwar
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=0.4]{img/logos/intellij-logo.png}
+	\includegraphics[scale=0.3]{img/logos/intellij-logo.png}
 	\caption{Logo IntelliJ}
 	\label{figura:intellij}
 \end{figure}
@@ -176,6 +182,89 @@ Dado que pretendemos obtener la mejor versión de nuestro algoritmo, el desarroll
 \cleardoublepage
 \chapter{Descripción informática}
 \label{sec:descinformatica} 
+
+En este apartado se abordará la construcción del proyecto. Este proyecto consta de una colección de algoritmos de detección de comunidades, que parte desde un algoritmo de detección aleatoria, pasando por la evolución de un algoritmo destructivo hasta obtener la mejor versión del mismo aplicando una búsqueda local.
+
+\section{Requisitos}
+
+\subsection{Requisitos funcionales}
+
+Los requisitos funcionales de la aplicación son simples dado que se trata de un algoritmo:
+
+\begin{itemize}
+	\item Debe poder leer un fichero de entrada (correspondiente al grafo a tratar).
+	\item Dado esa entrada y un algoritmo, debe devolver los clústers resultantes al realizar la detección de comunidades.  
+\end{itemize}
+
+\subsection{Requisitos no funcionales}
+
+Los requisitos no funcionales de la aplicación se reducen a la calidad de la solución ofrecida y al tiempo de ejecución:
+
+\begin{itemize}
+	\item Maximizar la modularidad.
+	\item Ofrecer el menor tiempo de cálculo posible\footnote{Existen algoritmos que ofrecen soluciones óptimas a este problema, pero no son aplicables a grafos grandes dado que requieren demasiado tiempo de computo.}. 
+\end{itemize}
+
+\begin{tcolorbox}[fonttitle=\bfseries,title=Modularidad,label=alg1]
+	Las soluciones de los algoritmos de detección de comunidades se construyen máximizando su valor de modularidad, una medida utilizada para medir la fuerza de division de un grafo en clústers. Esta métrica se define cómo la fracción de enlaces que caen dentro de los clústers dados menos el valor esperado que dicha fracción hubiese recibido si los enlaces se hubiesen distribuido al azar. De forma matemática:
+	
+	\begin{equation*}
+	Md(S,G) = \sum_{j=1}^{max(S)} (e_{jj} - a^{2}_{j})
+	\end{equation*}
+	
+	dónde $S$ es la solución y $G$ el grafo, siendo $e_{jj}$ la fracción de enlaces con ambos vértices finales en el mismo grupo:
+	
+	\begin{equation*}
+	e_{jj} = \frac{|\{(v,u) \epsilon E : S_{v} = S_{u} = j\}|}{|E|}
+	\end{equation*}
+	
+	y $a_{j}$ la fracción de enlaces con al menos un extremo en la misma comunidad:
+	
+	\begin{equation*}
+	a_{j} = \frac{|\{(v,u) \epsilon E : S_{v} = j\}|}{|E|}
+	\end{equation*}
+	siendo en ambos caso $E$ el conjunto de las aristas del grafo.
+\end{tcolorbox}
+
+\section{Diseño e implementación}
+
+A continuación, se detallará la construcción incremental del algoritmo, explicando cada versión creada:
+
+\begin{itemize}
+	\item ConstRandom
+	\item ConstDivider
+	\item ConstDividerGreedy
+	\item ConstDividerGreedyLS
+\end{itemize}
+
+\subsection{ConstRandom: Algoritmo aleatorio}
+
+En esta primera aproximación que nos sirve como punto de partida y para posterior comparación, generamos los clústers de manera aleatoria; se crea un número aleatorio de clústers y se distribuyen los nodos de forma aleatorio en ellos.
+
+\begin{spacing}{1}
+	\begin{algorithm}
+		\caption{ConsRandom algorithm}\label{euclid}
+		\begin{algorithmic}[1]
+			\Procedure{ConstRandom}{$g$}\Comment{The graph 'g'}
+			\State $S \gets EmptySolution(G)$
+			\State $numClusters \gets Random(N(g))$\Comment{N returns nº of graph nodes}
+			
+			\For{$i=0$ to $numClusters$}
+				\State $createEmptyCluster(S)$
+			\EndFor
+			
+			\For{$i=0$ to $N(S)$}
+				\State $rnd \gets Random(numClusters)$
+				\State $AssignToCluster(S, i, rnd)$ \Comment{Assign node $i$ to cluster $rnd$ in solution $S$}
+			\EndFor
+			
+			\State \textbf{return} $S$
+			
+			\EndProcedure
+		\end{algorithmic}
+	\end{algorithm}
+\end{spacing}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 		   5. Estudio comparativo             %
