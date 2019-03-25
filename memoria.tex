@@ -78,7 +78,7 @@ Tutor : Jesús Sánchez-Oro Calvo
 
 \markboth{RESUMEN}{RESUMEN} % encabezado
 
-En este proyecto abordaremos la creación de un algoritmo capaz de detectar comunidades en redes sociales, un problema en el que los algoritmos tradicionales no ofrecen soluciones rápidas. Para ello usaremos un enfoque metaheurístico basado en la división de comunidades e intentaremos mejorar sus prestaciones a lo largo de varias iteraciones.
+En este proyecto abordaremos la creación de un algoritmo capaz de detectar comunidades en redes sociales, un problema en el que los algoritmos tradicionales no ofrecen soluciones rápidas. Para ello usaremos un enfoque metaheurístico basado en la división de comunidades e intentaremos mejorar sus prestaciones a lo largo de varias iteraciones. (PENDIENTE DE TERMINAR TRAS FINALIZAR LA MEMORIA)
 
 %%%%%%%%%%%%%%%%%%%%
 % ÍNDICES %
@@ -223,29 +223,35 @@ Los requisitos no funcionales de la aplicación se reducen a la calidad de la sol
 	\begin{equation*}
 	a_{j} = \frac{|\{(v,u) \epsilon E : S_{v} = j\}|}{|E|}
 	\end{equation*}
-	siendo en ambos caso $E$ el conjunto de las aristas del grafo.
+	siendo en ambos caso $E$ el conjunto de las aristas de $G$.
+	
+	La modularidad toma valor en el intervalo [-.5,1)
 \end{tcolorbox}
 
 \section{Diseño e implementación}
 
-A continuación, se detallará la construcción incremental del algoritmo, explicando cada versión creada:
+A continuación, se detallará la construcción incremental del algoritmo, explicando cada versión creada. Las premisas para todos los algoritmos son las siguientes:
 
 \begin{itemize}
-	\item ConstRandom
-	\item ConstDivider
-	\item ConstDividerGreedy
-	\item ConstDividerGreedyLS
+	\item Se comienza con todos en la misma comunidad.
+	\item Se asume un grafo conexo
 \end{itemize}
+
+\begin{tcolorbox}[fonttitle=\bfseries,title=Grafo conexo,label=alg1]
+Un grafo conexo $\overline{G}$ es todo grafo $G$ dónde para cada par de vertices $(x,y)$ existe un camino $P$.
+
+\end{tcolorbox}
+
+Para estimar cómo de buena es cada versión del algoritmo usaremos un grafo de ejemplo representativo que llamaremos \textit{Instancia de Prueba} (214 nodos y 1954 aristas).
 
 \subsection{ConstRandom: Algoritmo aleatorio}
 
-En esta primera aproximación que nos sirve como punto de partida y para posterior comparación, generamos los clústers de manera aleatoria; se crea un número aleatorio de clústers y se distribuyen los nodos de forma aleatorio en ellos.
+En esta primera aproximación (Algoritmo \ref{alg1}) que nos sirve como punto de partida y para posterior comparación, generamos los clústers de manera aleatoria; se crea un número aleatorio de clústers y se distribuyen los nodos de forma aleatorio en ellos.
 
-\begin{spacing}{1}
-	\begin{algorithm}
-		\caption{ConsRandom algorithm}\label{euclid}
-		\begin{algorithmic}[1]
-			\Procedure{ConstRandom}{$g$}\Comment{The graph 'g'}
+\begin{algorithm}
+	\caption{ConsRandom algorithm}\label{alg1}
+	\begin{algorithmic}[1]
+		\Procedure{ConstRandom}{$G$}\Comment{The graph 'G'}
 			\State $S \gets EmptySolution(G)$
 			\State $numClusters \gets Random(N(g))$\Comment{N returns nº of graph nodes}
 			
@@ -257,13 +263,202 @@ En esta primera aproximación que nos sirve como punto de partida y para posterio
 				\State $rnd \gets Random(numClusters)$
 				\State $AssignToCluster(S, i, rnd)$ \Comment{Assign node $i$ to cluster $rnd$ in solution $S$}
 			\EndFor
-			
 			\State \textbf{return} $S$
+		\EndProcedure
+	\end{algorithmic}
+	\textbf{Modularidad para Instancia de Prueba: -0.007}	
+\end{algorithm}
+
+
+
+\subsection{ConstDivider: Primer aproximación}
+
+Este algoritmo supone el primer intento de aplicar un enfoque divisor a la detección de comunidades. Los pasos del algoritmo a seguir son los siguiente (Ver junto al Algoritmo~\ref{alg2}):
+\begin{enumerate}
+	\item Comenzamos con una sola comunidad que contiene todos los nodos.
+	\item Se busca el nodo peor conectado (menor número de aristas) ó el primero que encuentre una arista.
+	\item Se crea un nuevo clúster con ese nodo y se añaden los adyacentes en la medida en la que aumente la modularidad. Se descartan los adyacentes de los nodos los cuales no han mejorado la modularidad. De esta manera, se crearán dos clústers (A y B).
+	\item Repetimos los pasos 1-3 con el clúster B hasta que no se generen nuevos clusters.
+\end{enumerate}
+
+\begin{algorithm}
+	\caption{ConstDivider algorithm}\label{alg2}
+	\begin{algorithmic}[1]
+		\Procedure{ConstDivider}{$G$}\Comment{The graph 'G'}
+			\State $S \gets EmptySolution(G)$
+			\State $S' \gets S$
 			
-			\EndProcedure
-		\end{algorithmic}
-	\end{algorithm}
-\end{spacing}
+			\State $c \gets 0$\Comment{Current cluster index}
+			\While{$c < Size(S')$}
+				\State $K \gets EmptySet()$\Comment{Checked Nodes}
+				\State $S'' \gets S'$
+				\State $createEmptyCluster(S'')$	
+				\State $wcn <- GetWorstConnectedNode(S'')$
+				\State $Move(wcn, c+1, S'')$\Comment{Move node $wcn$ to cluster $c+1$ in solution $S''$}  
+				\State $A \gets Adyacents(G, wcn)$
+				\While{$Size(A) > 0$}
+					\State $i <- Poll(A)$
+					\State $K <- Append(K, i)$
+					\State $Move(i, c+1, S'')$
+					\If{$Md(S'', G) > Md(S', G)$} 
+						\State $S' <- S''$
+					\EndIf
+					\For{$j \epsilon Adyacents(i)$}
+						\If{$j \notin K \And j \notin Cluster(S'', c)$}
+						\State $A <- Remove(A, node)$
+						\State $K <- Append(K, node)$
+						\EndIf
+					\EndFor
+				\EndWhile
+				\If{$Md(S', G) > Md(S, G)$} 
+					\State $ S \gets S'$
+				\Else 
+					\State  $c \gets c + 1$
+				\EndIf
+			\EndWhile
+			\State \textbf{return} $S$
+		\EndProcedure
+	\end{algorithmic}
+	\textbf{Modularidad para Instancia de Prueba: 0.096}
+\end{algorithm}
+
+\subsection{ConstDividerGreedy: Segunda aproximación}
+
+Podemos observar como la mejora en cuanto a modularidad no es destacable (recordemos que la modularidad toma un valor entre -0.5 y 1.0). Es necesario utilizar otro enfoque. El problema de este algortimo es que una mala elección del primer nodo puede provocar que no se formen correctamente las comunidades. Aleatorizar este la elección de este primer nodo nos abre la puerta a realizar múltiples iteraciones comenzando desde distintos nodos. Los pasos a seguir en este algoritmo serían (Ver junto al Algoritmo~\ref{alg3}):
+\begin{itemize}
+	\item Se elige el primer nodo de forma aleatoria, añadiendo, como antes, los nodos adyacentes si aumenta la modularidad.
+	\item Se crea una lista de candidatos, que contiene a todos los vertices ordenados por el número de aristas que vayan a otro clúster de mayor a menor.
+	\item A partir de una funcion voraz (Ver Funcion \ref{func1}), obtenemos un umbral $mu$, que restringe la lista a los vértices con un número de vertices mayor que $mu$.
+	\item El siguiente vértice se selecciona al azar de esta lista restringida.
+	\item Se repite este proceso hasta que no mejora la modularidad.
+\end{itemize}
+
+\begin{tcolorbox}[fonttitle=\bfseries,title=Función Voraz,label=func1]
+	Dado $g_{max}$ y $g_{min}$ cómo los valores mayor y menos de nuestra función voraz (el número de aristas) y $\alpha$ un parámetro en el rango [0,1] (que indicará cómo de voraz es nuestro algoritmo, siendo 1 completamente aleatorio y 0 totalmente voraz), el umbral $mu$ se calcula siguiendo la siguiente función:
+	\begin{equation*}
+		mu = g_{max} - \alpha * (g_{max} - g_{min})
+	\end{equation*}
+\end{tcolorbox}
+
+Para probar el algoritmo se han utilizado los siguientes valores de $\alpha$: 0.0, 0.25, 0.5, 0.75, 1.
+
+\begin{algorithm}
+	\caption{ConstDividerGreedy algorithm}\label{alg3}
+	\begin{algorithmic}[1]
+		\Procedure{ConstDividerGreedy}{$G, \alpha$}\Comment{The graph 'G' and param '$\alpha$'}
+		\State $S \gets EmptySolution(G)$
+		\State $S' \gets S$
+		\State $c \gets 0$\Comment{Current cluster index}
+		\State $b \gets GetRandom(S', c)$\Comment{Base node}
+		\State $refactorIters \gets 10$
+		
+		\While{$c < Size(S') \And b \neq -1 \And refactorIters > 0$}
+			\State $K \gets EmptySet()$\Comment{Checked Nodes}
+			\State $S'' \gets S'$
+			\State $createEmptyCluster(S'')$	
+			
+			\State $candidates \gets RestrictedList(G,c, \alpha)$
+			\If{$Empty(candidates)$}
+				\State{$b \gets GetRandom(candidates)$}	
+			\Else
+				\State{$b \gets GetRandom(S', c)$}
+			\EndIf
+			
+			\If{$b = -1$}
+				\State $c \gets 0$
+				\State $refactorIters \gets refactorIters - 1$
+				\State \textbf{continue}
+			\EndIf
+			
+			\State $Move(b, c+1, S'')$\Comment{Move node $b$ to cluster $c+1$ in solution $S''$}  
+			\State $A \gets Adyacents(G, wcn)$
+			\While{$Size(A) > 0$}
+				\State $i <- Poll(A)$
+				\State $K <- Append(K, i)$
+				\State $Move(i, c+1, S'')$
+				\If{$Md(S'', G) > Md(S', G)$} 
+					\State $S' <- S''$
+				\EndIf
+				\For{$j \epsilon Adyacents(i)$}
+					\If{$j \notin K \And j \notin Cluster(S'', c)$}
+						\State $A <- Remove(A, node)$
+						\State $K <- Append(K, node)$
+					\EndIf
+				\EndFor
+			\EndWhile
+			
+			\If{$Md(S', G) > Md(S, G)$} 
+				\State $ S \gets S'$
+			\EndIf
+			
+			\State  $c \gets c + 1$
+			
+			
+		\EndWhile
+		\State \textbf{return} $S$
+		\EndProcedure
+	\end{algorithmic}
+	\textbf{Modularidad para Instancia de Prueba (1000 iteraciones y $\alpha$ = 0.0): 0.251 }
+\end{algorithm}
+
+\subsection{ConstDividerGreedy + Local Search: Última versión}
+
+La modularidad obtenida trás aplicar un enfoque voraz mejora de forma considerable. A pesar de ello, intentaremos aumentarla aún más partiendo de un heurístico no contemplado hasta ahora, la búsqueda local. Esta búsqueda local utilizará la solución de cada iteración del algortimo anterior (ConstDividerGreedy) e intentará mejorarla cambiando algunos nodos de clúster. La búsqueda local implementada se detalla a continuación (Ver junto al Algoritmo~\ref{alg4}):
+\begin{itemize}
+	\item Para cada clúster, se crea una lista de candidatos a moverse. Esta lista de candidatos estará ordenada por el \% de aristas que caen fuera del clúster.
+	\item Cada nodo de esta lista de candidatos se intenta mover a otro clúster (incluido a un nuevo clúster). Si la modularidad mejora, se actualiza la solución, pero se siguen explorando otros movimientos.
+\end{itemize}
+
+Para probar el algoritmo se han utilizado los siguientes valores de $\alpha$: 0.0, 0.25, 0.5, 0.75, 1.
+
+\begin{algorithm}
+	\caption{LocalSearch algorithm}\label{alg4}
+	\begin{algorithmic}[1]
+		\Procedure{LocalSearch}{$S, G$}\Comment{The Solution 'S' and Graph 'G'}
+		\State $i \gets 0$\Comment{Current cluster index}
+		\While{$i < Size(S)$}
+			\State $CL \gets CandidateList(S, i)$
+			\While{$Size(CL) > 0$}
+				\State $c \gets Poll(CL)$\Comment{Current candidate}
+				\State $S' \gets S$
+				\State $createEmptyCluster(S')$
+				\State $j \gets 0$\Comment{Target cluster}
+				\While{$j < Size(S)$}
+					\If{$j = i$} 
+						\State $j \gets j + 1$
+						\State \textbf{continue}
+					\EndIf
+					\State $Move(c, j, S')$\Comment{Move node $c$ to cluster $j$ in solution $S'$}
+					\If{$Md(S', G) > Md(S, G)$} 
+						\State $S <- S'$
+					\EndIf
+					\State $Move(c, i, S')$\Comment{Return node $c$ to cluster $i$ in solution $S'$}
+				 	\State $j \gets j + 1$
+				\EndWhile
+			\EndWhile
+			\State $i \gets i + 1$
+		\EndWhile
+		\State \textbf{return} $S$
+		\EndProcedure
+	\end{algorithmic}
+	\textbf{Modularidad para Instancia de Prueba (1000 iteraciones y $\alpha$ = 0.25): 0.3295 }
+\end{algorithm}
+
+Observamos que para $\alpha = 0.25$ obtenemos un resultado notablemente mejor que con el anterior algoritmo y consideramos \textit{ConstDividerGreedy + Local Search} la última versión de nuestro algoritmo.
+
+\subsection{Paralelización}
+
+Una vez obtenida una modularidad aceptable, terminaremos el desarrollo procurando optimizar el uso de los recursos de la máquina dónde se ejecute el algoritmo. Se hará uso de la libreria estándar de java para el manejo de hilos, $java.util.concurrent$, concretamente de los Ejecutores ($Executors$), que nos permiten gestionar de forma sencilla y óptima la casuística de la programación concurrente. Las tareas a paralelizar de nuestro programa serán las iteraciones del algoritmo.
+
+Para demostrar la eficacia de usar paralelización en este algoritmo, usaremos de ejemplo la ejecución del algoritmo más lento: $ConstDividerGreedy + Local Search$. La siguiente prueba se ha realizado en una máquina Ubuntu 16.04 con 16GB de RAM y 4 procesadores (sin \textit{hyper-threading}).
+
+Tiempos de ejecucción (en milisegundos) para 1000 iteraciones:
+\begin{itemize}
+	\item Secuencial: 			446.187 ms
+	\item Paralelo (4 hilos):   132.753 ms
+\end{itemize}
+
+Podemos observar que se reduce de forma considerable (hasta un 70\%) el tiempo de ejecución, atendiendo a nuestro requisito no funcional de ofrecer el menor tiempo de ejecución posible.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -274,6 +469,13 @@ En esta primera aproximación que nos sirve como punto de partida y para posterio
 \chapter{Estudio comparativo}
 \label{sec:estudio} 
 
+El estudio comparativo que se llevará a cabo a continuación constará de dos secciones:
+
+\begin{itemize}
+	\item La primera usará un conjunto de grafos de \textit{'entrenamiento'} que servirá para comparar los actuales algoritmos junto a los posibles valores de sus parámetros en términos de modularidad.
+	\item La segunda usará un conjunto de grafos de \textit{test} (distintos al primero) que servirán para comparar la mejor versión de nuestro algoritmo con otras soluciones pre-existentes en términos de conductancia y cobertura.
+\end{itemize}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 6. Conclusiones del proyecto y trabajos futuros %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -282,7 +484,7 @@ En esta primera aproximación que nos sirve como punto de partida y para posterio
 \chapter{Conclusiones del proyecto y trabajos futuros}
 \label{sec:conclusions} 
 
-estigmérgicos~\cite{jya1}. 
+Prueba cita~\cite{jya1}. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % BIBLIOGRAFIA %
