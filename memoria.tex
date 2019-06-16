@@ -3,6 +3,7 @@
 \usepackage{times}
 \usepackage[latin1]{inputenc}
 \usepackage[spanish]{babel} 
+\renewcommand\spanishtablename{Tabla}
 \usepackage{url}
 \usepackage{graphicx}
 \usepackage{float} 
@@ -12,6 +13,7 @@
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 \usepackage{setspace}
+\usepackage{rotating}
 
 \newcommand{\subsubsubsection}[1]{\paragraph{#1}\mbox{}\\}
 \setcounter{secnumdepth}{4}
@@ -76,9 +78,9 @@ Tutor : Jesús Sánchez-Oro Calvo
 \chapter*{Resumen}
 \pagenumbering{gobble}
 
-\markboth{RESUMEN}{RESUMEN} % encabezado
+\markboth{RESUMEN}{RESUMEN}
 
-En este proyecto abordaremos la creación de un algoritmo capaz de detectar comunidades en redes sociales, un problema en el que los algoritmos tradicionales no ofrecen soluciones rápidas. Para ello usaremos un enfoque metaheurístico basado en la división de comunidades e intentaremos mejorar sus prestaciones a lo largo de varias iteraciones. (PENDIENTE DE TERMINAR TRAS FINALIZAR LA MEMORIA)
+En este proyecto abordaremos la creación de un algoritmo capaz de detectar comunidades en redes sociales, un problema en el que los algoritmos tradicionales no ofrecen soluciones rápidas. Para ello usaremos un enfoque metaheurístico basado en la división de comunidades e intentaremos mejorar sus prestaciones a lo largo de varias iteraciones. Una vez obtenida la mejor versión de nuestro algoritmo, lo compararemos con los algoritmos existentes para validar su calidad.
 
 %%%%%%%%%%%%%%%%%%%%
 % ÍNDICES %
@@ -101,11 +103,21 @@ En este proyecto abordaremos la creación de un algoritmo capaz de detectar comun
 
 Desde su nacimiento, Internet ha logrado conectar a las personas de forma sencilla. El ejemplo más claro son las redes sociales, que han crecido de forma contundente los últimos años. La rápidez con la que se transmite la información ha provocado que muchas personas las utilicen como medio de información de referencia frente a los tradicionales. Esto ha desencadenado un creciente interés de diferentes marcas e incluso de otros medios de aprovechar este fenómeno para su beneficio, aprovechando la estructura de red (o grafo) en la que se basa.
 
-Desde el punto de vista de un científico de datos, resulta interesante estudiar la estructura que formas estas redes, que constituyen un ejemplo perfecto  de un grafo. Una de las áreas más interesantes que utiliza como base este tipo de redes es la detección de comunidades, que cuenta con multitud de aplicaciones.
+Desde el punto de vista de un científico de datos, resulta interesante estudiar la estructura que formas estas redes, que constituyen un ejemplo perfecto  de un grafo. Esto ha generado un creciente interés en la comunidad investigadora, desarrollandose nuevas lineas de investigación en torno al estudio de las redes sociales. Algunos ejemplos de estas lineas son:
+
+\begin{itemize}
+	\item La recomendación de perfiles a seguir o contenido de otros usuarios afines.
+	\item Detección de información viral
+	\item Detección de comunidades
+\end{itemize}
+
+En este proyecto nos centraremos en la detección de comunidades, una de las áreas más interesantes que cuenta con multitud de aplicaciones.
 
 Actualmente existen multitud de algoritmos que abordan el problema de la detección de comunidades. Los más tradicionales y exactos no son viables para abordar los grandes volumenes de datos que generan las redes sociales, por lo que se ha optado por soluciones heuristicas, no tan exactas, pero mucho más rápidas.
 
-La motivación de este proyecto nace de la idea de crear una solución heurística diferente a las preexistentes (normalmente basadas en algun algun algoritmo destructivo), optando por un enfoque destructivo.
+Las soluciones de que ofrecen estos algoritmos por su solapamiento (si permitimos que un nodo del grafo pertenezca a más de una comunidad o no) y su dinamismo (si la red sobre la que trabajamos cambia a lo largo del tiempo). Además, dentro de la detección de comunidades existen dos enfoques contrapuestos; el aglomerativo (todos los nodos comienzan en su propio clúster y se van uniendo) y el divisor (todos los nodos comienzan en el mismo clúster). 
+
+La motivación de este proyecto nace de la idea de crear una solución heurística diferente a las preexistentes (normalmente basadas en algun algun algoritmo aglomerativo), optando por un enfoque divisor. La solución propuesta será sin solapes sobre redes estáticas.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -120,92 +132,34 @@ El objetivo principal de este proyecto será la creación de un algoritmo de detec
 
 Finalmente, compararemos nuestro algoritmo con otros preexistentes para valorar si es efectivo el enfoque elegido. En esta fase usaremos otras métricas sobre las particiones obtenidas como la conductancia o covertura.
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 3. Tecnologías, Herramientas y Metodologías %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\cleardoublepage
-\chapter{Tecnologías, Herramientas y Metodologías}
-\label{sec:tecnologias} 
-
-\section{Tecnologías}
-
-\subsection{Java}
-\label{subsec:java}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[scale=0.04]{img/logos/java-logo.png}
-	\caption{Logo Java}
-	\label{figura:java}
-\end{figure}
-
-Java (Figura~\ref{figura:java}) es un lenguaje de programación de propósito general, concurrente y orientado a objetos. Su sintaxis deriva en gran medida de C y C++. Uno de los principales atractivos de Java es su máquina virtual (JVM) que nos permite ejecutar nuestro código Java en cualquier dispositivo, independientemente de la arquitectura.
-
-\cleardoublepage
-\section{Herramientas}
-
-\subsection{Control de versiones: Git}
-\label{subsec:git}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[scale=0.08]{img/logos/git-logo.png}
-	\caption{Logo Git}
-	\label{figura:git}
-\end{figure}
-
-
-Git\footnote{\url{https://git-scm.com/}} (Figura~\ref{figura:git}) es un software de control de versiones diseñado por Linus Torvalds, pensando en la eficiencia y la confiabilidad del mantenimiento de versiones de aplicaciones cuando éstas tienen un gran número de archivos de código fuente.
-
-\subsection{Entorno de desarrollo: IntelliJ}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[scale=0.3]{img/logos/intellij-logo.png}
-	\caption{Logo IntelliJ}
-	\label{figura:intellij}
-\end{figure}
-
-
-IntelliJ\footnote{\url{https://www.jetbrains.com/idea/}} (Figura~\ref{figura:intellij}) es un IDE para Java desarollado por JetBrains ideado para mejorar la productividad del programador. 
-
-\section{Metodologías}
-
-Dado que pretendemos obtener la mejor versión de nuestro algoritmo, el desarrollo seguirá una metodología iterativa-incremental\footnote{\url{https://proyectosagiles.org/desarrollo-iterativo-incremental/}}, dónde en cada iteración se propondrán y evaluarán diferentes mejoras sobre el algoritmo.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 		 4. Descripción informática           %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\cleardoublepage
-\chapter{Descripción informática}
-\label{sec:descinformatica} 
-
-En este apartado se abordará la construcción del proyecto. Este proyecto consta de una colección de algoritmos de detección de comunidades, que parte desde un algoritmo de detección aleatoria, pasando por la evolución de un algoritmo destructivo hasta obtener la mejor versión del mismo aplicando una búsqueda local.
-
-\section{Requisitos}
-
-\subsection{Requisitos funcionales}
-
-Los requisitos funcionales de la aplicación son simples dado que se trata de un algoritmo:
-
+Otros objetivos que perseguiremos serán:
 \begin{itemize}
-	\item Debe poder leer un fichero de entrada (correspondiente al grafo a tratar).
-	\item Dado esa entrada y un algoritmo, debe devolver los clústers resultantes al realizar la detección de comunidades.  
+	\item Aprender a trabajar con metaheurísticas, estrategias genéricas para resolver problemas de computación.
+	\item Aprender a trabajar de manera avanzada con grafos.
+	\item Aprender a solucionar problemas abstractos modelizandolos.
+	\item Ampliar el conocimiento en el area de la detección de comunidades.
 \end{itemize}
 
-\subsection{Requisitos no funcionales}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 3. Descripción algorítmica                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Los requisitos no funcionales de la aplicación se reducen a la calidad de la solución ofrecida y al tiempo de ejecución:
+\cleardoublepage
+\chapter{Descripción algorítmica}
+\label{sec:algorithms} 
 
-\begin{itemize}
-	\item Maximizar la modularidad.
-	\item Ofrecer el menor tiempo de cálculo posible\footnote{Existen algoritmos que ofrecen soluciones óptimas a este problema, pero no son aplicables a grafos grandes dado que requieren demasiado tiempo de computo.}. 
-\end{itemize}
+En este capítulo se abordará el algoritmo desarrollado así cómo las distintas iteraciones que dieron lugar al mismo.
 
-\begin{tcolorbox}[fonttitle=\bfseries,title=Modularidad,label=alg1]
+La detección de comunidades es un problema que se aborda haciendo uso de grafos, estructuras de datos que modelizan una red de elementos.\\
+
+\begin{tcolorbox}[fonttitle=\bfseries,title=Definición de Grafo,label=graphdef]
+	Un grafo $G = (V,E)$ se define como el conjunto no vacio de $n$ nodos o vértices ($V$) unidos por un conjunto de $m$ enlaces, denominados aristas o arcos ($E$). Una arista $(u,v) \epsilon E$ con $u,v \epsilon V$ representa la conexión entre los nodos $u$ y $v$.
+\end{tcolorbox}
+
+Antes de comenzar, es importante señalar que para la creación de un algoritmo de detección de comunidades es necesario tomar una métrica como referencia, la cual utilizaremos para tomar decisiones en el algoritmo. Entre las métricas más comunes para este tipo de problema se encuentran la cobertura, la conductancia y la modularidad. Para este algoritmo usaremos la modularidad cómo métrica a maximizar.
+
+
+\begin{tcolorbox}[fonttitle=\bfseries,title=Modularidad,label=mod]
 	Las soluciones de los algoritmos de detección de comunidades se construyen máximizando su valor de modularidad, una medida utilizada para medir la fuerza de division de un grafo en clústers. Esta métrica se define cómo la fracción de enlaces que caen dentro de los clústers dados menos el valor esperado que dicha fracción hubiese recibido si los enlaces se hubiesen distribuido al azar. De forma matemática:
 	
 	\begin{equation*}
@@ -225,113 +179,131 @@ Los requisitos no funcionales de la aplicación se reducen a la calidad de la sol
 	\end{equation*}
 	siendo en ambos caso $E$ el conjunto de las aristas de $G$.
 	
-	La modularidad toma valor en el intervalo [-.5,1)
+	La modularidad toma valor en el intervalo [-0.5,1)
 \end{tcolorbox}
 
-\section{Diseño e implementación}
+A continuación, se detallará la construcción incremental del algoritmo, explicando cada versión creada.
 
-A continuación, se detallará la construcción incremental del algoritmo, explicando cada versión creada. Las premisas para todos los algoritmos son las siguientes:
+Las premisas para todos los algoritmos son las siguientes:
 
 \begin{itemize}
 	\item Se comienza con todos en la misma comunidad.
 	\item Se asume un grafo conexo
 \end{itemize}
 
-\begin{tcolorbox}[fonttitle=\bfseries,title=Grafo conexo,label=alg1]
-Un grafo conexo $\overline{G}$ es todo grafo $G$ dónde para cada par de vertices $(x,y)$ existe un camino $P$.
-
+\begin{tcolorbox}[fonttitle=\bfseries,title=Grafo conexo,label=graphconex]
+	Un grafo conexo $\overline{G}$ es todo grafo $G$ dónde para cada par de vertices $(x,y)$ existe un camino $P$.
 \end{tcolorbox}
 
-Para estimar cómo de buena es cada versión del algoritmo usaremos un grafo de ejemplo representativo que llamaremos \textit{Instancia de Prueba} (214 nodos y 1954 aristas).
+\section{ConstRandom: Algoritmo aleatorio}
 
-\subsection{ConstRandom: Algoritmo aleatorio}
-
-En esta primera aproximación (Algoritmo \ref{alg1}) que nos sirve como punto de partida y para posterior comparación, generamos los clústers de manera aleatoria; se crea un número aleatorio de clústers y se distribuyen los nodos de forma aleatorio en ellos.
+En esta primera aproximación (Algoritmo \ref{alg1}) que nos sirve como punto de partida y para posterior comparación, generamos los clústers de manera aleatoria; se crea un número aleatorio de clústers y se distribuyen los nodos de forma aleatoria en ellos.
 
 \begin{algorithm}
 	\caption{ConsRandom algorithm}\label{alg1}
 	\begin{algorithmic}[1]
 		\Procedure{ConstRandom}{$G$}\Comment{The graph 'G'}
-			\State $S \gets EmptySolution(G)$
-			\State $numClusters \gets Random(N(g))$\Comment{N returns nº of graph nodes}
-			
-			\For{$i=0$ to $numClusters$}
-				\State $createEmptyCluster(S)$
-			\EndFor
-			
-			\For{$i=0$ to $N(S)$}
-				\State $rnd \gets Random(numClusters)$
-				\State $AssignToCluster(S, i, rnd)$ \Comment{Assign node $i$ to cluster $rnd$ in solution $S$}
-			\EndFor
-			\State \textbf{return} $S$
+		\State $S \gets EmptySolution(G)$
+		\State $numClusters \gets Random(N(g))$\Comment{N returns nº of graph nodes}
+		
+		\For{$i=0$ to $numClusters$}
+		\State $createEmptyCluster(S)$
+		\EndFor
+		
+		\For{$i=0$ to $N(S)$}
+		\State $rnd \gets Random(numClusters)$
+		\State $AssignToCluster(S, i, rnd)$ \Comment{Assign node $i$ to cluster $rnd$ in solution $S$}
+		\EndFor
+		\State \textbf{return} $S$
 		\EndProcedure
-	\end{algorithmic}
-	\textbf{Modularidad para Instancia de Prueba: -0.007}	
+	\end{algorithmic}	
 \end{algorithm}
 
 
 
-\subsection{ConstDivider: Primer aproximación}
+\section{ConstDivider: Primer aproximación}
 
-Este algoritmo supone el primer intento de aplicar un enfoque divisor a la detección de comunidades. Los pasos del algoritmo a seguir son los siguiente (Ver junto al Algoritmo~\ref{alg2}):
-\begin{enumerate}
-	\item Comenzamos con una sola comunidad que contiene todos los nodos.
-	\item Se busca el nodo peor conectado (menor número de aristas) ó el primero que encuentre una arista.
-	\item Se crea un nuevo clúster con ese nodo y se añaden los adyacentes en la medida en la que aumente la modularidad. Se descartan los adyacentes de los nodos los cuales no han mejorado la modularidad. De esta manera, se crearán dos clústers (A y B).
-	\item Repetimos los pasos 1-3 con el clúster B hasta que no se generen nuevos clusters.
-\end{enumerate}
+Este algoritmo supone el primer intento de aplicar un enfoque divisor a la detección de comunidades. Los pasos del algoritmo a seguir son se detallan a continuación (Ver junto al Algoritmo~\ref{alg2}).
+
+En el primer paso, comenzamos con una sola comunidad que contiene todos los nodos. A continuación, se busca el nodo peor conectado (menor número de aristas) ó el primero que encuentre de una arista. Se crea un nuevo clúster con ese nodo y se añaden los adyacentes en la medida en la que aumente la modularidad. Se descartan los adyacentes de los nodos los cuales no han mejorado la modularidad. De esta manera, se crearán dos clústers (A y B). Repetimos los el proceso con el clúster B hasta que no se generen nuevos clusters.
+
+%\begin{enumerate}
+%	\item Comenzamos con una sola comunidad que contiene todos los nodos.
+%	\item Se busca el nodo peor conectado (menor número de aristas) ó el primero que encuentre una arista.
+%	\item Se crea un nuevo clúster con ese nodo y se añaden los adyacentes en la medida en la que aumente la modularidad. Se descartan los adyacentes de los nodos los cuales no han mejorado la modularidad. De esta manera, se crearán dos clústers (A y B).
+%	\item Repetimos los pasos 1-3 con el clúster B hasta que no se generen nuevos clusters.
+%\end{enumerate}
 
 \begin{algorithm}
 	\caption{ConstDivider algorithm}\label{alg2}
 	\begin{algorithmic}[1]
 		\Procedure{ConstDivider}{$G$}\Comment{The graph 'G'}
-			\State $S \gets EmptySolution(G)$
-			\State $S' \gets S$
-			
-			\State $c \gets 0$\Comment{Current cluster index}
-			\While{$c < Size(S')$}
-				\State $K \gets EmptySet()$\Comment{Checked Nodes}
-				\State $S'' \gets S'$
-				\State $createEmptyCluster(S'')$	
-				\State $wcn <- GetWorstConnectedNode(S'')$
-				\State $Move(wcn, c+1, S'')$\Comment{Move node $wcn$ to cluster $c+1$ in solution $S''$}  
-				\State $A \gets Adyacents(G, wcn)$
-				\While{$Size(A) > 0$}
-					\State $i <- Poll(A)$
-					\State $K <- Append(K, i)$
-					\State $Move(i, c+1, S'')$
-					\If{$Md(S'', G) > Md(S', G)$} 
-						\State $S' <- S''$
-					\EndIf
-					\For{$j \epsilon Adyacents(i)$}
-						\If{$j \notin K \And j \notin Cluster(S'', c)$}
-						\State $A <- Remove(A, node)$
-						\State $K <- Append(K, node)$
-						\EndIf
-					\EndFor
-				\EndWhile
-				\If{$Md(S', G) > Md(S, G)$} 
-					\State $ S \gets S'$
-				\Else 
-					\State  $c \gets c + 1$
-				\EndIf
-			\EndWhile
-			\State \textbf{return} $S$
+		\State $S \gets EmptySolution(G)$
+		\State $S' \gets S$
+		
+		\State $c \gets 0$\Comment{Current cluster index}
+		\While{$c < Size(S')$}
+		\State $K \gets EmptySet()$\Comment{Checked Nodes}
+		\State $S'' \gets S'$
+		\State $createEmptyCluster(S'')$	
+		\State $wcn <- GetWorstConnectedNode(S'')$
+		\State $Move(wcn, c+1, S'')$\Comment{Move node $wcn$ to cluster $c+1$ in solution $S''$}  
+		\State $A \gets Adyacents(G, wcn)$
+		\While{$Size(A) > 0$}
+		\State $i <- Poll(A)$
+		\State $K <- Append(K, i)$
+		\State $Move(i, c+1, S'')$
+		\If{$Md(S'', G) > Md(S', G)$} 
+		\State $S' <- S''$
+		\EndIf
+		\For{$j \epsilon Adyacents(i)$}
+		\If{$j \notin K \And j \notin Cluster(S'', c)$}
+		\State $A <- Remove(A, node)$
+		\State $K <- Append(K, node)$
+		\EndIf
+		\EndFor
+		\EndWhile
+		\If{$Md(S', G) > Md(S, G)$} 
+		\State $ S \gets S'$
+		\Else 
+		\State  $c \gets c + 1$
+		\EndIf
+		\EndWhile
+		\State \textbf{return} $S$
 		\EndProcedure
 	\end{algorithmic}
-	\textbf{Modularidad para Instancia de Prueba: 0.096}
 \end{algorithm}
 
-\subsection{ConstDividerGreedy: Segunda aproximación}
+\section{ConstDividerGreedy: Segunda aproximación}
 
-Podemos observar como la mejora en cuanto a modularidad no es destacable (recordemos que la modularidad toma un valor entre -0.5 y 1.0). Es necesario utilizar otro enfoque. El problema de este algortimo es que una mala elección del primer nodo puede provocar que no se formen correctamente las comunidades. Aleatorizar este la elección de este primer nodo nos abre la puerta a realizar múltiples iteraciones comenzando desde distintos nodos. Los pasos a seguir en este algoritmo serían (Ver junto al Algoritmo~\ref{alg3}):
-\begin{itemize}
-	\item Se elige el primer nodo de forma aleatoria, añadiendo, como antes, los nodos adyacentes si aumenta la modularidad.
-	\item Se crea una lista de candidatos, que contiene a todos los vertices ordenados por el número de aristas que vayan a otro clúster de mayor a menor.
-	\item A partir de una funcion voraz (Ver Funcion \ref{func1}), obtenemos un umbral $mu$, que restringe la lista a los vértices con un número de vertices mayor que $mu$.
-	\item El siguiente vértice se selecciona al azar de esta lista restringida.
-	\item Se repite este proceso hasta que no mejora la modularidad.
-\end{itemize}
+El problema del anterior algortimo es que una mala elección del primer nodo puede provocar que no se formen correctamente las comunidades. Para solucionar este problema, usaremos la meta-heurística GRASP.\\
+
+\begin{tcolorbox}[fonttitle=\bfseries,title=GRASP,label=grasp]
+	GRASP (en inglés \textit{Greedy Randomized Adaptive Search Procedure}) es una meta-heurística basada en un procedimiento de búsqueda \textit{greedy} o avaricioso, aleatorio y adaptativo, utilizado en probemas de optimización, que garantiza una solución buena, aunque no necesariamente la óptima. Puede dividirse en 3 fases:\\
+	
+	\textbf{Fase de construcción:}
+	\begin{itemize}
+		\item Generar una lista de candidatos mediante la utilización de una función \textit{greedy}.
+		\item Generar una lista restringida de los mejores candidatos.
+		\item Seleccionar aleatoriamente un elemento de la lista restringida
+		\item Repetir el proceso hasta construir la solución.
+	\end{itemize}
+	\textbf{Fase de mejora:} Hacer un proceso de búsqueda local a partir de la solución construida hasta que no mejore más.
+	
+	\textbf{Fase de actualización:} Si la solución obtenida mejora la existente, actualizarla. 
+\end{tcolorbox}
+
+En esta segunda aproximación, exploraremos el uso de la fase de construcción para elegir el siguiente nodo a mover, dejando fuera la búsqueda local. Aleatorizar la elección del primer nodo nos abre la puerta a realizar múltiples iteraciones comenzando desde distintos nodos. Los pasos a seguir en este algoritmo se detallan a continuación (Ver junto al Algoritmo~\ref{alg3}).
+
+Inicialmente, se elige el primer nodo de forma aleatoria, añadiendo, como antes, los nodos adyacentes si aumenta la modularidad. Se crea una lista de candidatos, que contiene a todos los vertices ordenados por el número de aristas que vayan a otro clúster de mayor a menor. A partir de una funcion voraz (Ver Funcion \ref{func1}), obtenemos un umbral $mu$, que restringe la lista a los vértices con un número de vertices mayor que $mu$. El siguiente vértice se selecciona al azar de esta lista restringida. Se repite este proceso hasta que no mejora la modularidad.
+
+%\begin{itemize}
+%	\item Se elige el primer nodo de forma aleatoria, añadiendo, como antes, los nodos adyacentes si aumenta la modularidad.
+%	\item Se crea una lista de candidatos, que contiene a todos los vertices ordenados por el número de aristas que vayan a otro clúster de mayor a menor.
+%	\item A partir de una funcion voraz (Ver Funcion \ref{func1}), obtenemos un umbral $mu$, que restringe la lista a los vértices con un número de vertices mayor que $mu$.
+%	\item El siguiente vértice se selecciona al azar de esta lista restringida.
+%	\item Se repite este proceso hasta que no mejora la modularidad.
+%\end{itemize}
 
 \begin{tcolorbox}[fonttitle=\bfseries,title=Función Voraz,label=func1]
 	Dado $g_{max}$ y $g_{min}$ cómo los valores mayor y menos de nuestra función voraz (el número de aristas) y $\alpha$ un parámetro en el rango [0,1] (que indicará cómo de voraz es nuestro algoritmo, siendo 1 completamente aleatorio y 0 totalmente voraz), el umbral $mu$ se calcula siguiendo la siguiente función:
@@ -339,8 +311,6 @@ Podemos observar como la mejora en cuanto a modularidad no es destacable (record
 		mu = g_{max} - \alpha * (g_{max} - g_{min})
 	\end{equation*}
 \end{tcolorbox}
-
-Para probar el algoritmo se han utilizado los siguientes valores de $\alpha$: 0.0, 0.25, 0.5, 0.75, 1.
 
 \begin{algorithm}
 	\caption{ConstDividerGreedy algorithm}\label{alg3}
@@ -353,63 +323,63 @@ Para probar el algoritmo se han utilizado los siguientes valores de $\alpha$: 0.
 		\State $refactorIters \gets 10$
 		
 		\While{$c < Size(S') \And b \neq -1 \And refactorIters > 0$}
-			\State $K \gets EmptySet()$\Comment{Checked Nodes}
-			\State $S'' \gets S'$
-			\State $createEmptyCluster(S'')$	
-			
-			\State $candidates \gets RestrictedList(G,c, \alpha)$
-			\If{$Empty(candidates)$}
-				\State{$b \gets GetRandom(candidates)$}	
-			\Else
-				\State{$b \gets GetRandom(S', c)$}
-			\EndIf
-			
-			\If{$b = -1$}
-				\State $c \gets 0$
-				\State $refactorIters \gets refactorIters - 1$
-				\State \textbf{continue}
-			\EndIf
-			
-			\State $Move(b, c+1, S'')$\Comment{Move node $b$ to cluster $c+1$ in solution $S''$}  
-			\State $A \gets Adyacents(G, wcn)$
-			\While{$Size(A) > 0$}
-				\State $i <- Poll(A)$
-				\State $K <- Append(K, i)$
-				\State $Move(i, c+1, S'')$
-				\If{$Md(S'', G) > Md(S', G)$} 
-					\State $S' <- S''$
-				\EndIf
-				\For{$j \epsilon Adyacents(i)$}
-					\If{$j \notin K \And j \notin Cluster(S'', c)$}
-						\State $A <- Remove(A, node)$
-						\State $K <- Append(K, node)$
-					\EndIf
-				\EndFor
-			\EndWhile
-			
-			\If{$Md(S', G) > Md(S, G)$} 
-				\State $ S \gets S'$
-			\EndIf
-			
-			\State  $c \gets c + 1$
-			
-			
+		\State $K \gets EmptySet()$\Comment{Checked Nodes}
+		\State $S'' \gets S'$
+		\State $createEmptyCluster(S'')$	
+		
+		\State $candidates \gets RestrictedList(G,c, \alpha)$
+		\If{$Empty(candidates)$}
+		\State{$b \gets GetRandom(candidates)$}	
+		\Else
+		\State{$b \gets GetRandom(S', c)$}
+		\EndIf
+		
+		\If{$b = -1$}
+		\State $c \gets 0$
+		\State $refactorIters \gets refactorIters - 1$
+		\State \textbf{continue}
+		\EndIf
+		
+		\State $Move(b, c+1, S'')$\Comment{Move node $b$ to cluster $c+1$ in solution $S''$}  
+		\State $A \gets Adyacents(G, wcn)$
+		\While{$Size(A) > 0$}
+		\State $i <- Poll(A)$
+		\State $K <- Append(K, i)$
+		\State $Move(i, c+1, S'')$
+		\If{$Md(S'', G) > Md(S', G)$} 
+		\State $S' <- S''$
+		\EndIf
+		\For{$j \epsilon Adyacents(i)$}
+		\If{$j \notin K \And j \notin Cluster(S'', c)$}
+		\State $A <- Remove(A, node)$
+		\State $K <- Append(K, node)$
+		\EndIf
+		\EndFor
+		\EndWhile
+		
+		\If{$Md(S', G) > Md(S, G)$} 
+		\State $ S \gets S'$
+		\EndIf
+		
+		\State  $c \gets c + 1$
+		
+		
 		\EndWhile
 		\State \textbf{return} $S$
 		\EndProcedure
 	\end{algorithmic}
-	\textbf{Modularidad para Instancia de Prueba (1000 iteraciones y $\alpha$ = 0.0): 0.251 }
 \end{algorithm}
 
-\subsection{ConstDividerGreedy + Local Search: Última versión}
+\section{ConstDividerGreedy + Local Search: Última versión}
 
-La modularidad obtenida trás aplicar un enfoque voraz mejora de forma considerable. A pesar de ello, intentaremos aumentarla aún más partiendo de un heurístico no contemplado hasta ahora, la búsqueda local. Esta búsqueda local utilizará la solución de cada iteración del algortimo anterior (ConstDividerGreedy) e intentará mejorarla cambiando algunos nodos de clúster. La búsqueda local implementada se detalla a continuación (Ver junto al Algoritmo~\ref{alg4}):
-\begin{itemize}
-	\item Para cada clúster, se crea una lista de candidatos a moverse. Esta lista de candidatos estará ordenada por el \% de aristas que caen fuera del clúster.
-	\item Cada nodo de esta lista de candidatos se intenta mover a otro clúster (incluido a un nuevo clúster). Si la modularidad mejora, se actualiza la solución, pero se siguen explorando otros movimientos.
-\end{itemize}
+En este caso, aplicaremos la búsqueda local que dejamos fuera en la versión anterior. La búsqueda local utilizará la solución de cada iteración del algortimo anterior (ConstDividerGreedy) e intentará mejorarla cambiando algunos nodos de clúster. La búsqueda local implementada se detalla a continuación (Ver junto al Algoritmo~\ref{alg4}).
 
-Para probar el algoritmo se han utilizado los siguientes valores de $\alpha$: 0.0, 0.25, 0.5, 0.75, 1.
+Para cada clúster, se crea una lista de candidatos a moverse. Esta lista de candidatos estará ordenada por el \% de aristas que caen fuera del clúster. Cada nodo de esta lista de candidatos se intenta mover a otro clúster (incluido a un nuevo clúster). Si la modularidad mejora, se actualiza la solución, pero se siguen explorando otros movimientos.
+
+%\begin{itemize}
+%	\item Para cada clúster, se crea una lista de candidatos a moverse. Esta lista de candidatos estará ordenada por el \% de aristas que caen fuera del clúster.
+%	\item Cada nodo de esta lista de candidatos se intenta mover a otro clúster (incluido a un nuevo clúster). Si la modularidad mejora, se actualiza la solución, pero se siguen explorando otros movimientos.
+%\end{itemize}
 
 \begin{algorithm}
 	\caption{LocalSearch algorithm}\label{alg4}
@@ -417,42 +387,134 @@ Para probar el algoritmo se han utilizado los siguientes valores de $\alpha$: 0.
 		\Procedure{LocalSearch}{$S, G$}\Comment{The Solution 'S' and Graph 'G'}
 		\State $i \gets 0$\Comment{Current cluster index}
 		\While{$i < Size(S)$}
-			\State $CL \gets CandidateList(S, i)$
-			\While{$Size(CL) > 0$}
-				\State $c \gets Poll(CL)$\Comment{Current candidate}
-				\State $S' \gets S$
-				\State $createEmptyCluster(S')$
-				\State $j \gets 0$\Comment{Target cluster}
-				\While{$j < Size(S)$}
-					\If{$j = i$} 
-						\State $j \gets j + 1$
-						\State \textbf{continue}
-					\EndIf
-					\State $Move(c, j, S')$\Comment{Move node $c$ to cluster $j$ in solution $S'$}
-					\If{$Md(S', G) > Md(S, G)$} 
-						\State $S <- S'$
-					\EndIf
-					\State $Move(c, i, S')$\Comment{Return node $c$ to cluster $i$ in solution $S'$}
-				 	\State $j \gets j + 1$
-				\EndWhile
-			\EndWhile
-			\State $i \gets i + 1$
+		\State $CL \gets CandidateList(S, i)$
+		\While{$Size(CL) > 0$}
+		\State $c \gets Poll(CL)$\Comment{Current candidate}
+		\State $S' \gets S$
+		\State $createEmptyCluster(S')$
+		\State $j \gets 0$\Comment{Target cluster}
+		\While{$j < Size(S)$}
+		\If{$j = i$} 
+		\State $j \gets j + 1$
+		\State \textbf{continue}
+		\EndIf
+		\State $Move(c, j, S')$\Comment{Move node $c$ to cluster $j$ in solution $S'$}
+		\If{$Md(S', G) > Md(S, G)$} 
+		\State $S <- S'$
+		\EndIf
+		\State $Move(c, i, S')$\Comment{Return node $c$ to cluster $i$ in solution $S'$}
+		\State $j \gets j + 1$
+		\EndWhile
+		\EndWhile
+		\State $i \gets i + 1$
 		\EndWhile
 		\State \textbf{return} $S$
 		\EndProcedure
 	\end{algorithmic}
-	\textbf{Modularidad para Instancia de Prueba (1000 iteraciones y $\alpha$ = 0.25): 0.3295 }
 \end{algorithm}
 
-Observamos que para $\alpha = 0.25$ obtenemos un resultado notablemente mejor que con el anterior algoritmo y consideramos \textit{ConstDividerGreedy + Local Search} la última versión de nuestro algoritmo.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 4. Tecnologías, Herramientas y Metodologías %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter{Tecnologías, Herramientas y Metodologías}
+\label{sec:tecnologias} 
+
+\section{Tecnologías}
+
+\subsection{Java}
+\label{subsec:java}
+
+Java es un lenguaje de programación de propósito general, concurrente y orientado a objetos. Su sintaxis deriva en gran medida de C y C++. Uno de los principales atractivos de Java es su máquina virtual (JVM) que nos permite ejecutar nuestro código Java en cualquier dispositivo, independientemente de la arquitectura.
+
+\section{Herramientas}
+
+\subsection{Control de versiones: Git}
+\label{subsec:git}
+
+Git\footnote{\url{https://git-scm.com/}} es un software de control de versiones diseñado por Linus Torvalds, pensando en la eficiencia y la confiabilidad del mantenimiento de versiones de aplicaciones cuando éstas tienen un gran número de archivos de código fuente.
+
+\subsection{Entorno de desarrollo: IntelliJ}
+
+IntelliJ\footnote{\url{https://www.jetbrains.com/idea/}} es un IDE para Java desarollado por JetBrains ideado para mejorar la productividad del programador. 
+
+\section{Metodologías}
+
+Dado que pretendemos obtener la mejor versión de nuestro algoritmo, el desarrollo seguirá una metodología iterativa-incremental\footnote{\url{https://proyectosagiles.org/desarrollo-iterativo-incremental/}}(Figura~\ref{fig:itinc}). En cada iteración se tomará el algoritmo previo (si lo hay), se evaluarán sus limitaciones, se mejorará y se evaluará, obteniendo en cada iteración un versión mejorada del mismoo.
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=10cm]{img/itinc}
+		\caption{Ciclo de la metodología iterativa-incremental}
+		\label{fig:itinc}
+	\end{center}
+\end{figure}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 		 5. Descripción informática           %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter{Descripción informática}
+\label{sec:descinformatica} 
+
+En este apartado se abordará la construcción del proyecto. Este proyecto consta de una colección de algoritmos de detección de comunidades, que parte desde un algoritmo de detección aleatoria, pasando por la evolución de un algoritmo destructivo hasta obtener la mejor versión del mismo aplicando una búsqueda local. Todo el código generado se encuentra en Java y la documentación para ejecutarlo se encuentra en el Anexo 1.
+
+\section{Requisitos}
+
+\subsection{Requisitos funcionales}
+
+Los requisitos funcionales de la aplicación son simples dado que se trata de un algoritmo:
+
+\begin{itemize}
+	\item Debe poder leer un fichero de entrada (correspondiente al grafo a tratar).
+	\item Dado esa entrada y un algoritmo, debe devolver los clústers resultantes al realizar la detección de comunidades.  
+\end{itemize}
+
+\subsection{Requisitos no funcionales}
+
+Los requisitos no funcionales de la aplicación se reducen a la calidad de la solución ofrecida y al tiempo de ejecución:
+
+\begin{itemize}
+	\item Maximizar la modularidad.
+	\item Ofrecer el menor tiempo de cálculo posible\footnote{Existen algoritmos que ofrecen soluciones óptimas a este problema, pero no son aplicables a grafos grandes dado que requieren demasiado tiempo de cómputo.}. 
+\end{itemize}
+
+\section{Implementación}
+
+\subsection{Diseño de clases}
+
+Cómo podemos observar en la Figura~\ref{fig:class_diagram}, cada algoritmo desarrollado en el capítulo 3 está representado como una clase dentro de nuestro proyecto Java.
+Todas las clases implementan la interfaz \textit{Constructive} que obliga la implementación de un método que transforma una instancia de partida (el objeto que representa al grafo) en una solución, que contiene la partición en comunidades del grafo.
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=10cm]{img/class_diagram}
+		\caption{Diagrama de clases de la aplicación}
+		\label{fig:class_diagram}
+	\end{center}
+\end{figure}
+
+La clase \textit{ConstRandom} implementa el Algoritmo~\ref{alg1}, dada una instancia devuelve una partición en comunidades generadas de forma aleatoria.
+
+La clase \textit{ConstDivider} implementa el Algoritmo~\ref{alg2}, dada una instancia, devuelve una partición en comunidades maximizando la modularidad. Este resultado es determinista.
+
+La clase \textit{ConstDividerGreedy} implementa el Algoritmo~\ref{alg3}, dada una instancia, genera una partición en comunidades maximizando la modularidad a partir de una meta-heurística greedy, sin la fase de mejora. Depende de una variable $\alpha$, que limita la voracidad del algoritmo y de una valor random, que lo hace no-determinista.
+
+La clase \textit{ConstDividerGreedyLS} implementa el Algoritmo~\ref{alg3}. Esta clase genera una solución a partir de la clase \textit{ConstDividerGreedy} y la mejora con una búsqueda local.
+
+Por último, se implementa una clase adicional, \textit{AlgorithmExecutor}, que nos permite ejecutar N veces un algoritmo. Esta clase solo tiene utilidad para los algoritmos no-deterministas, obteniendo la mejor partición en comunidades de las N iteraciones.
 
 \subsection{Paralelización}
 
-Una vez obtenida una modularidad aceptable, terminaremos el desarrollo procurando optimizar el uso de los recursos de la máquina dónde se ejecute el algoritmo. Se hará uso de la libreria estándar de java para el manejo de hilos, $java.util.concurrent$, concretamente de los Ejecutores ($Executors$), que nos permiten gestionar de forma sencilla y óptima la casuística de la programación concurrente. Las tareas a paralelizar de nuestro programa serán las iteraciones del algoritmo.
+Una vez implementada la mejor versión de nuestro algoritmo, terminaremos el desarrollo procurando optimizar el uso de los recursos de la máquina dónde se ejecute el algoritmo. Se hará uso de la libreria estándar de java para el manejo de hilos, $java.util.concurrent$, concretamente de los Ejecutores ($Executors$), que nos permiten gestionar de forma sencilla y óptima la casuística de la programación concurrente. Las tareas a paralelizar de nuestro programa serán las iteraciones que realiza la clase \textit{AlgorithmExecutor} sobre los algoritmos no-deterministas.
 
-Para demostrar la eficacia de usar paralelización en este algoritmo, usaremos de ejemplo la ejecución del algoritmo más lento: $ConstDividerGreedy + Local Search$. La siguiente prueba se ha realizado en una máquina Ubuntu 16.04 con 16GB de RAM y 4 procesadores (sin \textit{hyper-threading}).
+Para demostrar la eficacia de usar paralelización en este algoritmo, usaremos de ejemplo la ejecución del algoritmo más lento: $ConstDividerGreedy + Local Search$. La siguiente prueba se ha realizado en una máquina Ubuntu 18.04 con 16GB de RAM y 4 procesadores (sin \textit{hyper-threading}).
 
-Tiempos de ejecucción (en milisegundos) para 1000 iteraciones:
+Tiempos de ejecucción (en milisegundos) para 1000 iteraciones en una instancia de prueba (214 nodos y 1954 aristas):
 \begin{itemize}
 	\item Secuencial: 			446.187 ms
 	\item Paralelo (4 hilos):   132.753 ms
@@ -462,7 +524,7 @@ Podemos observar que se reduce de forma considerable (hasta un 70\%) el tiempo d
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 		   5. Estudio comparativo             %
+% 		   6. Estudio comparativo             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage
@@ -472,19 +534,166 @@ Podemos observar que se reduce de forma considerable (hasta un 70\%) el tiempo d
 El estudio comparativo que se llevará a cabo a continuación constará de dos secciones:
 
 \begin{itemize}
-	\item La primera usará un conjunto de grafos de \textit{'entrenamiento'} que servirá para comparar los actuales algoritmos junto a los posibles valores de sus parámetros en términos de modularidad.
-	\item La segunda usará un conjunto de grafos de \textit{test} (distintos al primero) que servirán para comparar la mejor versión de nuestro algoritmo con otras soluciones pre-existentes en términos de conductancia y cobertura.
+	\item La primera usará un conjunto de grafos que servirá para comparar los actuales algoritmos junto a los posibles valores de sus parámetros en términos de modularidad.
+	\item La segunda usará otro conjunto de grafos (distintos al primero) que servirán para comparar la mejor versión de nuestro algoritmo con otras soluciones pre-existentes.
 \end{itemize}
 
+Para la realización del estudio, se ejecutaran los diferentes algoritmos en una máquina Ubuntu 18.04 con 16GB de RAM y 4 procesadores (sin \textit{hyper-threading}).
+
+\section{Comparativa de algoritmos propios}
+
+\subsection{Instancias y Algoritmos}
+
+En esta sección analizaremos los resultados de nuestros algoritmos para 5 instancias descritas a continuación en la Tabla 6.1, dónde $N$ es el número de nodos y $M$ el número de aristas de la instancia.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|l|l|l|}
+		\hline
+		\textbf{Instancia}             & \textbf{N}    & \textbf{M}     \\ \hline
+		1000\_0.1network.txt & 1000 & 10434 \\ \hline
+		500\_0.1network.txt  & 500  & 5337  \\ \hline
+		500\_0.2network.txt  & 500  & 4965  \\ \hline
+		500\_0.3network.txt  & 500  & 4842  \\ \hline
+		1000\_0.2network.txt & 1000 & 10071 \\ \hline
+	\end{tabular}
+	\label{table:instances1}
+	\caption{Instancias seleccionadas para la primera comparativa}
+\end{table}
+
+Para los algoritmos $DividerGreedy$ y $DividerGreedyLS$ ejecutaremos 100 iteraciones para cada los siguientes valores de $\alpha:$ 0.25, 0.5 y 0.75.
+
+\subsection{Resultados}
+
+Atendiendo al resumen de los resultados ofrecidos en la Tabla 6.2 podemos observar que el mejor algoritmo es $DividerGreedyLS$ con el valor $\alpha=0.25$, el cual ofrece la mejor modularidad para 4 de las 5 instancias, con una desviación típica media muy baja (0.00016). Para ese mismo algoritmo, observamos que para valores de $\alpha=0.5$ y $\alpha=0.75$ la desviación típica media aumenta. Los datos ampliados de esta comparativa pueden encontrarse en la Tabla~\ref{table:results1} del Apéndice~\ref{app:resultados}.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|l|r|c|}
+		\hline
+		\textbf{Algoritmo}                             & \textbf{Dev(\%)} & \textbf{Mejor modularidad (veces)} \\ \hline
+		Random                                         & 1.00264          & 0/5                                \\ \hline
+		Divider                                        & 0.54658          & 0/5                                \\ \hline
+		DividerGreedy ($\alpha$ = 0.25)   & 0.29836          & 0/5                                \\ \hline
+		DividerGreedy ($\alpha$ = 0.5)    & 0.32129          & 0/5                                \\ \hline
+		DividerGreedy ($\alpha$ = 0.75)   & 0.31385          & 0/5                                \\ \hline
+		DividerGreedyLS ($\alpha$ = 0.25) & 0.00016          & 4/5                                \\ \hline
+		DividerGreedyLS ($\alpha$ = 0.5)  & 0.00459           & 2/5                                \\ \hline
+		DividerGreedyLS ($\alpha$ = 0.75) & 0.00342          & 0/5                                \\ \hline
+	\end{tabular}
+	\label{table:results1-min}
+	\caption{Resumen de la comparativa de algoritmos propios}
+\end{table}
+
+\section{Comparativa con algoritmos previos}
+
+\subsection{Instancias y Algoritmos}
+
+Una vez hemos encontrado el mejor algoritmo de los desarrollados en este trabajo, en esta sección lo compararemos con los algoritmos previos de detección de comunidades.  Los algoritmos seleccionados para la comparativa han sido Edge Betweenness~\cite{girvan2002community}, Fast Greedy~\cite{clauset2004finding}, Walktrap~\cite{pons2005computing}, Eigenvectors~\cite{newman2006finding}, Spinglass~\cite{reichardt2006statistical}, 
+Label Propagation~\cite{raghavan2007near} y Multi-level~\cite{blondel2008fast}, junto al mejor de nuestros algoritmos ($DividerGreedyLS$ con el valor $\alpha=0.25$, ejecutado en 100 iteraciones). Para la ejecución de los algoritmos previos se ha hecho uso de la libreria de Python igraph~\footnote{\url{https://igraph.org/python/}}. Las instancias utilizadas para esta comparativa serán las descritas en la Tabla 6.3.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|l|l|l|}
+		\hline
+		\textbf{Instancia}             & \textbf{N}    & \textbf{M}     \\ \hline
+		500\_0.4network.txt  & 500  & 10338  \\ \hline
+		500\_0.5network.txt  & 500  & 10310  \\ \hline
+		500\_0.6network.txt  & 500  & 10312  \\ \hline
+		500\_0.7network.txt  & 500  & 10232  \\ \hline
+		500\_0.8network.txt  & 500  & 10194  \\ \hline
+		1000\_0.3network.txt & 1000 & 19432 \\ \hline
+		1000\_0.4network.txt & 1000 & 20014 \\ \hline
+		1000\_0.5network.txt & 1000 & 20770 \\ \hline
+		1000\_0.6network.txt & 1000 & 20084 \\ \hline
+		1000\_0.7network.txt & 1000 & 20150 \\ \hline
+		1000\_0.8network.txt & 1000 & 20640 \\ \hline
+	\end{tabular}
+	\label{table:instances2}
+	\caption{Instancias seleccionadas para la segunda comparativa}
+\end{table}
+
+Para esta comparativa, en lugar de hacer uso de la modularidad, se hará uso de la métrica NMI (Normalized Mutual Information). Para el experimento, se usarán las soluciones óptimas para el problema de la detección de comunidades de las instancias seleccionadas, de forma que las soluciones arrojadas por los distintos algoritmos se compararan con ellas obteniendo su NMI, comprobando así la calidad de las soluciones.
+
+\begin{tcolorbox}[fonttitle=\bfseries,title=Normalized Mutual Information,label=graphconex]
+	La información mutua normalizada (en ingles \textit{Normalized Mutual Information}) es una cantidad que mide la dependencia mutua de dos conjuntos. Sin profundizar en su cálculo (que puede consultarse en la literatura~\cite{mcdaid2011normalized}), comprobamos que es una buena métrica para evaluar cómo de similares son dos soluciones al problema de la detección de comunidades. 
+	
+	Por ejemplo, dos soluciones al problema (dónde la posición en la lista corresponde al nodo y el valor a la comunidad a la que pertenece) $[0, 0, 1, 1]$ y $[1, 1, 0, 0]$ resultan obtener un valor para esta métrica de 1.0 (son idénticas) a pesar de que usan distintos valores para las etiquetas. Al estar normalizada, nos permite comparar soluciones que cuentan con distinto número de comunidades. Las soluciones $[0,0,0,1,1,1]$ y $[1,1,1,2,2,0]$ obtienen un valor para la métrica de 0.82, a pesar de que la segunda solución cuenta con una comunidad más. 
+\end{tcolorbox}
+
+\subsection{Resultados}
+
+Atendiendo al resumen de los resultados ofrecidos en la Tabla 6.4 observamos que nuestro algoritmo, a pesar de no encontrar el mejor valor NMI respecto al resto de algoritmos, cuenta con una desviación típica media inferior a 3 de los algoritmos previos, pero lejos de los mejores algoritmos. Es necesario destacar que nuestro algoritmo cuenta con uno de los mayores tiempos de ejecución, con una magnitud similar al Edge Betweeness a pesar de ser ejecutado en paralelo. Los datos ampliados de esta comparativa pueden encontrarse en las Tablas~\ref{table:results2} y A.3 del Apéndice~\ref{app:resultados}.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|l|r|c|}
+		\hline
+		\textbf{Algoritmo} & \multicolumn{1}{l|}{\textbf{Dev(\%)}} & \multicolumn{1}{l|}{\textbf{Mejor NMI (veces)}} \\ \hline
+		Edge Betweenness   & 0.09368                               & 3/11                                                    \\ \hline
+		Eigenvectors       & 0.63170                               & 0/11                                                    \\ \hline
+		Fast Greedy        & 0.49691                               & 0/11                                                    \\ \hline
+		Label Propagation  & 0.46733                               & 1/11                                                    \\ \hline
+		Multi-level        & 0.18881                               & 0/11                                                    \\ \hline
+		Spinglass          & 0.15059                               & 3/11                                                    \\ \hline
+		Walktrap           & 0.11338                                  & 6/11                                                    \\ \hline 
+		DividerGreedyLS    & 0.33755                                  & 0/11                                                    \\ \hline
+	\end{tabular}
+	\label{table:results2-min}
+	\caption{Resumen de la comparativa de algoritmos previos}
+\end{table}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 6. Conclusiones del proyecto y trabajos futuros %
+% 7. Conclusiones del proyecto y trabajos futuros %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage
 \chapter{Conclusiones del proyecto y trabajos futuros}
 \label{sec:conclusions} 
 
-Prueba cita~\cite{jya1}. 
+Este proyecto ha supuesto un desafío y una fuente de aprendizaje sobre los algoritmos de detección de comunidades, pues hasta ahora solo los había usado sin preocuparme de cómo se implementaban.
+
+Quedan satisfechos los objetivos del proyecto y se ha obtenido un algoritmo de detección de comunidades usable para grandes redes dónde la solución optima nos llevaría demasiado tiempo. A pesar de no obtener un algoritmo revolucionario, hemos conseguido obtener un rendimiento superior en cuanto a las soluciones frente a algunos algoritmos previos.
+
+Sin duda se trata de un algoritmo mejorable, por lo que un trabajo futuro pasaria por encontrar mejores heurísticos que reduzcan el tiempo de ejecucción y mejoren la calidad de las soluciones
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% APÉNDICE(S) %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\appendix
+\chapter{Tablas de resultados}
+\label{app:resultados}
+
+Este apéndice recoge los resultados de los distintos experimentos realizados.
+
+\section{Resultados del experimento 1}
+
+En la Tabla~\ref{table:results1} se ven reflejados los resultados del primer experimento, dónde comparamos las métricas recogidas para cada propuesta en cada uno de las instancias de la Tabla~\ref{table:instances1}. A continuación se explica cada una de los valores y métricas que se muestran:
+
+\begin{itemize}
+	\item \textbf{N}: Este valor indica el número de nodos con el que cuenta la instancia
+	\item \textbf{M}: Este valor indica el número de aristas con el que cuenta la instancia
+	\item \textbf{Mod}: Esta valor corresponde a la métrica de modularidad arrojada por el algoritmo para una instancia.
+	\item \textbf{T(ms)}: Este valor corresponde al tiempo (en milisegundos) que tarda en ejecutar un algoritmo para una instancia.
+	\item \textbf{Dev(\%)}: Este valor corresponde a la desviación típica de la modularidad de ese algoritmo para una instancia respecto a la mejor modularidad obtenida para la misma instancia.
+	\item \textbf{\# Best}: Este valor indica si la modularidad ofrecida por ese algoritmo es la mejor para una instancia. Toma el valor 1 en caso afirmativo y 0 en el contrario.
+\end{itemize}
+
+\input{results1}
+
+\section{Resultados del experimento 2}
+
+En las Tablas~\ref{table:results2} y A.3 se ven reflejados los resultados del segundo experimento, dónde comparamos las métricas recogidas para cada algoritmo previo junto a la mejor versión del nuestro en cada una de las instancias de la Tabla 6.3. Los valores que podemos encontrar en la tabla son idénticos a los definidos para el primer experimento a excepción de métrica NMI, que toma el lugar de la modularidad (Mod). Esta métrica muestra el valor de la información mutua normalizada (\textit{Normalized Mutual Information}).
+
+
+\input{results2}
+
+\input{results3}
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % BIBLIOGRAFIA %
