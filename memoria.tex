@@ -461,7 +461,8 @@ Dado que pretendemos obtener la mejor versión de nuestro algoritmo, el desarroll
 \chapter{Descripción informática}
 \label{sec:descinformatica} 
 
-En este apartado se abordará la construcción del proyecto. Este proyecto consta de una colección de algoritmos de detección de comunidades, que parte desde un algoritmo de detección aleatoria, pasando por la evolución de un algoritmo destructivo hasta obtener la mejor versión del mismo aplicando una búsqueda local. Todo el código generado se encuentra en Java y la documentación para ejecutarlo se encuentra en el Anexo 1.
+En este apartado se abordará la construcción del proyecto. Este proyecto consta de una colección de algoritmos de detección de comunidades, que parte desde un algoritmo de detección aleatoria, pasando por la evolución de un algoritmo destructivo hasta obtener la mejor versión del mismo aplicando una búsqueda local. Todo el código generado se encuentra escrito en Java y esta disponible en un repositorio de Github~\footnote{\url{https://github.com/Maes95/CommunityDetection}} junto a la documentación para ejecutarlo.
+
 
 \section{Requisitos}
 
@@ -498,11 +499,11 @@ Todas las clases implementan la interfaz \textit{Constructive} que obliga la imp
 	\end{center}
 \end{figure}
 
-La clase \textit{ConstRandom} implementa el Algoritmo~\ref{alg1}, dada una instancia devuelve una partición en comunidades generadas de forma aleatoria.
+La clase \textit{ConstRandom} implementa el Algoritmo~\ref{alg1}; dada una instancia devuelve una partición en comunidades generadas de forma aleatoria.
 
-La clase \textit{ConstDivider} implementa el Algoritmo~\ref{alg2}, dada una instancia, devuelve una partición en comunidades maximizando la modularidad. Este resultado es determinista.
+La clase \textit{ConstDivider} implementa el Algoritmo~\ref{alg2}; dada una instancia, devuelve una partición en comunidades maximizando la modularidad. Este resultado es determinista.
 
-La clase \textit{ConstDividerGreedy} implementa el Algoritmo~\ref{alg3}, dada una instancia, genera una partición en comunidades maximizando la modularidad a partir de una meta-heurística greedy, sin la fase de mejora. Depende de una variable $\alpha$, que limita la voracidad del algoritmo y de una valor random, que lo hace no-determinista.
+La clase \textit{ConstDividerGreedy} implementa el Algoritmo~\ref{alg3}; dada una instancia, genera una partición en comunidades maximizando la modularidad a partir de una meta-heurística greedy, sin la fase de mejora. Depende de una variable $\alpha$, que limita la voracidad del algoritmo y de una valor random, que lo hace no-determinista.
 
 La clase \textit{ConstDividerGreedyLS} implementa el Algoritmo~\ref{alg3}. Esta clase genera una solución a partir de la clase \textit{ConstDividerGreedy} y la mejora con una búsqueda local.
 
@@ -623,7 +624,7 @@ Para esta comparativa, en lugar de hacer uso de la modularidad, se hará uso de l
 
 \subsection{Resultados}
 
-Atendiendo al resumen de los resultados ofrecidos en la Tabla 6.4 observamos que nuestro algoritmo, a pesar de no encontrar el mejor valor NMI respecto al resto de algoritmos, cuenta con una desviación típica media inferior a 3 de los algoritmos previos, pero lejos de los mejores algoritmos. Es necesario destacar que nuestro algoritmo cuenta con uno de los mayores tiempos de ejecución, con una magnitud similar al Edge Betweeness a pesar de ser ejecutado en paralelo. Los datos ampliados de esta comparativa pueden encontrarse en las Tablas~\ref{table:results2} y A.3 del Apéndice~\ref{app:resultados}.
+Atendiendo al resumen de los resultados ofrecidos en la Tabla 6.4 observamos que nuestro algoritmo, a pesar de no encontrar el mejor valor NMI respecto al resto de algoritmos, cuenta con una desviación típica media inferior a 3 de los algoritmos previos, pero lejos de los mejores algoritmos. Es necesario destacar que nuestro algoritmo cuenta con uno de los mayores tiempos de ejecución, con una magnitud similar al Edge Betweeness a pesar de ser ejecutado en paralelo, aunque hay que tener en cuenta que los resultados son sobre 100 iteraciones para conseguir una solución mucho mejor. Los datos ampliados de esta comparativa pueden encontrarse en las Tablas~\ref{table:results2} y A.3 del Apéndice~\ref{app:resultados}.
 
 \begin{table}[h]
 	\centering
